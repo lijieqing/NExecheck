@@ -1,3 +1,87 @@
 <resources>
-    <string name="app_name">NExecheck</string>
+    <string name="app_name">柳工挖机检测Pro 2.0</string>
+    <string name="userName">请选择用户</string>
+    <string name="app_foot_version">2017广西柳工集团版权所有</string>
+    <string name="nameRepeat">姓名重复</string>
+    <string name="codeRepeat">工号重复</string>
+    <string name="pwsNotSame">两次输入密码不相同</string>
+    <string name="pleaseInputAllMsg">请填写完整信息</string>
+    <string name="selectUser">+</string>
+    <string name="password">密码</string>
+    <string name="passwordEmpty">请输入密码</string>
+    <string name="passwordError">密码错误，请重新输入</string>
+    <string name="checkLine">检线名</string>
+    <string name="checkLineEmpty">请选择检线名</string>
+    <string name="checkLineError">----------WIFI连接与当前检线不符，无法开始检测----------\n请确认WIFI连接正确，点击\"菜单\">>\"设置检线\">>选择相应检线</string>
+    <string name="uploadError">并未连接到数据上传网络，若要上传请选择\"数据上传\"检线</string>
+    <string name="recordStateError">机型检验状态为\"未完成\"，\s请给定\"合格\"、\"不合格\"、\"强制合格\"后再上传检验记录</string>
+    <string name="recordNotFinish">存在检测项目\"未检测\"或\"未完成\"</string>
+    <string name="recordAlreadyFinish">该机型检测结果已确定，无需重复判定</string>
+    <string name="recordAlreadyhegeFinish">该机型检测结果已合格，无需重复判定</string>
+    <string name="xmlAlreadyChanged">该检测项目相关配置参数已修改，请新建机型开始检测或联系机型文件编辑人员</string>
+    <string name="checkByUploadError">当前为\"数据上传\"检线，如需检测请切换到检测检线</string>
+    <string name="loginButton">登录</string>
+    <string name="str_alert_title">请选择用户名</string>
+    <string name="str_alert_checkLine_title">请选择检线名</string>
+    <string name="str_save">保存</string>
+    <string name="str_ok">确认</string>
+    <string name="str_close">关闭</string>
+    <string name="inAllMessage">请填写完整信息</string>
+    <string name="diaLogWakeup">提醒</string>
+    <string name="delUserConfirm">确认删除该用户吗？</string>
+    <string name="recoverUserConfirm">确定要恢复该用户吗？</string>
+    <string name="saveSuccess">保存成功</string>
+    <string name="delSuccess">删除成功</string>
+    <string name="reSuccess">恢复成功</string>
+
+    <!-- activity_admin_index -->
+    <string name="btn_create">新建</string>
+    <string name="btn_open">打开</string>
+    <string name="btn_liucheng_check">流程检验</string>
+    <string name="btn_single_check">单项检验</string>
+    <string name="please_selectOne_check_item">请选择一条检验项目</string>
+
+    <!-- activity_new_check_record -->
+    <string name="btn_sure">确定</string>
+    <string name="btn_exit">退出</string>
+    <string name="pleaseSelectedDevice">请选择机型</string>
+    <string name="pleaseInputExcId">请输入合法的挖掘机出厂编号</string>
+    <string name="excIdIsExist">挖掘机出厂编号已存在</string>
+    <string name="title_activity_open_check_record">OpenCheckRecordActivity</string>
+
+    <!-- activity_open_check_record -->
+    <string name="please_selectOne_check_record">请选择一条检验记录</string>
+    <string name="title_activity_data_upload">DataUploadActivity</string>
+    <string name="uploadData">数据上传</string>
+    <string name="deleteData">数据删除</string>
+    <string name="noNeedDeleteData">没有要删除的数据</string>
+    <string name="pleaseCheckedNeedDeleteData">请选中要删除的数据</string>
+    <string name="pleaseCheckedNeedUploadData">请选中要上传的数据</string>
+    <string name="title_activity_mod_pwd">ModPwdActivity</string>
+    <string name="title_activity_single_check">SingleCheckActivity</string>
+    <string name="btn_clear">清除</string>
+    <string name="btn_search">查询</string>
+
+    <!-- check -->
+    <string name="beginCheck">开始测量</string>
+    <string name="stopCheck">终止测量</string>
+    <string name="checkFinish">测量已经完成</string>
+    <string name="nextItem">下一项目</string>
+    <string name="exitCheck">退出测量</string>
+    <string name="stopCheckConfirm">您确定要退出测量吗？</string>
+    <string name="please_wait_currentTask_over">请等待当前任务结束</string>
+    <string name="current_item_is_last_item">当前项目已经是最后一项</string>
+
+    <!--  -->
+    <string name="exitSystemConfirm">您确定要退出系统吗？</string>
+    <string name="delCheckRecordConfirm">您确定要删除选中的记录？</string>
+
+    <!-- activity_admin_index -->
+    <string name="pass">合格</string>
+    <string name="unpass">不合格</string>
+    <string name="forcepass">强制合格</string>
+    <string name="passConfirm">确认合格吗？</string>
+    <string name="unpassConfirm">确认不合格吗？</string>
+    <string name="forcepassConfirm">确认强制合格吗？</string>
+    <string name="noRealTimeData">----</string>
 </resources>
