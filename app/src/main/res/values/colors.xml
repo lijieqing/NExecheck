@@ -3,4 +3,16 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="red">#ed1c24</color>
+    <color name="deviceTextColor">#434343</color>
+    <color name="deviceSecectedTextColor">#f1731a</color>
+    <color name="openCheckListRowColor">#f6f9f9</color>
+    <color name="userListSelectedColor">#ff6900</color>
+    <color name="userListTextColor">#666872</color>
+    <color name="checkItemParamTextColor">#3f3f3f</color>
+    <color name="checkItemParamResultRow">#f6f9f9</color>
+    <color name="selectedCheckItemTextColor">#f2741b</color>
+
 </resources>

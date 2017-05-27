@@ -1,4 +1,4 @@
-package com.kstech.nexecheck;
+package com.kstech.nexecheck.base;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,6 +25,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.domain.checkline.CheckLineLoadTask;
 import com.kstech.nexecheck.utils.Globals;
@@ -300,6 +301,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    //调用接口 子类实现返回activity实例 很优雅
     public abstract Activity getactivity();
     
     

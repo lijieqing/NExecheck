@@ -17,17 +17,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.kstech.nexecheck.BaseActivity;
+import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
-import com.kstech.nexecheck.adapter.LoginUserListAdspter;
+import com.kstech.nexecheck.adapter.LoginUserListAdapter;
 import com.kstech.nexecheck.domain.checkline.CheckLineLoadTask;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.db.dao.UserDao;
 import com.kstech.nexecheck.domain.db.dbenum.UserStatusEnum;
 import com.kstech.nexecheck.domain.db.entity.User;
-import com.kstech.nexecheck.utils.DensityUtils;
 import com.kstech.nexecheck.utils.DeviceUtil;
 import com.kstech.nexecheck.utils.Globals;
 
@@ -130,7 +128,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 View login_user_view = inflater.inflate(R.layout.login_user_view, null);
                 ListView loginUserList = (ListView) login_user_view.findViewById(R.id.loginUserView);
                 final List<Map<String, Object>> result = UserDao.findUserListReturnListMap(UserStatusEnum.ENABLE.getCode(),this);
-                LoginUserListAdspter adapter = new LoginUserListAdspter(this, result);
+                LoginUserListAdapter adapter = new LoginUserListAdapter(this, result);
                 loginUserList.setAdapter(adapter);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -9,6 +9,7 @@ import com.kstech.nexecheck.domain.config.vo.CheckLineVO;
 import com.kstech.nexecheck.domain.checkline.CheckLineManager;
 import com.kstech.nexecheck.domain.db.entity.User;
 import com.kstech.nexecheck.exception.ExcException;
+import com.kstech.nexecheck.view.widget.RealTimeView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class Globals {
     public static String REFPATH = fs + "storage" + fs + "sdcard1" + fs +"Models" + fs;
     public static String MODELPATH = fs + "storage" + fs + "sdcard1" + fs +"Models" + fs +"model" + fs;
     public static String UPDATE = fs + "storage" + fs + "sdcard1" + fs +"MyApp" + fs+"update.apk";
+    public static int HomeLastPosition = -1;
+
+    public static ArrayList<RealTimeView> HomeRealtimeViews = new ArrayList<>();
     /**
      * 当前登录的用户
      */

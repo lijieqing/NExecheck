@@ -26,19 +26,8 @@ public class SystemUtil {
 		}
 	}
 
-	// 此方法设置关闭软键盘的监听事件
-	public static void setHideSoftKeyBoardListener(final Activity ac, int id) {
-
-		ac.findViewById(id).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				hideSoftKeyBoard(ac);
-			}
-		});
-
-	}
 	public static boolean copyDB(String local,Context context) {
-		File target = new File("/data/data/com.kstech.exccheck/databases/exccheck");
+		File target = new File("/data/data/com.kstech.nexecheck/databases/newBee");
 		File f = new File("/storage/sdcard1/DB/"+local);
 		if(f.exists()){
 			try {

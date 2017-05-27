@@ -7,5 +7,44 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <!-- activity_admin_index begin-->
+    <style name="index_left_btn">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">95dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/btn_style_rect_black</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <!-- activity_admin_index begin-->
+    <!-- activity_admin_index begin-->
+    <style name="index_left_height_btn">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">95dp</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:background">@drawable/btn_style_rect_black</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <style name="fontSize15">
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="fontSize20">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="fontSize25">
+        <item name="android:textSize">25sp</item>
+    </style>
+    <style name="fontSize35">
+        <item name="android:textSize">35sp</item>
+    </style>
+    <style name="width200">
+        <item name="android:width">35dp</item>
+    </style>
+    <style name="text_bg">
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">110dp</item>
+        <item name="android:background">@drawable/text_bg_shape</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#d13131</item>
+    </style>
 </resources>

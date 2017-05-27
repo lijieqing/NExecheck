@@ -9,7 +9,7 @@ import com.kstech.nexecheck.domain.config.vo.J1939PgSetVO;
 import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
 import com.kstech.nexecheck.exception.ExcException;
 import com.kstech.nexecheck.utils.Globals;
-
+import com.kstech.nexecheck.view.widget.RealTimeView;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -282,7 +282,7 @@ public class DeviceModelFile {
 
 		parseQCSet(result, root);
 
-		parseRealTimeSet(result, root);
+		parseRealTimeSet(result, root,context);
 
 		return result;
 	}
@@ -298,7 +298,7 @@ public class DeviceModelFile {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	private static void parseRealTimeSet(DeviceModelFile result, Element root) {
+	private static void parseRealTimeSet(DeviceModelFile result, Element root,Context context) {
 		// 解析RealTimeParam
 		Element realTimeSet = root.element("RealTimeSet");
 		// 获取RealTimeSet节点 下的 RealTimeParam 节点集合
@@ -312,8 +312,9 @@ public class DeviceModelFile {
 			realTimeParam.setUnit(result.getDataSetVO().getDSItem(name).sUnit);
 			result.addRealTimeParam(realTimeParam);
 			// // TODO: 2017/5/24  realtime 给J1939_DataVar_ts对象的监听器，进行初始化
-//			result.getDataSetVO().getDSItem(name).listener = new RealTimeChangedListener(
-//					result.getDataSetVO().getDSItem(name));
+			RealTimeView realview = new RealTimeView(context, realTimeParam);
+			Globals.HomeRealtimeViews.add(realview);
+			result.getDataSetVO().getDSItem(name).listener = realview;
 		}
 	}
 

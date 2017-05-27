@@ -12,11 +12,9 @@ import java.lang.reflect.Method;
 public class TCPConnectUtil {
 	private static String TAG = "WIFIREFLECT";
 	public static boolean connect(){
-		// TODO
 		return true;
 	}
 	public static boolean checkConnect(){
-		// TODO
 		return true;
 	}
 	/**

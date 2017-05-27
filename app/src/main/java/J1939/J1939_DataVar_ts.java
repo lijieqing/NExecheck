@@ -1,6 +1,8 @@
 package J1939;
 
 
+import com.kstech.nexecheck.base.RealtimeChangeListener;
+
 enum VARTYPE {
 	BYTE, WORD, DWORD, SHORT, INT, FLOAT
 }
@@ -73,14 +75,14 @@ public class J1939_DataVar_ts {
 	 */
 	public J1939_SPCfg_ts pSPCfg;
 
-//	public RealTimeChangedListener listener;
-//
-//	public void notifyListener() {
-//		if (listener == null) {
-//			return;
-//		}
-//		listener.onChanged();
-//	}
+	public RealtimeChangeListener listener;
+
+	public void notifyListener(float value) {
+		if (listener == null) {
+			return;
+		}
+		listener.onDataChanged(value);
+	}
 
 	public boolean isFloatType() {
 		return bDataType.equals(VARTYPE.FLOAT);

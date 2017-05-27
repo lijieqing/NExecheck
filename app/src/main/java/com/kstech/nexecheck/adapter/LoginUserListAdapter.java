@@ -13,10 +13,10 @@ import com.kstech.nexecheck.R;
 import java.util.List;
 import java.util.Map;
 
-public class LoginUserListAdspter extends BaseAdapter {
+public class LoginUserListAdapter extends BaseAdapter {
 	private List<Map<String, Object>> data;
 	private LayoutInflater layoutInflater;
-	public LoginUserListAdspter(Context context, List<Map<String, Object>> data){
+	public LoginUserListAdapter(Context context, List<Map<String, Object>> data){
 		this.data=data;
 		this.layoutInflater=LayoutInflater.from(context);
 	}
