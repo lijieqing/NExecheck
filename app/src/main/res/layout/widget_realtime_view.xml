@@ -2,46 +2,46 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="0.5dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:gravity="center_vertical"
-                android:textSize="16sp"
-                android:text="压力参数激光唯一"
-                android:maxLines="1"
-                android:id="@+id/tv_name"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
-                />
-
-            <TextView
-                android:gravity="center_vertical"
-                android:id="@+id/tv_unit"
-                android:textSize="16sp"
-                android:text="L/min"
-                android:maxLines="1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
+        <TextView
+            android:layout_marginLeft="3dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:text="压力参数激光唯一"
+            android:maxLines="1"
+            android:id="@+id/tv_name"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            />
 
         <TextView
-            android:gravity="center"
-            android:id="@+id/tv_value"
-            android:textSize="18sp"
-            android:text="666.55"
+            android:gravity="center_vertical"
+            android:id="@+id/tv_unit"
+            android:textSize="16sp"
+            android:text="L/min"
+            android:maxLines="1"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="match_parent" />
     </LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/tv_value"
+        android:textSize="20sp"
+        android:text="666.55"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/linearLayout" />
 
 </RelativeLayout>

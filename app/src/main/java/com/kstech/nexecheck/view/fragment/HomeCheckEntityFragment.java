@@ -16,13 +16,13 @@ import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.adapter.MyAdapter;
 import com.kstech.nexecheck.adapter.RealTimeGridViewAdapter;
 import com.kstech.nexecheck.utils.Globals;
+import com.kstech.nexecheck.view.widget.DividerItemDecoration;
 
 /**
  * Created by lijie on 2017/5/24.
  */
 
 public class HomeCheckEntityFragment extends Fragment {
-    private GridView gridView;
     private RecyclerView recyclerView;
     private MyAdapter myAdapter;
     @Override
@@ -35,9 +35,11 @@ public class HomeCheckEntityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.fragment_home_check_entity,null);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_home_realtime);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),7);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),6);
         if (Globals.HomeRealtimeViews.size()>0){
             myAdapter = new MyAdapter ();
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL_LIST));
             recyclerView.setLayoutManager(gridLayoutManager);
             recyclerView.setAdapter(myAdapter);
         }
