@@ -1,7 +1,9 @@
 package com.kstech.nexecheck.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -23,6 +25,7 @@ import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
 import com.kstech.nexecheck.utils.Globals;
+import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
 import com.kstech.nexecheck.view.fragment.HomeCheckEntityFragment;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener{
@@ -43,9 +46,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     // 当前检验记录
     private CheckRecordEntity checkRecordEntity;
 
+    //替代布局
+    private LinearLayout llCheck;
+
     //fragment 相关变量
+    private Fragment showFg = null;
     private FragmentManager fragmentManager;
     private HomeCheckEntityFragment homeCheckEntityFragment;
+    private CreateCheckRecordFragment createCheckRecordFragment;
 
     /**
      * 当前选中的检验项
@@ -57,9 +65,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         setContentView(R.layout.activity_home);
         fragmentManager = getFragmentManager();
         homeCheckEntityFragment = new HomeCheckEntityFragment();
+        createCheckRecordFragment = new CreateCheckRecordFragment();
         initMenu("");
         initViewComp();
         initListener();
+
+        Globals.HomeRealtimeViews.clear();
         Globals.loadDeviceModelFile("0004","00001001",this);
         fragmentManager.beginTransaction().add(R.id.ll_home_show,homeCheckEntityFragment).commit();
     }
@@ -99,6 +110,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         wholePassBtn = (Button) findViewById(R.id.wholePassBtn);
         wholeNoPassBtn = (Button) findViewById(R.id.wholeNoPassBtn);
         wholeForcePassBtn = (Button) findViewById(R.id.wholeForcePassBtn);
+
+        llCheck = (LinearLayout) findViewById(R.id.ll_check);
         // 如果是检测员，则隐藏强制合格按钮
         if (Globals.getCurrentUser().getType().getCode().equals("1")) {
             wholeForcePassBtn.setVisibility(View.GONE);
@@ -146,6 +159,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             case R.id.btnCreateCheckRecord:
                 //Intent cintent = new Intent(AdminIndexActivity.this, CreateCheckRecordActivity.class);
                 //startActivityForResult(cintent, 0);
+                llCheck.setVisibility(View.VISIBLE);
+                showFragment(createCheckRecordFragment,"CreateFragment",R.id.ll_check);
                 break;
             case R.id.btnOpenCheckRecord:
                 //Intent ointent = new Intent(AdminIndexActivity.this, OpenCheckRecordActivity.class);
@@ -199,5 +214,24 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 });
                 break;
         }
+    }
+
+    private void showFragment(Fragment f, String tagPage, int rID) {
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
+            if (showFg != null) {
+                ft.hide(showFg).add(rID, f, "TAG" + tagPage);
+            } else {
+                ft.add(rID, f, "TAG" + tagPage);
+            }
+        } else { //已经加载进容器里去了....
+            if (showFg != null) {
+                ft.hide(showFg).show(f);
+            } else {
+                ft.show(f);
+            }
+        }
+        showFg = f;
+        ft.commit();
     }
 }

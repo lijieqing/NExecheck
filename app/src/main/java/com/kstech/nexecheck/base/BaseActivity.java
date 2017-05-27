@@ -303,6 +303,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     //调用接口 子类实现返回activity实例 很优雅
     public abstract Activity getactivity();
-    
-    
+
+    public void updateSubtitle(String title){
+        subTitle.setText(title);
+    }
+
 }
