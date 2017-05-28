@@ -28,11 +28,13 @@ import android.widget.Toast;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.domain.checkline.CheckLineLoadTask;
+import com.kstech.nexecheck.utils.DialogUtil;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.utils.SystemUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -50,10 +52,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     private TableRow dataUploadRowId, userManagerRowId, modPwdRowId,
             setCheckLineRowId, exitSystemRowId, fileDownLoadRowId, dataBaseRowID;
 
-
+    protected LinkedList<BaseFragment> baseFragments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        baseFragments = new LinkedList<>();
         //沉浸式状态栏 sdk 21以上
         if (Build.VERSION.SDK_INT >= 21) {
             View decorView = getWindow().getDecorView();
@@ -209,7 +212,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
-                                        android.os.Process.killProcess(android.os.Process.myPid());
+                                        getactivity().finish();
                                     }
                                 }).show();
             }
@@ -308,4 +311,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         subTitle.setText(title);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (baseFragments.size()>0){
+            for (BaseFragment baseFragment : baseFragments) {
+                if (baseFragment.isVisible()){
+                    getFragmentManager().beginTransaction().remove(baseFragment).commit();
+
+                }
+            }
+        }else {
+            DialogUtil.showDialog(getactivity(),"000",false);
+        }
+
+
+    }
 }

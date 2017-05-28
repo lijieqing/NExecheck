@@ -7,6 +7,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.adapter.CheckItemListAdapter;
+import com.kstech.nexecheck.base.BaseFragment;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDao;
@@ -31,9 +34,11 @@ import com.kstech.nexecheck.domain.db.dao.CheckItemDetailDao;
 import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
+import com.kstech.nexecheck.exception.ExcException;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
 import com.kstech.nexecheck.view.fragment.HomeCheckEntityFragment;
+import com.kstech.nexecheck.view.fragment.OpenCheckRecordFragment;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -41,7 +46,7 @@ import java.util.List;
 
 import static java.lang.Thread.State.TERMINATED;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener{
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     // 主页面组件变量
     private Button btnCreateCheckRecord, btnOpenCheckRecord, liuchengCheckBtn,
@@ -68,11 +73,29 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private FragmentManager fragmentManager;
     public HomeCheckEntityFragment homeCheckEntityFragment;
     public CreateCheckRecordFragment createCheckRecordFragment;
+    public OpenCheckRecordFragment openCheckRecordFragment;
 
     /**
      * 当前选中的检验项
      */
     private CheckItemEntity checkItemEntity;
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    updateHome(excID);
+
+                    // 初始化整机检验状态
+                    initWholeCheckStatus(checkRecordEntity);
+                    break;
+                case 2:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,12 +103,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         fragmentManager = getFragmentManager();
         homeCheckEntityFragment = new HomeCheckEntityFragment();
         createCheckRecordFragment = new CreateCheckRecordFragment();
+        openCheckRecordFragment = new OpenCheckRecordFragment();
         createCheckRecordFragment.setActivity(this);
+        openCheckRecordFragment.setActivity(this);
+
         initMenu("");
         initViewComp();
         initListener();
         initRecordItem(ConfigFileManager.getInstance(this).getLastExcid());
-        fragmentManager.beginTransaction().add(R.id.ll_home_show,homeCheckEntityFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.ll_home_show, homeCheckEntityFragment).commit();
     }
 
     @Override
@@ -94,11 +120,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
     /**
      * 初始化页面组件
      */
@@ -145,6 +166,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             wholeForcePassBtn.setVisibility(View.GONE);
         }
     }
+
     /**
      * 初始化整机检验状态
      *
@@ -155,7 +177,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         wholeCheckStatusTV.setText(cr.getCheckStatus());
         wholeCheckerNameTV.setText(cr.getCheckerName());
         wholeFinishTimeTV.setText(cr.getFinishTime() == null ? "无" : cr.getFinishTime());
-        String s = CheckItemDetailDao.getAllTimes(this,cr.getExcId()) + "次";
+        String s = CheckItemDetailDao.getAllTimes(this, cr.getExcId()) + "次";
         wholeSumTimesTV.setText(s);
         wholeCheckDescTV.setText(cr.getDesc());
     }
@@ -185,14 +207,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnCreateCheckRecord:
-                //Intent cintent = new Intent(AdminIndexActivity.this, CreateCheckRecordActivity.class);
-                //startActivityForResult(cintent, 0);
                 llCheck.setVisibility(View.VISIBLE);
-                showFragment(createCheckRecordFragment,"CreateFragment",R.id.ll_check);
+                showFragment(createCheckRecordFragment, "CreateFragment", R.id.ll_check);
                 break;
             case R.id.btnOpenCheckRecord:
-                //Intent ointent = new Intent(AdminIndexActivity.this, OpenCheckRecordActivity.class);
-                //startActivityForResult(ointent, 1);
+                llCheck.setVisibility(View.VISIBLE);
+                showFragment(openCheckRecordFragment, "OpenFragment", R.id.ll_check);
                 break;
             case R.id.liuchengCheckBtn:
                 //checkButHandle("liucheng");
@@ -243,8 +263,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 break;
         }
     }
+
     //fragment 切换
-    private void showFragment(Fragment f, String tagPage, int rID) {
+    private void showFragment(BaseFragment f, String tagPage, int rID) {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
             if (showFg != null) {
@@ -261,35 +282,54 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         }
         showFg = f;
         ft.commit();
+        if (!baseFragments.contains(f)) baseFragments.add(f);
     }
-    public void updateHome(String excID){
+
+    public void updateHome(String excID) {
         ConfigFileManager.getInstance(this).saveLastExcid(excID);
-        checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this,excID);
+        checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this, excID);
+        Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(), checkRecordEntity.getSubdeviceId(), this);
         deviceNameTV.setText(checkRecordEntity.getDeviceName());
         subdeviceNameTV.setText(checkRecordEntity.getSubdeviceName());
         excIdTV.setText(checkRecordEntity.getExcId());
         Globals.HomeItems = (ArrayList<CheckItemVO>) Globals.getModelFile().getCheckItemList();
+        Globals.HomeLastPosition = -1;
         checkItemListAdapter.notifyDataSetChanged();
+        if (homeCheckEntityFragment.myAdapter != null)
+            homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
     }
 
-    private void initRecordItem(String excId) {
+    private void initRecordItem(final String excId) {
         // 初始化的时候excId 为 ""
         if (excId == null || excId.equals("")) {
             return;
         }
-        LinkedList<String> excIdList = CheckRecordDao.findCheckRecordByUserName(this,Globals.getCurrentUser().getName());
-        checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this,excId);
-
+        checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this, excId);
         if (checkRecordEntity == null) {
             return;
         }
-        if(!excIdList.contains(excId)){
+        LinkedList<String> excIdList = CheckRecordDao.findCheckRecordByUserName(this, Globals.getCurrentUser().getName());
+
+        if (!excIdList.contains(excId)) {
             return;
         }
-        Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(),checkRecordEntity.getSubdeviceId(),this);
-        updateHome(excId);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(), checkRecordEntity.getSubdeviceId(), getApplicationContext());
+                } catch (ExcException excException) {
+                    Toast.makeText(getApplicationContext(), excException.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    Log.e("HomeActivity", excException.getErrorMsg());
+                    handler.sendEmptyMessage(0);
+                    return;
+                }
+                excID = excId;
+                handler.sendEmptyMessage(1);
+            }
+        }.start();
 
-        // 初始化整机检验状态
-        initWholeCheckStatus(checkRecordEntity);
+
+
     }
 }
