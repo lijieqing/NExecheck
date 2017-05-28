@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.adapter.MyAdapter;
 import com.kstech.nexecheck.adapter.RealTimeGridViewAdapter;
+import com.kstech.nexecheck.base.BaseFragment;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.widget.DividerItemDecoration;
 
@@ -22,9 +23,9 @@ import com.kstech.nexecheck.view.widget.DividerItemDecoration;
  * Created by lijie on 2017/5/24.
  */
 
-public class HomeCheckEntityFragment extends Fragment {
+public class HomeCheckEntityFragment extends BaseFragment {
     private RecyclerView recyclerView;
-    private MyAdapter myAdapter;
+    public MyAdapter myAdapter;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,5 +1,6 @@
 package com.kstech.nexecheck.view.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,20 +8,27 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.activity.HomeActivity;
+import com.kstech.nexecheck.base.BaseFragment;
 import com.kstech.nexecheck.domain.config.vo.DeviceVO;
 import com.kstech.nexecheck.domain.config.vo.SubDeviceVO;
+import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
+import com.kstech.nexecheck.exception.ExcException;
 import com.kstech.nexecheck.utils.DeviceUtil;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.widget.DividerItemDecoration;
@@ -32,7 +40,7 @@ import java.util.List;
  * Created by lijie on 2017/5/27.
  */
 
-public class CreateCheckRecordFragment extends Fragment {
+public class CreateCheckRecordFragment extends BaseFragment {
     private GridView gridView;
     private ListView listView;
     private Button btnSureId, btnExitId;
@@ -43,7 +51,11 @@ public class CreateCheckRecordFragment extends Fragment {
     private int currentPosition = -1;
     private int currentSubPosition = -1;
     private String devID;
+    private String devName;
     private String subDevID;
+    private String subDevName;
+
+    private EditText excIdET;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +69,9 @@ public class CreateCheckRecordFragment extends Fragment {
         View view = View.inflate(getActivity(), R.layout.fragment_create_check_record,null);
         gridView = (GridView) view.findViewById(R.id.gv_create_view);
         listView = (ListView) view.findViewById(R.id.lv_create_record);
+        btnExitId = (Button) view.findViewById(R.id.btnExitId);
+        btnSureId = (Button) view.findViewById(R.id.btnSureId);
+        excIdET = (EditText) view.findViewById(R.id.excIdET);
         //view 初始化相关
         deviceAdapter = new GVDeviceAdapter();
         subDevAdapter = new SubDeviceAdapter();
@@ -69,18 +84,22 @@ public class CreateCheckRecordFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView tvID = (TextView) view.findViewById(R.id.tv_device_id);
+                TextView tvName = (TextView) view.findViewById(R.id.tv_device_name);
                 if (currentPosition == position){
                     currentPosition = -1;
                     devID = null;
+                    devName = null;
                     subDeviceVOs.clear();
                 }else {
                     currentSubPosition = -1;
                     subDevID = null;
+                    subDevName = null;
 
                     currentPosition = position;
                     subDeviceVOs.clear();
                     subDeviceVOs.addAll(deviceVOs.get(position).getSubDeviceList());
                     devID = tvID.getText().toString();
+                    devName = tvName.getText().toString();
                 }
                 deviceAdapter.notifyDataSetChanged();
                 subDevAdapter.notifyDataSetChanged();
@@ -91,19 +110,96 @@ public class CreateCheckRecordFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView tvID = (TextView) view.findViewById(R.id.tv_device_id);
+                TextView tvName = (TextView) view.findViewById(R.id.tv_device_name);
                 if (currentSubPosition == position){
                     currentSubPosition = -1;
                     subDevID = null;
+                    subDevName = null;
                 }else {
                     currentSubPosition = position;
                     subDevID = tvID.getText().toString();
+                    subDevName = tvName.getText().toString();
                 }
 
                 subDevAdapter.notifyDataSetChanged();
             }
         });
 
+        btnExitId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                excIdET.setText("");
+                currentPosition = -1;
+                currentSubPosition = -1;
+                ((HomeActivity)activity).showFg = null;
+                ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
+                getFragmentManager().beginTransaction().remove(CreateCheckRecordFragment.this).commit();
+            }
+        });
+
+        btnSureId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validate()){
+                    // 根据用户选择，新建机型
+                    try {
+                        Globals.HomeRealtimeViews.clear();
+                        Globals.loadDeviceModelFile(devID, subDevID,getActivity());
+                    } catch (ExcException excException) {
+                        Toast.makeText(getActivity(), excException.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                        Log.e("AdminIndexActivity", excException.getErrorMsg());
+                        return;
+                    }
+                    excIdET.setText("");
+                    currentPosition = -1;
+                    currentSubPosition = -1;
+                    // 插入 检验记录表
+                    //CheckRecordDao.addCheckRecord(getActivity(),excIdET.getText().toString(), devID, devName, subDevID, subDevName);
+
+                    Toast.makeText(getActivity(), R.string.saveSuccess, Toast.LENGTH_LONG).show();
+
+                    ((HomeActivity)activity).homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
+
+                    ((HomeActivity)activity).showFg = null;
+                    ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
+                    getFragmentManager().beginTransaction().remove(CreateCheckRecordFragment.this).commit();
+                }
+            }
+        });
+
         return view;
+    }
+
+
+    private boolean validate() {
+        // 判断机型与挖掘机出厂编号是否为空
+        if (currentPosition == -1) {
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.pleaseSelectedDevice)
+                    .setNeutralButton(R.string.str_ok, null).show();
+            return false;
+        }else {
+            if (currentSubPosition == -1){
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(R.string.pleaseSelectedSubDevice)
+                        .setNeutralButton(R.string.str_ok, null).show();
+                return false;
+            }
+        }
+        String excId = excIdET.getText().toString().trim();
+        if ("".equals(excId)) {
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.pleaseInputExcId)
+                    .setNeutralButton(R.string.str_ok, null).show();
+            return false;
+        }
+        if (null != CheckRecordDao.findCheckRecordByExcId(getActivity(),excId)) {
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.excIdIsExist)
+                    .setNeutralButton(R.string.str_ok, null).show();
+            return false;
+        }
+        return true;
     }
 
     //gridview 适配器

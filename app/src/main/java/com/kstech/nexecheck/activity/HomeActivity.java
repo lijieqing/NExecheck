@@ -47,13 +47,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private CheckRecordEntity checkRecordEntity;
 
     //替代布局
-    private LinearLayout llCheck;
+    public LinearLayout llCheck;
 
     //fragment 相关变量
-    private Fragment showFg = null;
+    public Fragment showFg = null;
     private FragmentManager fragmentManager;
-    private HomeCheckEntityFragment homeCheckEntityFragment;
-    private CreateCheckRecordFragment createCheckRecordFragment;
+    public HomeCheckEntityFragment homeCheckEntityFragment;
+    public CreateCheckRecordFragment createCheckRecordFragment;
 
     /**
      * 当前选中的检验项
@@ -66,6 +66,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         fragmentManager = getFragmentManager();
         homeCheckEntityFragment = new HomeCheckEntityFragment();
         createCheckRecordFragment = new CreateCheckRecordFragment();
+        createCheckRecordFragment.setActivity(this);
         initMenu("");
         initViewComp();
         initListener();

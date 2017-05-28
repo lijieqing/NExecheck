@@ -41,6 +41,7 @@ public class MyAdapter extends RecyclerView.Adapter {
         if (parent != null){
             parent.removeView(Globals.HomeRealtimeViews.get(position));
         }
+        vh.fl.removeAllViews();
         vh.fl.addView(Globals.HomeRealtimeViews.get(position));
     }
 

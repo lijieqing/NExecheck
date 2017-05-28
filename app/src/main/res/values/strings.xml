@@ -45,6 +45,7 @@
     <string name="btn_sure">确定</string>
     <string name="btn_exit">退出</string>
     <string name="pleaseSelectedDevice">请选择机型</string>
+    <string name="pleaseSelectedSubDevice">请选择子机型</string>
     <string name="pleaseInputExcId">请输入合法的挖掘机出厂编号</string>
     <string name="excIdIsExist">挖掘机出厂编号已存在</string>
     <string name="title_activity_open_check_record">OpenCheckRecordActivity</string>
