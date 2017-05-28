@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.kstech.nexecheck.domain.config.DeviceModelFile;
 import com.kstech.nexecheck.domain.config.ResConfigFile;
+import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
 import com.kstech.nexecheck.domain.config.vo.CheckLineVO;
 import com.kstech.nexecheck.domain.checkline.CheckLineManager;
 import com.kstech.nexecheck.domain.db.entity.User;
@@ -26,7 +27,10 @@ public class Globals {
     public static String UPDATE = fs + "storage" + fs + "sdcard1" + fs +"MyApp" + fs+"update.apk";
     public static int HomeLastPosition = -1;
 
+    //实时显示参数集合
     public static ArrayList<RealTimeView> HomeRealtimeViews = new ArrayList<>();
+
+    public static ArrayList<CheckItemVO> HomeItems = new ArrayList<>();
     /**
      * 当前登录的用户
      */
@@ -59,6 +63,8 @@ public class Globals {
      * @throws ExcException
      */
     public static void loadDeviceModelFile(String deviceId,String subDeviceId,Context context) throws ExcException {
+        Globals.HomeRealtimeViews.clear();
+
         String fileName = deviceId;
         if (null !=subDeviceId && !"".equals(subDeviceId)) {
             fileName = fileName + "%" + subDeviceId;

@@ -37,13 +37,11 @@ public class HomeCheckEntityFragment extends BaseFragment {
         View view = View.inflate(getActivity(), R.layout.fragment_home_check_entity,null);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_home_realtime);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),6);
-        if (Globals.HomeRealtimeViews.size()>0){
-            myAdapter = new MyAdapter ();
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL_LIST));
-            recyclerView.setLayoutManager(gridLayoutManager);
-            recyclerView.setAdapter(myAdapter);
-        }
+        myAdapter = new MyAdapter ();
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL_LIST));
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(myAdapter);
         return view;
     }
 }

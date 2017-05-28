@@ -1,14 +1,17 @@
 package com.kstech.nexecheck.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,10 +19,14 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.adapter.CheckItemListAdapter;
+import com.kstech.nexecheck.domain.config.ConfigFileManager;
+import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
+import com.kstech.nexecheck.domain.db.dao.CheckItemDao;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDetailDao;
 import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
@@ -27,6 +34,12 @@ import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
 import com.kstech.nexecheck.view.fragment.HomeCheckEntityFragment;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.lang.Thread.State.TERMINATED;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
@@ -41,9 +54,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     // 当前机型检查项目列表
     private ListView currentMachineCheckItemList;
     // 检查项目的 适配器和适配器数据
-    private CheckItemListAdapter checkItemListAdspter;
+    private CheckItemListAdapter checkItemListAdapter;
 
-    // 当前检验记录
+    // 当前检验记录相关
+    private String excID;
     private CheckRecordEntity checkRecordEntity;
 
     //替代布局
@@ -70,9 +84,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         initMenu("");
         initViewComp();
         initListener();
-
-        Globals.HomeRealtimeViews.clear();
-        Globals.loadDeviceModelFile("0004","00001001",this);
+        initRecordItem(ConfigFileManager.getInstance(this).getLastExcid());
         fragmentManager.beginTransaction().add(R.id.ll_home_show,homeCheckEntityFragment).commit();
     }
 
@@ -113,6 +125,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         wholeForcePassBtn = (Button) findViewById(R.id.wholeForcePassBtn);
 
         llCheck = (LinearLayout) findViewById(R.id.ll_check);
+        //检测项目列表相关初始化
+        currentMachineCheckItemList = (ListView) findViewById(R.id.currentMachineCheckItemList);
+        checkItemListAdapter = new CheckItemListAdapter(this);
+        currentMachineCheckItemList.setAdapter(checkItemListAdapter);
+        currentMachineCheckItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LinearLayout ly = (LinearLayout) view;
+
+                String itemId = ((TextView) ly.getChildAt(0)).getText().toString();
+
+                Globals.HomeLastPosition = position;
+                checkItemListAdapter.notifyDataSetChanged();
+            }
+        });
         // 如果是检测员，则隐藏强制合格按钮
         if (Globals.getCurrentUser().getType().getCode().equals("1")) {
             wholeForcePassBtn.setVisibility(View.GONE);
@@ -216,7 +243,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 break;
         }
     }
-
+    //fragment 切换
     private void showFragment(Fragment f, String tagPage, int rID) {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
@@ -234,5 +261,35 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         }
         showFg = f;
         ft.commit();
+    }
+    public void updateHome(String excID){
+        ConfigFileManager.getInstance(this).saveLastExcid(excID);
+        checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this,excID);
+        deviceNameTV.setText(checkRecordEntity.getDeviceName());
+        subdeviceNameTV.setText(checkRecordEntity.getSubdeviceName());
+        excIdTV.setText(checkRecordEntity.getExcId());
+        Globals.HomeItems = (ArrayList<CheckItemVO>) Globals.getModelFile().getCheckItemList();
+        checkItemListAdapter.notifyDataSetChanged();
+    }
+
+    private void initRecordItem(String excId) {
+        // 初始化的时候excId 为 ""
+        if (excId == null || excId.equals("")) {
+            return;
+        }
+        LinkedList<String> excIdList = CheckRecordDao.findCheckRecordByUserName(this,Globals.getCurrentUser().getName());
+        checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this,excId);
+
+        if (checkRecordEntity == null) {
+            return;
+        }
+        if(!excIdList.contains(excId)){
+            return;
+        }
+        Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(),checkRecordEntity.getSubdeviceId(),this);
+        updateHome(excId);
+
+        // 初始化整机检验状态
+        initWholeCheckStatus(checkRecordEntity);
     }
 }

@@ -143,18 +143,14 @@ public class CreateCheckRecordFragment extends BaseFragment {
                 if (validate()){
                     // 根据用户选择，新建机型
                     try {
-                        Globals.HomeRealtimeViews.clear();
                         Globals.loadDeviceModelFile(devID, subDevID,getActivity());
                     } catch (ExcException excException) {
                         Toast.makeText(getActivity(), excException.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                        Log.e("AdminIndexActivity", excException.getErrorMsg());
+                        Log.e("CreateCheckRecord", excException.getErrorMsg());
                         return;
                     }
-                    excIdET.setText("");
-                    currentPosition = -1;
-                    currentSubPosition = -1;
                     // 插入 检验记录表
-                    //CheckRecordDao.addCheckRecord(getActivity(),excIdET.getText().toString(), devID, devName, subDevID, subDevName);
+                    CheckRecordDao.addCheckRecord(getActivity(),excIdET.getText().toString(), devID, devName, subDevID, subDevName);
 
                     Toast.makeText(getActivity(), R.string.saveSuccess, Toast.LENGTH_LONG).show();
 
@@ -162,6 +158,12 @@ public class CreateCheckRecordFragment extends BaseFragment {
 
                     ((HomeActivity)activity).showFg = null;
                     ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
+                    ((HomeActivity)activity).updateHome(excIdET.getText().toString());
+
+                    //还原默认值
+                    excIdET.setText("");
+                    currentPosition = -1;
+                    currentSubPosition = -1;
                     getFragmentManager().beginTransaction().remove(CreateCheckRecordFragment.this).commit();
                 }
             }

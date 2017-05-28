@@ -31,17 +31,10 @@ public class CheckItemListAdapter extends BaseAdapter {
 	private List<CheckItemEntity> data;
 	private LayoutInflater layoutInflater;
 	private Context context;
-	private List<CheckItemVO> values;
 
-	public CheckItemListAdapter(Context context, List<CheckItemEntity> data) {
-		this.context = context;
-		this.data = data;
-		this.layoutInflater = LayoutInflater.from(context);
-	}
 
-	public CheckItemListAdapter(Context context, ArrayList<CheckItemVO> values) {
+	public CheckItemListAdapter(Context context) {
 		this.context = context;
-		this.values = values;
 		this.layoutInflater = LayoutInflater.from(context);
 	}
 	/**
@@ -57,7 +50,7 @@ public class CheckItemListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return values.size();
+		return Globals.HomeItems.size();
 	}
 
 	/**
@@ -65,7 +58,7 @@ public class CheckItemListAdapter extends BaseAdapter {
 	 */
 	@Override
 	public Object getItem(int position) {
-		return values.get(position);
+		return Globals.HomeItems.get(position);
 	}
 
 	/**
@@ -98,10 +91,10 @@ public class CheckItemListAdapter extends BaseAdapter {
 		}
 
 		// 绑定数据
-		viewHolder.itemIdTv.setText(values.get(position).getId());
-		viewHolder.itemNameTv.setText(values.get(position).getName());
+		viewHolder.itemIdTv.setText(Globals.HomeItems.get(position).getId());
+		viewHolder.itemNameTv.setText(Globals.HomeItems.get(position).getName());
 
-		String status = CheckItemDao.getSingleCheckItemFromDB(ConfigFileManager.getInstance(context).getLastExcid(), values.get(position).getId(),context).getCheckStatus();
+		String status = CheckItemDao.getSingleCheckItemFromDB(ConfigFileManager.getInstance(context).getLastExcid(), Globals.HomeItems.get(position).getId(),context).getCheckStatus();
 		int statusImage;
 		if (status == null || status.equals(CheckItemStatusEnum.UN_CHECK.getCode())) {
 			statusImage = R.drawable.index_item_uncheck;
@@ -115,18 +108,6 @@ public class CheckItemListAdapter extends BaseAdapter {
 		}
 		viewHolder.itemCheckResultImage.setBackgroundResource(statusImage);
 
-		// 设置UI被选中的状态
-		/*CheckItemEntity selectedCheckItem = context.getSelectedCheckItem();
-		if (selectedCheckItem != null
-				&& selectedCheckItem.getItemId().equals(viewHolder.itemIdTv.getText())) {
-			viewHolder.arrRight.setVisibility(View.VISIBLE);
-			viewHolder.itemNameTv.setTextColor(context.getResources().getColor(
-					R.color.selectedCheckItemTextColor));
-		} else {
-			viewHolder.arrRight.setVisibility(View.GONE);
-			viewHolder.itemNameTv.setTextColor(context.getResources().getColor(
-					R.color.white));
-		}*/
 		if (ConfigFileManager.getInstance(context).getLastItemid().equals(viewHolder.itemIdTv.getText())) {
 
 		}
