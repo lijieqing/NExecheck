@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityNewCreate"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+	<LinearLayout
+		android:id="@+id/checkItemParamLinerLayout"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal" >
+
+		<TextView
+			android:layout_width="150dp"
+			android:layout_height="wrap_content"
+			android:textColor="#3f3f3f"
+			android:theme="@style/fontSize20" />
+		<TableLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TableRow
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:background="#ffffff"
+				android:paddingBottom="5dp"
+				android:paddingLeft="20dp"
+				android:paddingTop="5dp" >
+			</TableRow>
+		</TableLayout>
+		<TextView
+			android:layout_width="150dp"
+			android:layout_height="wrap_content"
+			android:text="TableRow child"
+			android:textColor="#3f3f3f"
+			android:textSize="20dp" />
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+			<ImageView
+				android:layout_width="18dp"
+				android:layout_height="18dp"
+				android:layout_gravity="center"
+				android:layout_marginLeft="33dp" />
+		</LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>

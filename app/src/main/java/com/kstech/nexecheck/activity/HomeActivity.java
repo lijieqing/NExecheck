@@ -40,6 +40,7 @@ import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
 import com.kstech.nexecheck.view.fragment.HomeCheckEntityFragment;
 import com.kstech.nexecheck.view.fragment.OpenCheckRecordFragment;
+import com.kstech.nexecheck.view.widget.CheckItemSummaryView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -157,7 +158,24 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 LinearLayout ly = (LinearLayout) view;
 
                 String itemId = ((TextView) ly.getChildAt(0)).getText().toString();
-
+                checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(excID,itemId,getactivity());
+                if(checkItemEntity == null){
+                    new AlertDialog.Builder(getactivity())
+                            .setMessage(R.string.xmlAlreadyChanged)
+                            .setNeutralButton(R.string.str_ok, null).show();
+                    return;
+                }
+                if(Globals.getModelFile().getCheckItemVO(checkItemEntity.getItemId()) != null ){
+                    // 加载 项目参数列表
+                    homeCheckEntityFragment.currentCheckItemView.initCheckItemParamList(checkItemEntity);
+                    // 保存最后一次点击的 itemID
+                    ConfigFileManager.getInstance(getactivity()).saveLastItemid(itemId);
+                }else {
+                    new AlertDialog.Builder(getactivity())
+                            .setMessage(R.string.xmlAlreadyChanged)
+                            .setNeutralButton(R.string.str_ok, null).show();
+                    return;
+                }
                 Globals.HomeLastPosition = position;
                 checkItemListAdapter.notifyDataSetChanged();
             }
@@ -197,6 +215,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         wholePassBtn.setOnClickListener(this);
         wholeNoPassBtn.setOnClickListener(this);
         wholeForcePassBtn.setOnClickListener(this);
+    }
+
+    /**
+     * 判断当前是否有检验项目被选中
+     *
+     * @return boolean
+     */
+    public boolean isCheckItemSelected() {
+        return checkRecordEntity != null && checkItemEntity != null;
+    }
+
+    public CheckItemEntity getSelectedCheckItem() {
+        return checkItemEntity;
     }
 
     /**

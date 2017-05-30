@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:background="#dddddd"
+	android:orientation="horizontal">
+	<RelativeLayout
+	    android:id="@+id/rl_desc"
+	    android:layout_margin="10dp"
+	    android:layout_width="600dp"
+    	android:layout_height="250dp"
+    	android:layout_weight="0.99"
+    	android:inputType="textMultiLine"
+    	android:paddingLeft="5dp"
+        android:ems="10"
+    	android:background="@drawable/rect_gray">
+
+		<EditText
+			android:id="@+id/checkDescET"
+			android:layout_marginBottom="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="100dp"
+			android:hint="补充说明:"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentLeft="true" />
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:id="@+id/recycler_desc"
+			android:layout_width="500dp"
+			android:layout_height="100dp"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentStart="true"
+			android:layout_marginStart="12dp"
+			android:layout_marginTop="14dp"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="12dp">
+			<CheckBox
+				android:id="@+id/cb_ignore"
+				android:text="忽略此检测项"
+				style="@style/text_bg"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+		</LinearLayout>
+	</RelativeLayout>
+	<LinearLayout 
+	    android:layout_marginTop="10dp"
+	    android:layout_marginRight="10dp"
+	    android:layout_marginBottom="10dp"
+	    android:layout_width="wrap_content"
+    	android:layout_height="250dp"
+    	android:layout_weight="0.1"
+    	android:orientation="vertical">
+	    <Button 
+	        android:id="@+id/saveCheckDescBtn"
+	        android:layout_marginTop="50dp"
+	        android:layout_width="100dp"
+    		android:layout_height="50dp"
+    		android:background="@drawable/btn_style_rect_black"
+    		android:textColor="#FFFFFF"
+	        android:textSize="20sp"
+	        android:text="@string/str_save" />
+
+	    <Button
+	        android:id="@+id/closeCheckDescBtn"
+	        android:layout_width="100dp"
+	        android:layout_height="50dp"
+	        android:layout_marginTop="50dp"
+	        android:background="@drawable/btn_style_rect_black"
+	        android:text="@string/str_close"
+	        android:textColor="#FFFFFF"
+	        android:textSize="20sp" />
+
+	</LinearLayout>
+</LinearLayout>

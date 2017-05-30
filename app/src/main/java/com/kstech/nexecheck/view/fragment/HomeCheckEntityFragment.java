@@ -17,6 +17,7 @@ import com.kstech.nexecheck.adapter.MyAdapter;
 import com.kstech.nexecheck.adapter.RealTimeGridViewAdapter;
 import com.kstech.nexecheck.base.BaseFragment;
 import com.kstech.nexecheck.utils.Globals;
+import com.kstech.nexecheck.view.widget.CheckItemSummaryView;
 import com.kstech.nexecheck.view.widget.DividerItemDecoration;
 
 /**
@@ -26,6 +27,7 @@ import com.kstech.nexecheck.view.widget.DividerItemDecoration;
 public class HomeCheckEntityFragment extends BaseFragment {
     private RecyclerView recyclerView;
     public MyAdapter myAdapter;
+    public CheckItemSummaryView currentCheckItemView;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +38,10 @@ public class HomeCheckEntityFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.fragment_home_check_entity,null);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_home_realtime);
+        currentCheckItemView = new CheckItemSummaryView(getActivity(),view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),6);
         myAdapter = new MyAdapter ();
+        currentCheckItemView.initView();
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL_LIST));
         recyclerView.setLayoutManager(gridLayoutManager);
