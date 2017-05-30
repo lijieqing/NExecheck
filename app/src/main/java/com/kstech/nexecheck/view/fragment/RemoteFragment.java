@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.activity.upload;
+package com.kstech.nexecheck.view.fragment;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.activity.upload.FTP;
 import com.kstech.nexecheck.domain.config.vo.FtpServerVO;
 import com.kstech.nexecheck.utils.FormatUtil;
 import com.kstech.nexecheck.utils.Globals;

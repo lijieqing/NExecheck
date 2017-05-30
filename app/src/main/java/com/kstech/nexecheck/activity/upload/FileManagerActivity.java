@@ -14,6 +14,8 @@ import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.domain.config.vo.FtpServerVO;
 import com.kstech.nexecheck.utils.DateUtil;
 import com.kstech.nexecheck.utils.Globals;
+import com.kstech.nexecheck.view.fragment.LocalFragment;
+import com.kstech.nexecheck.view.fragment.RemoteFragment;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -75,7 +77,8 @@ public class FileManagerActivity extends BaseActivity {
         copyDB();
     }
     public void copyDB() {
-        File f = new File("/data/data/com.kstech.nexecheck/databases/newBee");
+        String path  = getactivity().getDatabasePath("newBee").getPath();
+        File f = new File(path);
         File target = new File("/storage/sdcard1/DB/"+Globals.getCurrentUser().getName()+"_"+ DateUtil.getDateTimeFormat14(new Date())+".db");
         if(f.exists()){
             try {

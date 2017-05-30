@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.activity.upload;
+package com.kstech.nexecheck.view.fragment;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
