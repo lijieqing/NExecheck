@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.user.HistoryUserActivity">
+    <include
+        android:id="@+id/main1"
+        layout="@layout/activity_other_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+
+        <TableLayout
+            android:id="@+id/userListTable"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:shrinkColumns="0"
+            android:stretchColumns="0" >
+            <TableRow
+                android:layout_weight="0.01">
+                <TextView
+                    android:id="@+id/historyUserTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#666872"
+                    android:text="历史用户:" >
+                </TextView>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="#003c65" >
+                </TextView>
+            </TableRow>
+            <TableRow
+                android:layout_weight="0.98"
+                android:background="#ffffff">
+                <ListView
+                    android:id="@+id/userlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                </ListView>
+            </TableRow>
+            <TableRow
+                android:layout_weight="0.01">
+                <Button
+                    android:id="@+id/showCurrentUserBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="5dp"
+                    android:text="查看当前用户" >
+                </Button>
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/recoverUserTable"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:shrinkColumns="1"
+            android:stretchColumns="1" >
+
+            <TableRow>
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:text="姓名：" />
+                <TextView
+                    android:id="@+id/userNameETForRe"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:background="#DCDCDC" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:text="工号：" />
+                <TextView
+                    android:id="@+id/userCodeETForRe"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:background="#DCDCDC" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:text="删除人：" />
+                <TextView
+                    android:id="@+id/delUserETForRe"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:background="#DCDCDC" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:text="删除时间：" />
+                <TextView
+                    android:id="@+id/delTimeETForRe"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:background="#DCDCDC" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:text="添加人：" />
+                <TextView
+                    android:id="@+id/addUserETForRe"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:background="#DCDCDC" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:text="添加时间：" />
+                <TextView
+                    android:id="@+id/addTimeETForRe"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp"
+                    android:paddingTop="10dp"
+                    android:background="#DCDCDC" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/tablelayout02"
+            android:layout_width="300dp"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="50dp"
+            android:shrinkColumns="0"
+            android:stretchColumns="0" >
+            <TableRow>
+                <Button
+                    android:id="@+id/recoverUserBtn"
+                    android:layout_width="140dp"
+                    android:layout_height="50dp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/btn_normal_rect_black"
+                    android:textSize="20sp"
+                    android:text="恢复用户" >
+                </Button>
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/backBtn"
+                    android:layout_width="140dp"
+                    android:layout_height="60dp"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:layout_marginTop="530dp"
+                    android:text="退出" >
+                </Button>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</LinearLayout>

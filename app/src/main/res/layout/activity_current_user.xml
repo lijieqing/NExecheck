@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.user.CurrentUserActivity">
+    <include
+        android:id="@+id/main1"
+        layout="@layout/activity_other_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <TableLayout
+            android:id="@+id/userListTable"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:shrinkColumns="0"
+            android:stretchColumns="0" >
+
+            <TableRow android:layout_weight="0.01" >
+
+                <TextView
+                    android:id="@+id/currentUserTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="当前用户:"
+                    android:textColor="#666872"
+                    android:textSize="20sp" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="#003c65" >
+                </TextView>
+            </TableRow>
+
+            <TableRow
+                android:layout_weight="0.98"
+                android:background="#ffffff" >
+
+                <ListView
+                    android:id="@+id/userlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" >
+                </ListView>
+            </TableRow>
+
+            <TableRow android:layout_weight="0.01" >
+
+                <Button
+                    android:id="@+id/showHistoryUserBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="查看历史用户"
+                    android:textColor="#000000"
+                    android:textSize="20sp" >
+                </Button>
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/addUserTable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_weight="1"
+            android:shrinkColumns="1"
+            android:stretchColumns="1" >
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="姓名："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/userNameET"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="工号："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/userCodeET"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="类型：" />
+
+                <EditText
+                    android:id="@+id/userTypeET"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:text="1"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="新密码："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/pwdET"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:ems="10"
+                    android:inputType="numberPassword"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="确认密码："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/pwdConfirmET"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:ems="10"
+                    android:inputType="numberPassword"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/editUserTable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_weight="1"
+            android:shrinkColumns="1"
+            android:stretchColumns="1"
+            android:visibility="gone" >
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="姓名："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/userNameETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="工号："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/userCodeETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow android:visibility="gone" >
+
+                <EditText
+                    android:id="@+id/userOldNameForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/userOldCodeForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="类型："
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/userTypeSPForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/rect_gray"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="新密码："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/pwdETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:ems="10"
+                    android:inputType="numberPassword"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="确认密码："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/pwdConfirmETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:ems="10"
+                    android:inputType="numberPassword"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="添加人："
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/addUserETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="#DCDCDC"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="添加时间："
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/addTimeETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="#DCDCDC"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/tablelayout02"
+            android:layout_width="300dp"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="50dp"
+            android:shrinkColumns="0"
+            android:stretchColumns="0" >
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/addCheckBtn"
+                    android:layout_width="140dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/login_btn"
+                    android:text="增加检验员"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" >
+                </Button>
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/addAdminBtn"
+                    android:layout_width="140dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_normal_rect_black"
+                    android:text="增加管理员"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" >
+                </Button>
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/saveUserBtn"
+                    android:layout_width="140dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_normal_rect_black"
+                    android:text="保存用户"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" >
+                </Button>
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/backBtn"
+                    android:layout_width="140dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="410dp"
+                    android:text="退出"
+                    android:textColor="#000000"
+                    android:textSize="20sp" >
+                </Button>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</LinearLayout>

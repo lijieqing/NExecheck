@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
@@ -26,8 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kstech.nexecheck.R;
-import com.kstech.nexecheck.activity.HomeActivity;
-import com.kstech.nexecheck.domain.checkline.CheckLineLoadTask;
+import com.kstech.nexecheck.activity.user.CurrentUserActivity;
+import com.kstech.nexecheck.activity.user.ModPwdActivity;
+import com.kstech.nexecheck.engine.CheckLineLoadTask;
 import com.kstech.nexecheck.utils.DialogUtil;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.utils.SystemUtil;
@@ -139,8 +141,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             userManagerRowId.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-//                    Intent intent = new Intent(this, CurrentUserActivity.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(getactivity(), CurrentUserActivity.class);
+                    startActivity(intent);
                     changeStatusPopUp.dismiss();
                 }
             });
@@ -179,8 +181,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         modPwdRowId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-//                Intent intent = new Intent(this, ModPwdActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getactivity(), ModPwdActivity.class);
+                startActivity(intent);
                 changeStatusPopUp.dismiss();
             }
         });
@@ -308,6 +310,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public abstract Activity getactivity();
 
     public void updateSubtitle(String title){
+        subTitle = (TextView) findViewById(R.id.subTitle);
         subTitle.setText(title);
     }
 

@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.domain.checkline;
+package com.kstech.nexecheck.engine;
 
 import java.util.List;
 
@@ -14,6 +14,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.domain.checkline.CheckLineListAdapter;
+import com.kstech.nexecheck.domain.checkline.CheckLineManager;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.config.vo.CheckLineVO;
 import com.kstech.nexecheck.utils.Globals;

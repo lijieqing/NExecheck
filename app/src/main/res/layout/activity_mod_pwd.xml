@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityModPwd"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.user.ModPwdActivity">
+    <LinearLayout
+        android:focusableInTouchMode="true"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+    </LinearLayout>
+    <include
+        android:id="@+id/main1"
+        layout="@layout/activity_other_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <TableLayout
+            android:id="@+id/editUserTable"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="150dp"
+            android:shrinkColumns="1"
+            android:stretchColumns="1" >
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="原密码："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/oldPwdETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:ems="10"
+                    android:inputType="numberPassword"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="新密码："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/newPwdETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:ems="10"
+                    android:inputType="numberPassword"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="right"
+                    android:paddingTop="10dp"
+                    android:text="确认密码："
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/pwdConfirmETForEdit"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rect_gray"
+                    android:ems="10"
+                    android:inputType="numberPassword"
+                    android:paddingLeft="10dp"
+                    android:textSize="20sp" />
+            </TableRow>
+        </TableLayout>
+        <LinearLayout
+            android:layout_width="400dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="72dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+            <Button
+                android:id="@+id/saveUserBtn"
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_normal_rect_black"
+                android:text="保存"
+                android:textColor="#ffffff"
+                android:textSize="20sp" >
+            </Button>
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="56dp"
+                android:text="退出"
+                android:background="@drawable/btn_normal_rect_black"
+                android:textColor="#ffffff"
+                android:textSize="20sp" >
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -34,6 +34,7 @@ import com.kstech.nexecheck.domain.db.dao.CheckItemDetailDao;
 import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
+import com.kstech.nexecheck.engine.DeviceLoadTask;
 import com.kstech.nexecheck.exception.ExcException;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
@@ -62,7 +63,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private CheckItemListAdapter checkItemListAdapter;
 
     // 当前检验记录相关
-    private String excID;
+    public String excID;
     private CheckRecordEntity checkRecordEntity;
 
     //替代布局
@@ -311,25 +312,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         LinkedList<String> excIdList = CheckRecordDao.findCheckRecordByUserName(this, Globals.getCurrentUser().getName());
 
         if (!excIdList.contains(excId)) {
+            //如果权限不够就清空之前加载的
+            Globals.HomeItems.clear();
+            Globals.HomeRealtimeViews.clear();
             return;
         }
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(), checkRecordEntity.getSubdeviceId(), getApplicationContext());
-                } catch (ExcException excException) {
-                    Toast.makeText(getApplicationContext(), excException.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                    Log.e("HomeActivity", excException.getErrorMsg());
-                    handler.sendEmptyMessage(0);
-                    return;
-                }
-                excID = excId;
-                handler.sendEmptyMessage(1);
-            }
-        }.start();
-
-
-
+        new DeviceLoadTask(excId,checkRecordEntity,handler,this).execute();
     }
 }
