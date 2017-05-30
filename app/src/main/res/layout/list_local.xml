@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:gravity="center"
+        android:text="本地文件"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+    <TextView
+        android:id="@+id/tv_back"
+        android:gravity="center_vertical"
+        android:background="#d2d3d4"
+        android:text="返回上一级"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+    <ListView
+        android:id="@+id/local_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+</LinearLayout>

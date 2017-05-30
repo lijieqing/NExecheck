@@ -89,4 +89,8 @@ public class ModPwdActivity extends BaseActivity {
         }
     };
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

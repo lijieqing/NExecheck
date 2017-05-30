@@ -26,6 +26,18 @@ public class Globals {
     public static String MODELPATH = fs + "storage" + fs + "sdcard1" + fs +"Models" + fs +"model" + fs;
     public static String UPDATE = fs + "storage" + fs + "sdcard1" + fs +"MyApp" + fs+"update.apk";
     public static int HomeLastPosition = -1;
+    public static int UploatLastPosition = -1;
+
+    public static ArrayList<String> upload = new ArrayList<String>();
+    public static ArrayList<String> download = new ArrayList<String>();
+    public static String REMOTE_FILE = "";
+    public static final String LOCAL_PATH = fs + "storage" + fs + "sdcard1" + fs;
+    public static String LOCAL_CURRENT_FILE = LOCAL_PATH;
+
+
+
+
+
 
     //实时显示参数集合
     public static ArrayList<RealTimeView> HomeRealtimeViews = new ArrayList<>();

@@ -364,4 +364,9 @@ public class CurrentUserActivity extends BaseActivity {
         }
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

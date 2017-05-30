@@ -159,4 +159,8 @@ public class HistoryUserActivity extends BaseActivity {
         backBtn.setOnClickListener(backBtnListener);
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

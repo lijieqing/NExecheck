@@ -27,6 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.activity.upload.DataUploadActivity;
+import com.kstech.nexecheck.activity.upload.FileManagerActivity;
 import com.kstech.nexecheck.activity.user.CurrentUserActivity;
 import com.kstech.nexecheck.activity.user.ModPwdActivity;
 import com.kstech.nexecheck.engine.CheckLineLoadTask;
@@ -159,8 +161,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         fileDownLoadRowId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-//                Intent intent = new Intent(this, FileManagerActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getactivity(), FileManagerActivity.class);
+                startActivity(intent);
                 changeStatusPopUp.dismiss();
             }
         });
@@ -170,8 +172,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         dataUploadRowId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-//                Intent intent = new Intent(this, DataUploadActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getactivity(), DataUploadActivity.class);
+                startActivity(intent);
                 changeStatusPopUp.dismiss();
             }
         });

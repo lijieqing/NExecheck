@@ -379,7 +379,7 @@ public class DateUtil {
     }
 
     /**
-     * 根据指定的年月日小时分秒，返回一个java.Util.Date对象。
+     * 根据指定的年月日小时分秒，返回一个java.FormatUtil.Date对象。
      *
      * @param year 年
      * @param month 月 0-11
