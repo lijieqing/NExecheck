@@ -1,5 +1,6 @@
 package com.kstech.nexecheck.view.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -10,6 +11,11 @@ import android.widget.TextView;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.base.RealtimeChangeListener;
 import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
+import com.kstech.nexecheck.utils.Globals;
+
+import java.text.DecimalFormat;
+
+import J1939.J1939_DataVar_ts;
 
 
 /**
@@ -18,11 +24,12 @@ import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
 
 public class RealTimeView extends RelativeLayout implements RealtimeChangeListener{
     private RealTimeParamVO realTimeParamVO;
-    private Context context;
+    private Activity context;
     private TextView tvName ;
     private TextView tvUnit ;
     private TextView tvValue ;
-    public RealTimeView(Context context,RealTimeParamVO realTimeParamVO) {
+    private String formatValue;
+    public RealTimeView(Activity context,RealTimeParamVO realTimeParamVO) {
         super(context);
         this.context = context;
         this.realTimeParamVO = realTimeParamVO;
@@ -57,8 +64,49 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
     }
 
     @Override
-    public void onDataChanged(float value) {
-        tvValue.setText(value+"");
+    public void onDataChanged(final float value) {
+        J1939_DataVar_ts dataVar = Globals.getModelFile().getDataSetVO().getDSItem(tvName.getText().toString());
+        formatValue(dataVar);
+
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvValue.setText(formatValue+"");
+            }
+        });
+
+    }
+
+    //对接收到的数据进行精度转换
+    private void formatValue(J1939_DataVar_ts dataVar){
+        // 保留小数点位数
+        byte bDataDec = dataVar.bDataDec;
+        StringBuffer sb = new StringBuffer();
+        if (bDataDec!=0) {
+            sb.append(".");
+            for (int i=0;i < bDataDec;i++) {
+                sb.append("0");
+            }
+        }
+        DecimalFormat decimalFormat=new DecimalFormat(sb.toString());//构造方法的字符格式这里如果小数不足2位,会以0补足.
+
+        if(dataVar.isFloatType()){
+            Float fvalue = dataVar.getFloatValue();
+            formatValue = decimalFormat.format(fvalue);
+
+            if(".".equals(formatValue.substring(0,1))) {
+                formatValue = "0" + formatValue;
+            }
+            if("0".equals(formatValue)){
+                formatValue = "0";
+            }
+        }else{
+            Long lvalue = dataVar.getValue();
+            formatValue = decimalFormat.format(lvalue);
+            if(lvalue == 0) {
+                formatValue = "0" + formatValue;
+            }
+        }
     }
 
 }

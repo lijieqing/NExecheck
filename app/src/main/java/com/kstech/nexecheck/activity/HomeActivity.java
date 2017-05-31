@@ -93,13 +93,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
      * The constant j1939ProtTask.
      */
 // 1939任务
-    public  J1939_Task j1939ProtTask = null;
+    public  static J1939_Task j1939ProtTask = null;
 
     /**
      * The constant j1939CommTask.
      */
 // 1939任务
-    public  CommunicationWorker j1939CommTask = null;
+    public  static CommunicationWorker j1939CommTask = null;
 
     Handler handler = new Handler(){
         @Override

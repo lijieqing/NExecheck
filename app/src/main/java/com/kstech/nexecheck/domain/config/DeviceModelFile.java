@@ -1,5 +1,6 @@
 package com.kstech.nexecheck.domain.config;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -250,7 +251,7 @@ public class DeviceModelFile {
 	 * @return the device model file
 	 * @throws ExcException the exc exception
 	 */
-	public static DeviceModelFile readFromFile(String filePath, Context context) throws ExcException {
+	public static DeviceModelFile readFromFile(String filePath, Activity context) throws ExcException {
 		DeviceModelFile result = new DeviceModelFile();
 
 		Document document;
@@ -298,7 +299,7 @@ public class DeviceModelFile {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	private static void parseRealTimeSet(DeviceModelFile result, Element root,Context context) {
+	private static void parseRealTimeSet(DeviceModelFile result, Element root,Activity context) {
 		// 解析RealTimeParam
 		Element realTimeSet = root.element("RealTimeSet");
 		// 获取RealTimeSet节点 下的 RealTimeParam 节点集合

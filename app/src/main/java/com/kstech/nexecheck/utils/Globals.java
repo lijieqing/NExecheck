@@ -74,7 +74,7 @@ public class Globals {
      * @param subDeviceId 子机型ID
      * @throws ExcException
      */
-    public static void loadDeviceModelFile(String deviceId,String subDeviceId,Context context) throws ExcException {
+    public static void loadDeviceModelFile(String deviceId,String subDeviceId,Activity context) throws ExcException {
         Globals.HomeRealtimeViews.clear();
 
         String fileName = deviceId;
