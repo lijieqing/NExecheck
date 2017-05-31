@@ -85,4 +85,5 @@
     <string name="unpassConfirm">确认不合格吗？</string>
     <string name="forcepassConfirm">确认强制合格吗？</string>
     <string name="noRealTimeData">----</string>
+    <string name="createoropenrecord">请新建机型记录或打开机型记录</string>
 </resources>

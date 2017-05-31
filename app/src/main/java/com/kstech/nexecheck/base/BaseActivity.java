@@ -56,6 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private TableRow dataUploadRowId, userManagerRowId, modPwdRowId,
             setCheckLineRowId, exitSystemRowId, fileDownLoadRowId, dataBaseRowID;
 
+    //// TODO: 2017/5/31 homeactivity 对于fragmen集合操作 onbackpress
     protected LinkedList<BaseFragment> baseFragments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -316,19 +317,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         subTitle.setText(title);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (baseFragments.size()>0){
-            for (BaseFragment baseFragment : baseFragments) {
-                if (baseFragment.isVisible()){
-                    getFragmentManager().beginTransaction().remove(baseFragment).commit();
 
-                }
-            }
-        }else {
-            DialogUtil.showDialog(getactivity(),"000",false);
-        }
-
-
-    }
 }

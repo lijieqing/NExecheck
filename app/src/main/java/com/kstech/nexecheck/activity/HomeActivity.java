@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,10 +36,13 @@ import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDao;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDetailDao;
 import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
+import com.kstech.nexecheck.domain.db.dbenum.CheckItemStatusEnum;
+import com.kstech.nexecheck.domain.db.dbenum.CheckRecordStatusEnum;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
 import com.kstech.nexecheck.engine.DeviceLoadTask;
 import com.kstech.nexecheck.exception.ExcException;
+import com.kstech.nexecheck.utils.DateUtil;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
 import com.kstech.nexecheck.view.fragment.HomeCheckEntityFragment;
@@ -125,8 +129,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         initMenu("");
         initViewComp();
         initListener();
-        initRecordItem(ConfigFileManager.getInstance(this).getLastExcid());
-        fragmentManager.beginTransaction().add(R.id.ll_home_show, homeCheckEntityFragment).commit();
+        initRecordItem(ConfigFileManager.getInstance(this).getLastExcid(),true);
     }
 
     @Override
@@ -308,6 +311,139 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                     }
                 });
                 break;
+            case R.id.wholePassBtn:
+                if (checkRecordEntity == null){
+                    return;
+                }
+                if("未完成".equals(checkRecordEntity.getCheckStatus())){
+
+                    //未检测 或 未完成 无法合格
+                    List<CheckItemEntity> itemList = checkRecordEntity.getCheckItemList();
+                    for (CheckItemEntity item : itemList) {
+                        String status = item.getCheckStatus();
+                        if ((status.equals(CheckItemStatusEnum.UN_CHECK.getCode()) || status.equals(CheckItemStatusEnum.UN_FINISH.getCode())) && !item.getCheckDesc().contains("ignore$")) {
+                            new AlertDialog.Builder(getactivity())
+                                    .setMessage(R.string.recordNotFinish)
+                                    .setNeutralButton(R.string.str_ok, null).show();
+                            return;
+                        }
+                    }
+                    new AlertDialog.Builder(getactivity())
+                            .setTitle(R.string.diaLogWakeup)
+                            .setMessage(R.string.passConfirm)
+                            .setNegativeButton(R.string.str_close, null)
+                            .setPositiveButton(R.string.str_ok,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            updateWholeArea(CheckRecordStatusEnum.PASS.getCode(),CheckRecordStatusEnum.PASS.getName());
+                                            checkRecordEntity.setCheckStatus(CheckRecordStatusEnum.PASS.getName());
+                                        }
+                                    }).show();
+
+                    return;
+                }else {
+                    new AlertDialog.Builder(getactivity())
+                            .setMessage(R.string.recordAlreadyFinish)
+                            .setNeutralButton(R.string.str_ok, null).show();
+                }
+                break;
+            case R.id.wholeNoPassBtn:
+                if (checkRecordEntity == null){
+                    return;
+                }
+                if("未完成".equals(checkRecordEntity.getCheckStatus())){
+
+                    //未检测 或 未完成 无法合格
+                    List<CheckItemEntity> itemList = checkRecordEntity.getCheckItemList();
+                    Log.e("CBHomeActivity",itemList.size()+"-------------");
+                    for (CheckItemEntity item : itemList) {
+                        String status = item.getCheckStatus();
+                        if ((status.equals(CheckItemStatusEnum.UN_CHECK.getCode()) || status.equals(CheckItemStatusEnum.UN_FINISH.getCode())) && !item.getCheckDesc().contains("ignore$")) {
+                            new AlertDialog.Builder(getactivity())
+                                    .setMessage(R.string.recordNotFinish)
+                                    .setNeutralButton(R.string.str_ok, null).show();
+                            return;
+                        }
+                    }
+                    new AlertDialog.Builder(getactivity())
+                            .setTitle(R.string.diaLogWakeup)
+                            .setMessage(R.string.unpassConfirm)
+                            .setNegativeButton(R.string.str_close, null)
+                            .setPositiveButton(R.string.str_ok,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            updateWholeArea(CheckRecordStatusEnum.UN_PASS.getCode(), CheckRecordStatusEnum.UN_PASS.getName());
+                                            checkRecordEntity.setCheckStatus(CheckRecordStatusEnum.UN_PASS.getName());
+                                        }
+                                    }).show();
+
+                    return;
+                }else {
+                    new AlertDialog.Builder(getactivity())
+                            .setMessage(R.string.recordAlreadyFinish)
+                            .setNeutralButton(R.string.str_ok, null).show();
+                }
+                break;
+            case R.id.wholeForcePassBtn:
+                if (checkRecordEntity == null){
+                    return;
+                }
+                if("未完成".equals(checkRecordEntity.getCheckStatus())){
+                    //未检测 或 未完成 无法合格
+                    List<CheckItemEntity> itemList = checkRecordEntity.getCheckItemList();
+                    for (CheckItemEntity item : itemList) {
+                        String status = item.getCheckStatus();
+                        if ((status.equals(CheckItemStatusEnum.UN_CHECK.getCode()) || status.equals(CheckItemStatusEnum.UN_FINISH.getCode())) && !item.getCheckDesc().contains("ignore$")) {
+                            new AlertDialog.Builder(getactivity())
+                                    .setMessage(R.string.recordNotFinish)
+                                    .setNeutralButton(R.string.str_ok, null).show();
+                            return;
+                        }
+                    }
+                    new AlertDialog.Builder(getactivity())
+                            .setTitle(R.string.diaLogWakeup)
+                            .setMessage(R.string.forcepassConfirm)
+                            .setNegativeButton(R.string.str_close, null)
+                            .setPositiveButton(R.string.str_ok,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            updateWholeArea(CheckRecordStatusEnum.FORCE_PASS.getCode(), CheckRecordStatusEnum.FORCE_PASS.getName());
+                                            checkRecordEntity.setCheckStatus(CheckRecordStatusEnum.FORCE_PASS.getName());
+                                        }
+                                    }).show();
+
+                    return;
+                }else if("合格".equals(checkRecordEntity.getCheckStatus()) || "强制合格".equals(checkRecordEntity.getCheckStatus())){
+                    Log.e("CB","else"+checkRecordEntity.getCheckStatus());
+                    new AlertDialog.Builder(getactivity())
+                            .setMessage(R.string.recordAlreadyhegeFinish)
+                            .setNeutralButton(R.string.str_ok, null).show();
+                } else if("未合格".equals(checkRecordEntity.getCheckStatus())){
+                    new AlertDialog.Builder(getactivity())
+                            .setTitle(R.string.diaLogWakeup)
+                            .setMessage(R.string.forcepassConfirm)
+                            .setNegativeButton(R.string.str_close, null)
+                            .setPositiveButton(R.string.str_ok,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            updateWholeArea(CheckRecordStatusEnum.FORCE_PASS.getCode(), CheckRecordStatusEnum.FORCE_PASS.getName());
+                                            checkRecordEntity.setCheckStatus(CheckRecordStatusEnum.FORCE_PASS.getName());
+                                        }
+                                    }).show();
+                }
+
+
+                break;
+            default:
+                break;
         }
     }
 
@@ -316,9 +452,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
             if (showFg != null) {
-                ft.hide(showFg).add(rID, f, "TAG" + tagPage);
+                ft.hide(showFg).add(rID, f, tagPage);
             } else {
-                ft.add(rID, f, "TAG" + tagPage);
+                ft.add(rID, f, tagPage);
             }
         } else { //已经加载进容器里去了....
             if (showFg != null) {
@@ -334,11 +470,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
 
     public void updateHome(String excID) {
         ConfigFileManager.getInstance(this).saveLastExcid(excID);
+
         checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this, excID);
+
+        List<CheckItemEntity> itemList = CheckItemDao.getCheckItemListFromDB(excID,getactivity());
+        checkRecordEntity.setCheckItemList(itemList);
+
         Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(), checkRecordEntity.getSubdeviceId(), this);
+
         deviceNameTV.setText(checkRecordEntity.getDeviceName());
         subdeviceNameTV.setText(checkRecordEntity.getSubdeviceName());
         excIdTV.setText(checkRecordEntity.getExcId());
+
         Globals.HomeItems = (ArrayList<CheckItemVO>) Globals.getModelFile().getCheckItemList();
         Globals.HomeLastPosition = -1;
         checkItemListAdapter.notifyDataSetChanged();
@@ -346,7 +489,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
             homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
     }
 
-    public void initRecordItem(final String excId) {
+    public void initRecordItem(final String excId,boolean restart) {
         // 初始化的时候excId 为 ""
         if (excId == null || excId.equals("")) {
             clear();
@@ -364,8 +507,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
             clear();
             return;
         }
+        if (restart){
+            new DeviceLoadTask(excId,checkRecordEntity,handler,this).execute();
+        }
         showFragment(homeCheckEntityFragment,"HomeCheckEntity",R.id.ll_home_show);
-        new DeviceLoadTask(excId,checkRecordEntity,handler,this).execute();
     }
 
     @Override
@@ -387,9 +532,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     protected void onResume() {
         super.onResume();
         if (checkRecordEntity != null ) {
-            initRecordItem(checkRecordEntity.getExcId());
+            initRecordItem(checkRecordEntity.getExcId(),false);
         } else {
-            initRecordItem(null);
+            initRecordItem(null,false);
         }
     }
 
@@ -406,12 +551,26 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         Globals.HomeRealtimeViews.clear();
         if (homeCheckEntityFragment.myAdapter!=null)homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
 
-        fragmentManager.beginTransaction().hide(homeCheckEntityFragment).commit();
-
         wholeCheckStatusTV.setText("");
         wholeCheckerNameTV.setText("");
         wholeFinishTimeTV.setText("");
         wholeSumTimesTV.setText("");
         wholeCheckDescTV.setText("");
+    }
+
+    /**
+     * 更新整机显示区域内容，更新数据库
+     *
+     * @param stateCode the state code
+     * @param stateName the state name
+     */
+    public void updateWholeArea(String stateCode,String stateName){
+        if (checkRecordEntity!=null) {
+            String finishTime = DateUtil.getCurrentEndMin();
+            CheckRecordDao.updateCheckStatus(getactivity(),checkRecordEntity.getExcId(), stateCode,finishTime);
+            wholeCheckStatusTV.setText(stateName);
+            wholeCheckerNameTV.setText(Globals.getCurrentUser().getName());
+            wholeFinishTimeTV.setText(finishTime);
+        }
     }
 }

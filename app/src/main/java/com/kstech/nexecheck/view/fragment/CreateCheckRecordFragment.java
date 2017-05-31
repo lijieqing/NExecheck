@@ -149,11 +149,12 @@ public class CreateCheckRecordFragment extends BaseFragment {
 
                     Toast.makeText(getActivity(), R.string.saveSuccess, Toast.LENGTH_LONG).show();
 
-                    ((HomeActivity)activity).homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
+                    if (((HomeActivity)activity).homeCheckEntityFragment.myAdapter != null)
+                        ((HomeActivity)activity).homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
 
                     ((HomeActivity)activity).showFg = null;
                     ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
-                    ((HomeActivity)activity).initRecordItem(excIdET.getText().toString());
+                    ((HomeActivity)activity).initRecordItem(excIdET.getText().toString(),true);
 
                     //还原默认值
                     excIdET.setText("");

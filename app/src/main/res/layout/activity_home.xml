@@ -258,14 +258,19 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_weight="8">
-                <LinearLayout
+                <FrameLayout
                     android:id="@+id/ll_home_show"
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="4">
+                    <TextView
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:text="@string/createoropenrecord"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
-                </LinearLayout>
+                </FrameLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"

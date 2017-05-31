@@ -2,6 +2,7 @@ package com.kstech.nexecheck.domain.db.entity;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,7 +83,7 @@ public class CheckRecordEntity implements Serializable {
 	 */
 	private int sumTimesNoPass;
 
-	private List<CheckItemEntity> checkItemList;
+	private List<CheckItemEntity> checkItemList = new ArrayList<>();
 
 	public CheckItemEntity getCheckItem(String itemId) {
 		for (CheckItemEntity item : checkItemList) {
