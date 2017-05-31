@@ -24,13 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.HomeActivity"></activity>
-        <activity android:name=".activity.user.CurrentUserActivity"></activity>
-        <activity android:name=".activity.user.HistoryUserActivity"></activity>
-        <activity android:name=".activity.user.ModPwdActivity"></activity>
-        <activity android:name=".activity.upload.DataUploadActivity"></activity>
-        <activity android:name=".activity.upload.FileManagerActivity"></activity>
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.user.CurrentUserActivity" />
+        <activity android:name=".activity.user.HistoryUserActivity" />
+        <activity android:name=".activity.user.ModPwdActivity" />
+        <activity android:name=".activity.upload.DataUploadActivity" />
+        <activity android:name=".activity.upload.FileManagerActivity" />
 
+        <service
+            android:name=".engine.J1939TaskService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

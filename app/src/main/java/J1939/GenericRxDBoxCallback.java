@@ -28,7 +28,7 @@ public class GenericRxDBoxCallback implements IRxDBoxCallback {
 		}
 		// TODO: 2017/5/24  监听回调
 		pDD.notifyListener(fValue);
-		Log.e("GenericRxDBoxCallback", "fValue");
+		Log.e("GenericRxDBoxCallback", fValue+"");
 	}
 
 

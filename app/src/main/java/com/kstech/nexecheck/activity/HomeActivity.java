@@ -92,14 +92,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     /**
      * The constant j1939ProtTask.
      */
-// 1939任务
-    public  static J1939_Task j1939ProtTask = null;
-
-    /**
-     * The constant j1939CommTask.
-     */
-// 1939任务
-    public  static CommunicationWorker j1939CommTask = null;
 
     Handler handler = new Handler(){
         @Override
@@ -357,21 +349,23 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     public void initRecordItem(final String excId) {
         // 初始化的时候excId 为 ""
         if (excId == null || excId.equals("")) {
+            clear();
             return;
         }
         checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this, excId);
         if (checkRecordEntity == null) {
+            clear();
             return;
         }
         LinkedList<String> excIdList = CheckRecordDao.findCheckRecordByUserName(this, Globals.getCurrentUser().getName());
 
         if (!excIdList.contains(excId)) {
             //如果权限不够就清空之前加载的
-            Globals.HomeItems.clear();
-            Globals.HomeRealtimeViews.clear();
+            clear();
             return;
         }
-        new DeviceLoadTask(excId,checkRecordEntity,handler,j1939ProtTask,j1939CommTask,this).execute();
+        showFragment(homeCheckEntityFragment,"HomeCheckEntity",R.id.ll_home_show);
+        new DeviceLoadTask(excId,checkRecordEntity,handler,this).execute();
     }
 
     @Override
@@ -387,5 +381,37 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (checkRecordEntity != null ) {
+            initRecordItem(checkRecordEntity.getExcId());
+        } else {
+            initRecordItem(null);
+        }
+    }
+
+    private void clear() {
+        deviceNameTV.setText("");
+        subdeviceNameTV.setText("");
+        excIdTV.setText("");
+        //检测项目列表清空
+        Globals.HomeItems.clear();
+        checkItemListAdapter.notifyDataSetChanged();
+        //当前检测项详情清空
+        if (homeCheckEntityFragment.currentCheckItemView!=null) homeCheckEntityFragment.currentCheckItemView.clear();
+        //实时显示区域清空
+        Globals.HomeRealtimeViews.clear();
+        if (homeCheckEntityFragment.myAdapter!=null)homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
+
+        fragmentManager.beginTransaction().hide(homeCheckEntityFragment).commit();
+
+        wholeCheckStatusTV.setText("");
+        wholeCheckerNameTV.setText("");
+        wholeFinishTimeTV.setText("");
+        wholeSumTimesTV.setText("");
+        wholeCheckDescTV.setText("");
     }
 }

@@ -279,7 +279,7 @@ public class CommunicationWorker extends Thread {
                         ssid = wifiinfo.getSSID();
                         Log.e("LOGIN","---S S I D---"+ssid);
                     }
-                    netWorkStatusListener.onStatusChanged(true);
+                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(true);
                     Log.e("hahah", "before create socket");
                     if("\"Dlink_DWL2000\"".equals(ssid) || "\"DLINK_DWL2000_01\"".equals(ssid)|| "\"TP-LINK_Outdoor_E85A88\"".equals(ssid)){
                         Log.e("hahah", "serverIPAddress" + serverIPAddress);
@@ -292,9 +292,9 @@ public class CommunicationWorker extends Thread {
                     in = sockTcp.getInputStream();
                     Out = sockTcp.getOutputStream();
                     lastRecvTime = System.currentTimeMillis();
-                    netWorkStatusListener.onStatusChanged(false);
+                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(false);
                 } else {
-                    netWorkStatusListener.onStatusChanged(true);
+                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(true);
                     Thread.sleep(1000);
                     continue;
                 }

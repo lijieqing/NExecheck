@@ -93,8 +93,6 @@ public class CheckItemSingleView {
 				}
 			}
 		});
-//		Globals.values = AppContext.getModelFile().getCheckItemVO(checkItem.getItemId()).getParamNameList();
-//		Globals.content = CheckItemDetailDao.getCheckItemDetailList(checkItem.getExcId(), checkItem.getItemId());
 
 		// 拼装列表 参数头信息
 		itemTableView.setCheckItemParamHeaderTV(Globals.getModelFile().getCheckItemVO(checkItem.getItemId()).getParamNameList());

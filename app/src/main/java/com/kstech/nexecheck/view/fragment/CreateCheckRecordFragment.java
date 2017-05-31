@@ -1,13 +1,10 @@
 package com.kstech.nexecheck.view.fragment;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +28,6 @@ import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
 import com.kstech.nexecheck.exception.ExcException;
 import com.kstech.nexecheck.utils.DeviceUtil;
 import com.kstech.nexecheck.utils.Globals;
-import com.kstech.nexecheck.view.widget.DividerItemDecoration;
-
 import java.util.ArrayList;
 import java.util.List;
 
