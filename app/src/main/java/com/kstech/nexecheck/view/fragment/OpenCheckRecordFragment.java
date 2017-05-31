@@ -124,7 +124,7 @@ public class OpenCheckRecordFragment extends BaseFragment {
             } else {
                 String excId = ((TextView)currentSelectedRecord.getChildAt(4)).getText().toString();
                 ((HomeActivity)activity).initRecordItem(excId,true);
-                ((HomeActivity)activity).showFg = null;
+                ((HomeActivity)activity).showChFg = null;
                 ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction().remove(OpenCheckRecordFragment.this).commit();
             }
@@ -135,7 +135,7 @@ public class OpenCheckRecordFragment extends BaseFragment {
      */
     View.OnClickListener openCheckRecordExitBtnListener = new View.OnClickListener() {
         public void onClick(View arg0) {
-            ((HomeActivity)activity).showFg = null;
+            ((HomeActivity)activity).showChFg = null;
             ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
             getFragmentManager().beginTransaction().remove(OpenCheckRecordFragment.this).commit();
         }

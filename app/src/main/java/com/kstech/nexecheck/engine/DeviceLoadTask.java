@@ -49,7 +49,7 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
         } catch (ExcException excException) {
             Toast.makeText(context, excException.getErrorMsg(), Toast.LENGTH_SHORT).show();
             Log.e("HomeActivity", excException.getErrorMsg());
-            handler.sendEmptyMessage(0);
+            handler.sendEmptyMessage(2);
             return null;
         }
         context.excID = InExc;

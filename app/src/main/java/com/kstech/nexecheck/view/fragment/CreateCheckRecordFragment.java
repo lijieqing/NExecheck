@@ -126,7 +126,7 @@ public class CreateCheckRecordFragment extends BaseFragment {
                 excIdET.setText("");
                 currentPosition = -1;
                 currentSubPosition = -1;
-                ((HomeActivity)activity).showFg = null;
+                ((HomeActivity)activity).showChFg = null;
                 ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction().remove(CreateCheckRecordFragment.this).commit();
             }
@@ -152,7 +152,7 @@ public class CreateCheckRecordFragment extends BaseFragment {
                     if (((HomeActivity)activity).homeCheckEntityFragment.myAdapter != null)
                         ((HomeActivity)activity).homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
 
-                    ((HomeActivity)activity).showFg = null;
+                    ((HomeActivity)activity).showChFg = null;
                     ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
                     ((HomeActivity)activity).initRecordItem(excIdET.getText().toString(),true);
 

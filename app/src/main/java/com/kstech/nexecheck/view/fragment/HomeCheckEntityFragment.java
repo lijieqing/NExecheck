@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.adapter.MyAdapter;
 import com.kstech.nexecheck.adapter.RealTimeGridViewAdapter;
 import com.kstech.nexecheck.base.BaseFragment;
@@ -47,5 +48,11 @@ public class HomeCheckEntityFragment extends BaseFragment {
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(myAdapter);
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((HomeActivity)activity).showFg = null;
     }
 }

@@ -83,6 +83,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
 
     //fragment 相关变量
     public Fragment showFg = null;
+    public Fragment showChFg = null;
     private FragmentManager fragmentManager;
     public HomeCheckEntityFragment homeCheckEntityFragment;
     public CreateCheckRecordFragment createCheckRecordFragment;
@@ -106,10 +107,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
 
                     // 初始化整机检验状态
                     initWholeCheckStatus(checkRecordEntity);
-
-
                     break;
                 case 2:
+                    initRecordItem(null,false);
                     break;
             }
         }
@@ -125,6 +125,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         openCheckRecordFragment = new OpenCheckRecordFragment();
         createCheckRecordFragment.setActivity(this);
         openCheckRecordFragment.setActivity(this);
+        homeCheckEntityFragment.setActivity(this);
 
         initMenu("");
         initViewComp();
@@ -258,11 +259,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         switch (v.getId()) {
             case R.id.btnCreateCheckRecord:
                 llCheck.setVisibility(View.VISIBLE);
-                showFragment(createCheckRecordFragment, "CreateFragment", R.id.ll_check);
+                showCheckFragment(createCheckRecordFragment, "CreateFragment", R.id.ll_check);
                 break;
             case R.id.btnOpenCheckRecord:
                 llCheck.setVisibility(View.VISIBLE);
-                showFragment(openCheckRecordFragment, "OpenFragment", R.id.ll_check);
+                showCheckFragment(openCheckRecordFragment, "OpenFragment", R.id.ll_check);
                 break;
             case R.id.liuchengCheckBtn:
                 //checkButHandle("liucheng");
@@ -448,6 +449,26 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     }
 
     //fragment 切换
+    private void showCheckFragment(BaseFragment f, String tagPage, int rID) {
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
+            if (showChFg != null) {
+                ft.hide(showChFg).add(rID, f, tagPage);
+            } else {
+                ft.add(rID, f, tagPage);
+            }
+        } else { //已经加载进容器里去了....
+            if (showChFg != null) {
+                ft.hide(showChFg).show(f);
+            } else {
+                ft.show(f);
+            }
+        }
+        showChFg = f;
+        ft.commit();
+        if (!baseFragments.contains(f)) baseFragments.add(f);
+    }
+    //fragment 切换
     private void showFragment(BaseFragment f, String tagPage, int rID) {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
@@ -470,11 +491,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
 
     public void updateHome(String excID) {
         ConfigFileManager.getInstance(this).saveLastExcid(excID);
-
-        checkRecordEntity = CheckRecordDao.findCheckRecordByExcId(this, excID);
-
-        List<CheckItemEntity> itemList = CheckItemDao.getCheckItemListFromDB(excID,getactivity());
-        checkRecordEntity.setCheckItemList(itemList);
 
         Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(), checkRecordEntity.getSubdeviceId(), this);
 
@@ -500,6 +516,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
             clear();
             return;
         }
+        checkRecordEntity.setCheckItemList(CheckItemDao.getCheckItemListFromDB(excId,getactivity()));
         LinkedList<String> excIdList = CheckRecordDao.findCheckRecordByUserName(this, Globals.getCurrentUser().getName());
 
         if (!excIdList.contains(excId)) {
@@ -550,7 +567,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         //实时显示区域清空
         Globals.HomeRealtimeViews.clear();
         if (homeCheckEntityFragment.myAdapter!=null)homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
-
+        fragmentManager.beginTransaction().remove(homeCheckEntityFragment).commit();
         wholeCheckStatusTV.setText("");
         wholeCheckerNameTV.setText("");
         wholeFinishTimeTV.setText("");
