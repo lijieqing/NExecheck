@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -27,6 +28,8 @@ import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.adapter.CheckItemListAdapter;
 import com.kstech.nexecheck.base.BaseFragment;
+import com.kstech.nexecheck.base.NetWorkStatusListener;
+import com.kstech.nexecheck.domain.communication.CommunicationWorker;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDao;
@@ -46,9 +49,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import J1939.J1939_Task;
+
 import static java.lang.Thread.State.TERMINATED;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener {
+public class HomeActivity extends BaseActivity implements View.OnClickListener,NetWorkStatusListener {
 
     // 主页面组件变量
     private Button btnCreateCheckRecord, btnOpenCheckRecord, liuchengCheckBtn,
@@ -57,6 +62,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             wholeCheckStatusTV, wholeCheckerNameTV, wholeFinishTimeTV,
             wholeSumTimesTV, wholeCheckDescTV;
     private TableRow wholeCheckDescTableRow;
+
+    private ImageView connStatus;
 
     // 当前机型检查项目列表
     private ListView currentMachineCheckItemList;
@@ -82,6 +89,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
      */
     private CheckItemEntity checkItemEntity;
 
+    /**
+     * The constant j1939ProtTask.
+     */
+// 1939任务
+    public  J1939_Task j1939ProtTask = null;
+
+    /**
+     * The constant j1939CommTask.
+     */
+// 1939任务
+    public  CommunicationWorker j1939CommTask = null;
+
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -91,6 +110,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
                     // 初始化整机检验状态
                     initWholeCheckStatus(checkRecordEntity);
+
+
                     break;
                 case 2:
                     break;
@@ -148,6 +169,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         wholeForcePassBtn = (Button) findViewById(R.id.wholeForcePassBtn);
 
         llCheck = (LinearLayout) findViewById(R.id.ll_check);
+
+        connStatus = (ImageView) findViewById(R.id.connStatusId);
         //检测项目列表相关初始化
         currentMachineCheckItemList = (ListView) findViewById(R.id.currentMachineCheckItemList);
         checkItemListAdapter = new CheckItemListAdapter(this);
@@ -331,7 +354,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
     }
 
-    private void initRecordItem(final String excId) {
+    public void initRecordItem(final String excId) {
         // 初始化的时候excId 为 ""
         if (excId == null || excId.equals("")) {
             return;
@@ -348,6 +371,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             Globals.HomeRealtimeViews.clear();
             return;
         }
-        new DeviceLoadTask(excId,checkRecordEntity,handler,this).execute();
+        new DeviceLoadTask(excId,checkRecordEntity,handler,j1939ProtTask,j1939CommTask,this).execute();
+    }
+
+    @Override
+    public void onStatusChanged(final boolean off) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (off){
+                    connStatus.setBackgroundResource(R.drawable.link_no);
+                }else {
+                    connStatus.setBackgroundResource(R.drawable.link);
+                }
+            }
+        });
+
     }
 }

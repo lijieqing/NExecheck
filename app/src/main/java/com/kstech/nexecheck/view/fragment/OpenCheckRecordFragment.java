@@ -123,7 +123,7 @@ public class OpenCheckRecordFragment extends BaseFragment {
                         .setNeutralButton(R.string.str_ok, null).show();
             } else {
                 String excId = ((TextView)currentSelectedRecord.getChildAt(4)).getText().toString();
-                ((HomeActivity)activity).updateHome(excId);
+                ((HomeActivity)activity).initRecordItem(excId);
                 ((HomeActivity)activity).showFg = null;
                 ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
                 getFragmentManager().beginTransaction().remove(OpenCheckRecordFragment.this).commit();

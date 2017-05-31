@@ -158,7 +158,7 @@ public class CreateCheckRecordFragment extends BaseFragment {
 
                     ((HomeActivity)activity).showFg = null;
                     ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
-                    ((HomeActivity)activity).updateHome(excIdET.getText().toString());
+                    ((HomeActivity)activity).initRecordItem(excIdET.getText().toString());
 
                     //还原默认值
                     excIdET.setText("");

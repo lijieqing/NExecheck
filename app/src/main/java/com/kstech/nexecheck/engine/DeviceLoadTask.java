@@ -20,6 +20,7 @@ import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.domain.checkline.CheckLineListAdapter;
 import com.kstech.nexecheck.domain.checkline.CheckLineManager;
+import com.kstech.nexecheck.domain.communication.CommunicationWorker;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.config.vo.CheckLineVO;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
@@ -28,20 +29,33 @@ import com.kstech.nexecheck.utils.Globals;
 
 import java.util.List;
 
+import J1939.J1939_Task;
+
+import static java.lang.Thread.State.TERMINATED;
+
 public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
     // 后面尖括号内分别是参数（线程休息时间），进度(publishProgress用到)，返回值 类型
 
     private ProgressDialog mProgressDialog = null;
     private CheckRecordEntity checkRecordEntity = null;
-    private BaseActivity context;
+    private HomeActivity context;
     private Handler handler;
     private String InExc;
 
-    public DeviceLoadTask(String InExc,CheckRecordEntity checkRecordEntity, Handler handler, BaseActivity context) {
+    // 1939任务
+    public  J1939_Task j1939ProtTask = null;
+
+    // 1939任务
+    public CommunicationWorker j1939CommTask = null;
+
+    public DeviceLoadTask(String InExc,CheckRecordEntity checkRecordEntity, Handler handler,
+                          J1939_Task j1939ProtTask, CommunicationWorker j1939CommTask, HomeActivity context) {
         this.checkRecordEntity = checkRecordEntity;
         this.context = context;
         this.handler = handler;
         this.InExc = InExc;
+        this.j1939CommTask = j1939CommTask;
+        this.j1939ProtTask = j1939ProtTask;
     }
     /**
      * 主要实现类 执行时机：在onPreExecute 方法执行后马上执行，该方法运行在后台线程中 作用：主要负责执行那些很耗时的后台处理工作。可以调用
@@ -60,8 +74,44 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
             handler.sendEmptyMessage(0);
             return null;
         }
-        ((HomeActivity)context).excID = InExc;
+        context.excID = InExc;
         handler.sendEmptyMessage(1);
+        SystemClock.sleep(1000);
+        publishProgress("msg");
+        // 配置文件加载后需要重新初始化1939任务，任务中包括实时参数的增量初始化
+        if (j1939ProtTask != null && j1939ProtTask.isRunning) {
+            // 停止通讯任务
+            j1939CommTask.setStop(true);
+            while (TERMINATED != j1939CommTask.getState()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // 停止协议任务
+            j1939ProtTask.setStop(true);
+            while(TERMINATED != j1939ProtTask.getState()){
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        j1939ProtTask = new J1939_Task();
+        j1939ProtTask.Init();
+        // 启动协议任务
+        publishProgress("pro");
+        SystemClock.sleep(1000);
+        // 启动通讯任务
+        j1939CommTask = new CommunicationWorker("192.168.1.178", 4001,context);
+        j1939CommTask.setNetWorkStatusListener(context);
+        Log.e("hahah","j1939CommTask start");
+        publishProgress("comm");
+
         SystemClock.sleep(1000);
         return null;
     }
@@ -100,7 +150,17 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
     protected void onProgressUpdate(String... values) {
         // mTextView.setText(values[0]+"%");
         super.onProgressUpdate(values);
-
+        if ("msg".equals(values[0])){
+            mProgressDialog.setMessage("正在初始化通讯线程，请稍等。。。");
+        }
+        if ("pro".equals(values[0])){
+            j1939ProtTask.start();
+            mProgressDialog.setMessage("正在启动协议线程，请稍等。。。");
+        }
+        if ("comm".equals(values[0])){
+            j1939CommTask.start();
+            mProgressDialog.setMessage("正在启动通讯线程，请稍等。。。");
+        }
     }
 
     /*

@@ -47,7 +47,7 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
             tvName.setText(realTimeParamVO.getName());
             tvUnit.setText(realTimeParamVO.getUnit());
             //// TODO: 2017/5/25 撤销测试代码
-            tvValue.setText("382.14");
+            tvValue.setText("----");
         }
         this.addView(view);
     }

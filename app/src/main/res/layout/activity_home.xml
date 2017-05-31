@@ -128,95 +128,99 @@
                         android:layout_marginLeft="5dp"
                         android:text="@string/btn_open" />
                 </LinearLayout>
-
-                <LinearLayout
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
                     android:background="#303030"
-                    android:orientation="horizontal" >
-
-                    <TableLayout
-                        android:layout_width="wrap_content"
+                    android:scrollbars="vertical">
+                    <LinearLayout
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp" >
+                        android:background="#303030"
+                        android:orientation="horizontal" >
 
-                        <TableRow
+                        <TableLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp" >
+                            android:padding="5dp" >
 
-                            <TextView
-                                android:layout_width="80dp"
+                            <TableRow
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="机        型:"
-                                android:textColor="#ffffff"
-                                android:theme="@style/fontSize15" />
+                                android:layout_marginTop="10dp" >
 
-                            <TextView
-                                android:id="@+id/deviceNameTV"
-                                android:layout_width="100dp"
+                                <TextView
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="机        型:"
+                                    android:textColor="#ffffff"
+                                    android:theme="@style/fontSize15" />
+
+                                <TextView
+                                    android:id="@+id/deviceNameTV"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:gravity="left"
+                                    android:textColor="#ffffff"
+                                    android:theme="@style/fontSize15" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:gravity="left"
-                                android:textColor="#ffffff"
-                                android:theme="@style/fontSize15" />
-                        </TableRow>
+                                android:layout_marginTop="10dp" >
 
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp" >
+                                <TextView
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="子  机  型:"
+                                    android:textColor="#ffffff"
+                                    android:theme="@style/fontSize15" />
 
-                            <TextView
-                                android:layout_width="80dp"
+                                <TextView
+                                    android:id="@+id/subdeviceNameTV"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:gravity="left"
+                                    android:textColor="#ffffff"
+                                    android:theme="@style/fontSize15" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="子  机  型:"
-                                android:textColor="#ffffff"
-                                android:theme="@style/fontSize15" />
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="10dp" >
 
-                            <TextView
-                                android:id="@+id/subdeviceNameTV"
-                                android:layout_width="100dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:gravity="left"
-                                android:textColor="#ffffff"
-                                android:theme="@style/fontSize15" />
-                        </TableRow>
+                                <TextView
+                                    android:layout_width="80dp"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="出厂编号:"
+                                    android:textColor="#ffffff"
+                                    android:theme="@style/fontSize15" />
 
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginTop="10dp" >
-
-                            <TextView
-                                android:layout_width="80dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="出厂编号:"
-                                android:textColor="#ffffff"
-                                android:theme="@style/fontSize15" />
-
-                            <TextView
-                                android:id="@+id/excIdTV"
-                                android:layout_width="100dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:gravity="left"
-                                android:textColor="#ffffff"
-                                android:theme="@style/fontSize15" />
-                        </TableRow>
-                    </TableLayout>
-                </LinearLayout>
-
+                                <TextView
+                                    android:id="@+id/excIdTV"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:gravity="left"
+                                    android:textColor="#ffffff"
+                                    android:theme="@style/fontSize15" />
+                            </TableRow>
+                        </TableLayout>
+                    </LinearLayout>
+                </ScrollView>
                 <LinearLayout
                     android:layout_width="210dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="2dp"
                     android:layout_weight="6.8"
                     android:background="#3d3d3d"
                     android:orientation="horizontal"
