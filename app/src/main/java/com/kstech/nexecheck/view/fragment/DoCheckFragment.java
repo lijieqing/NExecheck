@@ -143,6 +143,7 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
                                         unRegistRealTimeListener();
+                                        Globals.CheckItemRealtimeViews.clear();
                                         ((HomeActivity)activity).showChFg = null;
                                         ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
                                         getFragmentManager().beginTransaction().remove(DoCheckFragment.this).commit();

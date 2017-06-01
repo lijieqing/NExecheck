@@ -20,7 +20,7 @@ public class BaseFragment extends Fragment {
     public void registRealTimeListener(){
         for (int i = 0; i < Globals.CheckItemRealtimeViews.size(); i++) {
             String name = Globals.CheckItemRealtimeViews.get(i).getRealTimeParamVO().getName();
-            Globals.getModelFile().getDataSetVO().getDSItem(name).listener = Globals.CheckItemRealtimeViews.get(i);
+            Globals.getModelFile().getDataSetVO().getDSItem(name).addListener(Globals.CheckItemRealtimeViews.get(i));
         }
     }
 
@@ -28,7 +28,7 @@ public class BaseFragment extends Fragment {
     public void unRegistRealTimeListener(){
         for (int i = 0; i < Globals.CheckItemRealtimeViews.size(); i++) {
             String name = Globals.CheckItemRealtimeViews.get(i).getRealTimeParamVO().getName();
-            Globals.getModelFile().getDataSetVO().getDSItem(name).listener = null;
+            Globals.getModelFile().getDataSetVO().getDSItem(name).removeListener(Globals.CheckItemRealtimeViews.get(i));
         }
     }
 

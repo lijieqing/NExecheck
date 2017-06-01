@@ -315,7 +315,7 @@ public class DeviceModelFile {
 			// // TODO: 2017/5/24  realtime 给J1939_DataVar_ts对象的监听器，进行初始化
 			RealTimeView realview = new RealTimeView(context, realTimeParam);
 			Globals.HomeRealtimeViews.add(realview);
-			result.getDataSetVO().getDSItem(name).listener = realview;
+			result.getDataSetVO().getDSItem(name).addListener(realview);
 		}
 	}
 

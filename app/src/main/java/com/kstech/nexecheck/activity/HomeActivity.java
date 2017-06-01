@@ -529,8 +529,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         Globals.HomeItems = (ArrayList<CheckItemVO>) Globals.getModelFile().getCheckItemList();
         Globals.HomeLastPosition = -1;
         checkItemListAdapter.notifyDataSetChanged();
-        if (homeCheckEntityFragment.myAdapter != null)
-            homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
+
+        showFragment(homeCheckEntityFragment,"HomeCheckEntity",R.id.ll_home_show);
+
     }
 
     public void initRecordItem(final String excId,boolean restart) {
@@ -555,7 +556,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         if (restart){
             new DeviceLoadTask(excId,checkRecordEntity,handler,this).execute();
         }
-        showFragment(homeCheckEntityFragment,"HomeCheckEntity",R.id.ll_home_show);
     }
 
     @Override
@@ -570,6 +570,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                 }
             }
         });
+        if (off){
+            for (RealTimeView homeRealtimeView : Globals.HomeRealtimeViews) {
+                homeRealtimeView.reset();
+            }
+            for (RealTimeView checkItemRealtimeView : Globals.CheckItemRealtimeViews) {
+                checkItemRealtimeView.reset();
+            }
+        }
 
     }
 

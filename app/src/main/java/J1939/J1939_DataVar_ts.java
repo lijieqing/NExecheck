@@ -3,6 +3,8 @@ package J1939;
 
 import com.kstech.nexecheck.base.RealtimeChangeListener;
 
+import java.util.LinkedList;
+
 enum VARTYPE {
 	BYTE, WORD, DWORD, SHORT, INT, FLOAT
 }
@@ -75,13 +77,28 @@ public class J1939_DataVar_ts {
 	 */
 	public J1939_SPCfg_ts pSPCfg;
 
-	public RealtimeChangeListener listener;
+	//public RealtimeChangeListener listener;
+
+	private LinkedList<RealtimeChangeListener> listenerLinkedList = new LinkedList<>();
+
+	public void addListener(RealtimeChangeListener listener){
+		if (listener != null && !listenerLinkedList.contains(listener))
+			listenerLinkedList.add(listener);
+	}
+
+	public void removeListener(RealtimeChangeListener listener){
+		if (listener != null && listenerLinkedList.contains(listener))
+			listenerLinkedList.remove(listener);
+	}
 
 	public void notifyListener(float value) {
-		if (listener == null) {
-			return;
+		for (RealtimeChangeListener listener : listenerLinkedList) {
+			listener.onDataChanged(value);
 		}
-		listener.onDataChanged(value);
+//		if (listener == null) {
+//			return;
+//		}
+//		listener.onDataChanged(value);
 	}
 
 	public boolean isFloatType() {

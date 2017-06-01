@@ -3,6 +3,7 @@ package com.kstech.nexecheck.view.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -13,11 +14,15 @@ import android.widget.TextView;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.base.RealtimeChangeListener;
 import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
+import com.kstech.nexecheck.domain.config.vo.ResourceVO;
 import com.kstech.nexecheck.utils.DeviceUtil;
 import com.kstech.nexecheck.utils.Globals;
 
 import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import J1939.J1939_DTCfg_ts;
 import J1939.J1939_DataVar_ts;
 
 
@@ -32,7 +37,7 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
     private TextView tvUnit ;
     private TextView tvValue ;
     private String formatValue;
-    private RelativeLayout rl;
+
     public RealTimeView(Activity context,RealTimeParamVO realTimeParamVO) {
         super(context);
         this.context = context;
@@ -52,7 +57,7 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
     private void initView(Context context){
         setWillNotDraw(false);
         View view = View.inflate(context, R.layout.widget_realtime_view,null);
-        rl = (RelativeLayout) view.findViewById(R.id.rl_realtime);
+        RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rl_realtime);
         rl.setMinimumWidth((int) (DeviceUtil.deviceWidth(context)/7.5));
         tvName = (TextView) view.findViewById(R.id.tv_name);
         tvUnit = (TextView) view.findViewById(R.id.tv_unit);
@@ -61,6 +66,7 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
             tvName.setText(realTimeParamVO.getName());
             tvUnit.setText(realTimeParamVO.getUnit());
             //// TODO: 2017/5/25 撤销测试代码
+            tvValue.setTextColor(Color.BLACK);
             tvValue.setText("----");
         }
         this.addView(view);
@@ -74,7 +80,21 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
     public void onDataChanged(final float value) {
         J1939_DataVar_ts dataVar = Globals.getModelFile().getDataSetVO().getDSItem(tvName.getText().toString());
         formatValue(dataVar);
-
+        if (checkDTC(dataVar)){
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvValue.setTextColor(Color.RED);
+                }
+            });
+        }else {
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvValue.setTextColor(Color.BLACK);
+                }
+            });
+        }
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -116,10 +136,24 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
         }
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        //// TODO: 2017/6/1 此处添加 心跳判断是否数据已不更新
-        Log.e("RealTimeView","on draw "+this.getRealTimeParamVO().getName());
+    //根据dtc判断是否存在故障 true 为有故障
+    private boolean checkDTC(J1939_DataVar_ts dataVar){
+        J1939_DTCfg_ts dtc = Globals.getModelFile().getJ1939PgSetVO().getLastErrorDtc(dataVar.sName);
+        if(dtc != null){
+            //说明传感器有故障
+            ResourceVO.MsgVO msgVO = Globals.getResConfig().getResourceVO().getMsgVO(dtc.wDescId);
+            return true;
+        }
+        return false;
+    }
+
+    public void reset(){
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvValue.setText("----");
+                tvValue.setTextColor(Color.BLACK);
+            }
+        });
     }
 }
