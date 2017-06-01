@@ -18,7 +18,7 @@
     <string name="recordNotFinish">存在检测项目\"未检测\"或\"未完成\"</string>
     <string name="recordAlreadyFinish">该机型检测结果已确定，无需重复判定</string>
     <string name="recordAlreadyhegeFinish">该机型检测结果已合格，无需重复判定</string>
-    <string name="xmlAlreadyChanged">该检测项目相关配置参数已修改，请新建机型开始检测或联系机型文件编辑人员</string>
+    <string name="xmlAlreadyChanged">未在数据库找到该检测项目，请新建机型开始检测或联系机型文件编辑人员</string>
     <string name="checkByUploadError">当前为\"数据上传\"检线，如需检测请切换到检测检线</string>
     <string name="loginButton">登录</string>
     <string name="str_alert_title">请选择用户名</string>

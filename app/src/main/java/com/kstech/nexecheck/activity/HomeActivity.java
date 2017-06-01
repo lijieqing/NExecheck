@@ -33,6 +33,7 @@ import com.kstech.nexecheck.base.NetWorkStatusListener;
 import com.kstech.nexecheck.domain.communication.CommunicationWorker;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
+import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDao;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDetailDao;
 import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
@@ -45,9 +46,11 @@ import com.kstech.nexecheck.exception.ExcException;
 import com.kstech.nexecheck.utils.DateUtil;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
+import com.kstech.nexecheck.view.fragment.DoCheckFragment;
 import com.kstech.nexecheck.view.fragment.HomeCheckEntityFragment;
 import com.kstech.nexecheck.view.fragment.OpenCheckRecordFragment;
 import com.kstech.nexecheck.view.widget.CheckItemSummaryView;
+import com.kstech.nexecheck.view.widget.RealTimeView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -69,6 +72,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
 
     private ImageView connStatus;
 
+    private boolean isFirstOncreate = false;
+
     // 当前机型检查项目列表
     private ListView currentMachineCheckItemList;
     // 检查项目的 适配器和适配器数据
@@ -76,7 +81,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
 
     // 当前检验记录相关
     public String excID;
-    private CheckRecordEntity checkRecordEntity;
+    public CheckRecordEntity checkRecordEntity;
 
     //替代布局
     public LinearLayout llCheck;
@@ -88,11 +93,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     public HomeCheckEntityFragment homeCheckEntityFragment;
     public CreateCheckRecordFragment createCheckRecordFragment;
     public OpenCheckRecordFragment openCheckRecordFragment;
+    public DoCheckFragment doCheckFragment;
 
     /**
      * 当前选中的检验项
      */
-    private CheckItemEntity checkItemEntity;
+    public CheckItemEntity checkItemEntity;
 
     /**
      * The constant j1939ProtTask.
@@ -119,13 +125,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        isFirstOncreate = true;
+
         fragmentManager = getFragmentManager();
         homeCheckEntityFragment = new HomeCheckEntityFragment();
         createCheckRecordFragment = new CreateCheckRecordFragment();
         openCheckRecordFragment = new OpenCheckRecordFragment();
+        doCheckFragment = new DoCheckFragment();
         createCheckRecordFragment.setActivity(this);
         openCheckRecordFragment.setActivity(this);
         homeCheckEntityFragment.setActivity(this);
+        doCheckFragment.setActivity(this);
 
         initMenu("");
         initViewComp();
@@ -266,10 +277,27 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                 showCheckFragment(openCheckRecordFragment, "OpenFragment", R.id.ll_check);
                 break;
             case R.id.liuchengCheckBtn:
-                //checkButHandle("liucheng");
+                if (checkItemEntity != null){
+                    //通过 entity id获取到需要初始化的 实施参数
+                    List<RealTimeParamVO> reals = Globals.getModelFile().getCheckItemVO(checkItemEntity.getItemId()).getRtParamList();
+                    Globals.CheckItemRealtimeViews.clear();
+                    for (RealTimeParamVO real : reals) {
+                        //// TODO: 2017/6/1 此时将实时显示参数添加到集合 但是未注册监听 在fragment初始化时注册
+                        RealTimeView realTimeView = new RealTimeView(getactivity(),real);
+                        Globals.CheckItemRealtimeViews.add(realTimeView);
+                    }
+                }else {
+                    new AlertDialog.Builder(getactivity())
+                            .setMessage(R.string.please_selectOne_check_item)
+                            .setNeutralButton(R.string.str_ok, null).show();
+                    return;
+                }
+                llCheck.setVisibility(View.VISIBLE);
+                showCheckFragment(doCheckFragment, "DoFragment", R.id.ll_check);
                 break;
             case R.id.singleCheckBtn:
-                //checkButHandle("single");
+//                llCheck.setVisibility(View.VISIBLE);
+//                showCheckFragment(doCheckFragment, "SingleFragment", R.id.ll_check);
                 break;
             case R.id.wholeCheckDescTableRow:
                 if (null == checkRecordEntity) {
@@ -448,7 +476,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         }
     }
 
-    //fragment 切换
+    //和检测相关的 fragment 切换
     private void showCheckFragment(BaseFragment f, String tagPage, int rID) {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
@@ -468,7 +496,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         ft.commit();
         if (!baseFragments.contains(f)) baseFragments.add(f);
     }
-    //fragment 切换
+    //和home activity 局部相关的fragment 切换
     private void showFragment(BaseFragment f, String tagPage, int rID) {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
@@ -548,7 +576,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     @Override
     protected void onResume() {
         super.onResume();
-        if (checkRecordEntity != null ) {
+        if (isFirstOncreate){
+            isFirstOncreate = false;
+        }else if (checkRecordEntity != null ) {
             initRecordItem(checkRecordEntity.getExcId(),false);
         } else {
             initRecordItem(null,false);

@@ -1,325 +1,332 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.78"
-        android:background="@drawable/index_right_bg"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:scrollbars="vertical">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#8b9eb2"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:padding="10dp"
-                android:text="检验日期"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="机型"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="子机型"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="检验状态"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="出厂编号"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="检验员"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:padding="10dp"
-                android:text="检线名称"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/checkRecordList"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:listSelector="#DCDCDC">
+            android:layout_weight="0.78"
+            android:background="@drawable/index_right_bg"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:scrollbars="vertical">
 
-        </ListView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.22"
-        android:background="#4a4949"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:text="检验日期："
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-        <LinearLayout
-            android:id="@+id/checkFinishTimeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/rect_gray"
-            android:paddingTop="2dp">
-
-            <TextView
-                android:id="@+id/checkFinishTimeTV"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:textColor="#999999"
-                android:textSize="20sp" />
+                android:background="#8b9eb2"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="13dp"
-                android:background="@drawable/login_spindow" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:padding="10dp"
+                    android:text="检验日期"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
-        <TextView
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:text="检验状态："
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="机型"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:id="@+id/checkStatusLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/rect_gray"
-            android:paddingTop="2dp">
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="子机型"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/checkStatusTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:textColor="#999999"
-                android:textSize="20sp" />
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="检验状态"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="13dp"
-                android:background="@drawable/login_spindow" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="出厂编号"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
-        <TextView
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:text="出厂编号："
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="检验员"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:id="@+id/excIdLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/rect_gray"
-            android:paddingTop="2dp">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:padding="10dp"
+                    android:text="检线名称"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/excIdTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:textColor="#999999"
-                android:textSize="20sp" />
+            <ListView
+                android:id="@+id/checkRecordList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:listSelector="#DCDCDC">
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="13dp"
-                android:background="@drawable/login_spindow" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:text="机型："
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-        <LinearLayout
-            android:id="@+id/deviceIdLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/rect_gray"
-            android:paddingTop="2dp">
-
-            <TextView
-                android:id="@+id/deviceIdTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:textColor="#999999"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="13dp"
-                android:background="@drawable/login_spindow" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="120dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:text="子机型："
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="#DCDCDC"
-            android:paddingTop="2dp">
-
-            <TextView
-                android:id="@+id/subdeviceIdTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:textColor="#999999"
-                android:textSize="20sp" />
-
+            </ListView>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.22"
+            android:background="#4a4949"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:text="检验日期："
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/checkFinishTimeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rect_gray"
+                android:paddingTop="2dp">
+
+                <TextView
+                    android:id="@+id/checkFinishTimeTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:textColor="#999999"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/login_spindow" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="检验状态："
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/checkStatusLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rect_gray"
+                android:paddingTop="2dp">
+
+                <TextView
+                    android:id="@+id/checkStatusTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:textColor="#999999"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/login_spindow" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="出厂编号："
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/excIdLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rect_gray"
+                android:paddingTop="2dp">
+
+                <TextView
+                    android:id="@+id/excIdTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:textColor="#999999"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/login_spindow" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="机型："
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/deviceIdLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/rect_gray"
+                android:paddingTop="2dp">
+
+                <TextView
+                    android:id="@+id/deviceIdTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:textColor="#999999"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/login_spindow" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="子机型："
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="#DCDCDC"
+                android:paddingTop="2dp">
+
+                <TextView
+                    android:id="@+id/subdeviceIdTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
+                    android:textColor="#999999"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
+
+                <Button
+                    android:id="@+id/openCheckRecordClearBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:background="@drawable/btn_style_rect_black"
+                    android:text="@string/btn_clear"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/openCheckRecordSearchBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="60dp"
+                    android:background="@drawable/btn_style_rect_black"
+                    android:text="@string/btn_search"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/openCheckRecordClearBtn"
-                android:layout_width="wrap_content"
+                android:id="@+id/openCheckRecordOpenBtn"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/btn_style_rect_black"
-                android:text="@string/btn_clear"
+                android:text="@string/btn_open"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/openCheckRecordSearchBtn"
-                android:layout_width="wrap_content"
+                android:id="@+id/openCheckRecordExitBtn"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/btn_style_rect_black"
-                android:text="@string/btn_search"
+                android:text="@string/btn_exit"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
+
         </LinearLayout>
-
-        <Button
-            android:id="@+id/openCheckRecordOpenBtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/btn_style_rect_black"
-            android:text="@string/btn_open"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/openCheckRecordExitBtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/btn_style_rect_black"
-            android:text="@string/btn_exit"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
 

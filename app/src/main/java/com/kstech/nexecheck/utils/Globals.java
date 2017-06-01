@@ -41,6 +41,7 @@ public class Globals {
 
     //实时显示参数集合
     public static ArrayList<RealTimeView> HomeRealtimeViews = new ArrayList<>();
+    public static ArrayList<RealTimeView> CheckItemRealtimeViews = new ArrayList<>();
 
     public static ArrayList<CheckItemVO> HomeItems = new ArrayList<>();
     /**

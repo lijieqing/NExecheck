@@ -316,6 +316,7 @@ public class CommunicationWorker extends Thread {
                 }
 
                 if (in != null && in.available() > 0) {
+                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(false);
 
                     iRecvBytes = in.read(RecvBuf, iRecvLen, 1000 - iRecvLen);
                     iRecvLen += iRecvBytes;

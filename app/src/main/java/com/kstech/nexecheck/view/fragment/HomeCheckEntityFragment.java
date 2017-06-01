@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class HomeCheckEntityFragment extends BaseFragment {
         View view = View.inflate(getActivity(), R.layout.fragment_home_check_entity,null);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_home_realtime);
         currentCheckItemView = new CheckItemSummaryView(getActivity(),view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),6);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(activity,2, LinearLayoutManager.HORIZONTAL,false);
         myAdapter = new MyAdapter ();
         currentCheckItemView.initView();
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));

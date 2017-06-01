@@ -2,8 +2,10 @@ package com.kstech.nexecheck.view.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.base.RealtimeChangeListener;
 import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
+import com.kstech.nexecheck.utils.DeviceUtil;
 import com.kstech.nexecheck.utils.Globals;
 
 import java.text.DecimalFormat;
@@ -29,6 +32,7 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
     private TextView tvUnit ;
     private TextView tvValue ;
     private String formatValue;
+    private RelativeLayout rl;
     public RealTimeView(Activity context,RealTimeParamVO realTimeParamVO) {
         super(context);
         this.context = context;
@@ -46,7 +50,10 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
         initView(context);
     }
     private void initView(Context context){
+        setWillNotDraw(false);
         View view = View.inflate(context, R.layout.widget_realtime_view,null);
+        rl = (RelativeLayout) view.findViewById(R.id.rl_realtime);
+        rl.setMinimumWidth((int) (DeviceUtil.deviceWidth(context)/7.5));
         tvName = (TextView) view.findViewById(R.id.tv_name);
         tvUnit = (TextView) view.findViewById(R.id.tv_unit);
         tvValue = (TextView) view.findViewById(R.id.tv_value);
@@ -109,4 +116,10 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
         }
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        //// TODO: 2017/6/1 此处添加 心跳判断是否数据已不更新
+        Log.e("RealTimeView","on draw "+this.getRealTimeParamVO().getName());
+    }
 }

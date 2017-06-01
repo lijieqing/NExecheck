@@ -547,7 +547,7 @@ public class DeviceModelFile {
 				realTimeParam
 						.setUnit(result.getDataSetVO().getDSItem(name).sUnit);
 				checkItem.addRtParam(realTimeParam);
-				// // TODO: 2017/5/24 qcset 给J1939_DataVar_ts对象的监听器，进行初始化
+				// // TODO: 2017/6/1 qcset 没有必要在此注册监听器 在进入检测界面时生成即可
 			}
 			checkItem.sortParamList();
 			result.addCheckItem(checkItem);

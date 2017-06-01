@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/rl_realtime"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:gravity="center"
@@ -37,7 +38,7 @@
     <TextView
         android:gravity="center"
         android:id="@+id/tv_value"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:text="666.55"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
