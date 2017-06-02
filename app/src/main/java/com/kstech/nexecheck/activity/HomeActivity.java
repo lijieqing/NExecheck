@@ -42,6 +42,7 @@ import com.kstech.nexecheck.domain.db.dbenum.CheckRecordStatusEnum;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
 import com.kstech.nexecheck.engine.DeviceLoadTask;
+import com.kstech.nexecheck.engine.SingleReadyToCheckTask;
 import com.kstech.nexecheck.exception.ExcException;
 import com.kstech.nexecheck.utils.DateUtil;
 import com.kstech.nexecheck.utils.Globals;
@@ -296,6 +297,24 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                 showCheckFragment(doCheckFragment, "DoFragment", R.id.ll_check);
                 break;
             case R.id.singleCheckBtn:
+                if (checkItemEntity != null){
+                    //通过 entity id获取到需要初始化的 实施参数
+                    List<RealTimeParamVO> reals = Globals.getModelFile().getCheckItemVO(checkItemEntity.getItemId()).getRtParamList();
+                    Globals.CheckItemRealtimeViews.clear();
+                    for (RealTimeParamVO real : reals) {
+                        //// TODO: 2017/6/1 此时将实时显示参数添加到集合 但是未注册监听 在fragment初始化时注册
+                        RealTimeView realTimeView = new RealTimeView(getactivity(),real);
+                        Globals.CheckItemRealtimeViews.add(realTimeView);
+                    }
+                    SingleReadyToCheckTask singleReadyToCheckTask = new SingleReadyToCheckTask(this);
+                    singleReadyToCheckTask.execute();
+                }else {
+                    new AlertDialog.Builder(getactivity())
+                            .setMessage(R.string.please_selectOne_check_item)
+                            .setNeutralButton(R.string.str_ok, null).show();
+                    return;
+                }
+
 //                llCheck.setVisibility(View.VISIBLE);
 //                showCheckFragment(doCheckFragment, "SingleFragment", R.id.ll_check);
                 break;
@@ -477,7 +496,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     }
 
     //和检测相关的 fragment 切换
-    private void showCheckFragment(BaseFragment f, String tagPage, int rID) {
+    public void showCheckFragment(BaseFragment f, String tagPage, int rID) {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
             if (showChFg != null) {
@@ -497,7 +516,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         if (!baseFragments.contains(f)) baseFragments.add(f);
     }
     //和home activity 局部相关的fragment 切换
-    private void showFragment(BaseFragment f, String tagPage, int rID) {
+    public void showFragment(BaseFragment f, String tagPage, int rID) {
         FragmentTransaction ft = fragmentManager.beginTransaction();
         if (!f.isAdded() && null == getFragmentManager().findFragmentByTag(tagPage)) {
             if (showFg != null) {
