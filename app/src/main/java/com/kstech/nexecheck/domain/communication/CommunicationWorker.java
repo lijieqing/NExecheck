@@ -15,6 +15,7 @@ import com.kstech.nexecheck.base.NetWorkStatusListener;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.LinkedList;
 import java.util.List;
 
 import J1939.J1939_CANID_ts;
@@ -30,9 +31,21 @@ import J1939.J1939;
  */
 public class CommunicationWorker extends Thread {
 
-    private NetWorkStatusListener netWorkStatusListener;
-    public void setNetWorkStatusListener(NetWorkStatusListener netWorkStatusListener){
-        this.netWorkStatusListener = netWorkStatusListener;
+    private LinkedList<NetWorkStatusListener> netWorkStatusListeners = new LinkedList<>();
+    public void addNetWorkStatusListener(NetWorkStatusListener netWorkStatusListener){
+        if (netWorkStatusListener != null && !netWorkStatusListeners.contains(netWorkStatusListener)){
+            netWorkStatusListeners.add(netWorkStatusListener);
+        }
+    }
+    public void removeNetWorkStatusListener(NetWorkStatusListener netWorkStatusListener){
+        if (netWorkStatusListener != null && netWorkStatusListeners.contains(netWorkStatusListener)){
+            netWorkStatusListeners.remove(netWorkStatusListener);
+        }
+    }
+    private void notifyListener(boolean off){
+        for (NetWorkStatusListener netWorkStatusListener : netWorkStatusListeners) {
+            netWorkStatusListener.onStatusChanged(off);
+        }
     }
 
     public static int CAN_PACKET_LEN = 13;
@@ -272,6 +285,8 @@ public class CommunicationWorker extends Thread {
                 bNop = true;
 
                 if (sockTcp == null) {
+                    Log.e("hahah", "sockTcp == null"+ netWorkStatusListeners.size());
+                    notifyListener(true);
                     String ssid = "";
                     WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     WifiInfo wifiinfo = manager.getConnectionInfo();
@@ -279,7 +294,6 @@ public class CommunicationWorker extends Thread {
                         ssid = wifiinfo.getSSID();
                         Log.e("LOGIN","---S S I D---"+ssid);
                     }
-                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(true);
                     Log.e("hahah", "before create socket");
                     if("\"Dlink_DWL2000\"".equals(ssid) || "\"DLINK_DWL2000_01\"".equals(ssid)|| "\"TP-LINK_Outdoor_E85A88\"".equals(ssid)){
                         Log.e("hahah", "serverIPAddress" + serverIPAddress);
@@ -292,9 +306,9 @@ public class CommunicationWorker extends Thread {
                     in = sockTcp.getInputStream();
                     Out = sockTcp.getOutputStream();
                     lastRecvTime = System.currentTimeMillis();
-                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(false);
+                    notifyListener(false);
                 } else {
-                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(true);
+                    notifyListener(true);
                     Thread.sleep(1000);
                     continue;
                 }
@@ -316,7 +330,7 @@ public class CommunicationWorker extends Thread {
                 }
 
                 if (in != null && in.available() > 0) {
-                    if (netWorkStatusListener != null)netWorkStatusListener.onStatusChanged(false);
+                    notifyListener(false);
 
                     iRecvBytes = in.read(RecvBuf, iRecvLen, 1000 - iRecvLen);
                     iRecvLen += iRecvBytes;

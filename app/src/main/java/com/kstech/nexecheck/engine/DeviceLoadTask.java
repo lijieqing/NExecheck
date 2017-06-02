@@ -108,7 +108,7 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     J1939TaskService.MyBinder myBinder = (J1939TaskService.MyBinder) service;
                     myBinder.task.context = context;
-                    myBinder.task.j1939CommTask.setNetWorkStatusListener(context);
+                    myBinder.task.j1939CommTask.addNetWorkStatusListener(context);
                     isWaitting = false;
                 }
 

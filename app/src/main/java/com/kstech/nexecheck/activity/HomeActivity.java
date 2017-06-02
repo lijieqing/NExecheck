@@ -23,14 +23,12 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.adapter.CheckItemListAdapter;
 import com.kstech.nexecheck.base.BaseFragment;
 import com.kstech.nexecheck.base.NetWorkStatusListener;
-import com.kstech.nexecheck.domain.communication.CommunicationWorker;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
 import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
@@ -42,24 +40,19 @@ import com.kstech.nexecheck.domain.db.dbenum.CheckRecordStatusEnum;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
 import com.kstech.nexecheck.engine.DeviceLoadTask;
-import com.kstech.nexecheck.engine.SingleReadyToCheckTask;
-import com.kstech.nexecheck.exception.ExcException;
+import com.kstech.nexecheck.engine.ReadyToCheckTask;
 import com.kstech.nexecheck.utils.DateUtil;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.CreateCheckRecordFragment;
 import com.kstech.nexecheck.view.fragment.DoCheckFragment;
 import com.kstech.nexecheck.view.fragment.HomeCheckEntityFragment;
 import com.kstech.nexecheck.view.fragment.OpenCheckRecordFragment;
-import com.kstech.nexecheck.view.widget.CheckItemSummaryView;
+import com.kstech.nexecheck.view.fragment.SingleCheckFragment;
 import com.kstech.nexecheck.view.widget.RealTimeView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import J1939.J1939_Task;
-
-import static java.lang.Thread.State.TERMINATED;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener,NetWorkStatusListener {
 
@@ -95,6 +88,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     public CreateCheckRecordFragment createCheckRecordFragment;
     public OpenCheckRecordFragment openCheckRecordFragment;
     public DoCheckFragment doCheckFragment;
+    public SingleCheckFragment singleCheckFragment;
 
     /**
      * 当前选中的检验项
@@ -134,10 +128,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         createCheckRecordFragment = new CreateCheckRecordFragment();
         openCheckRecordFragment = new OpenCheckRecordFragment();
         doCheckFragment = new DoCheckFragment();
+        singleCheckFragment = new SingleCheckFragment();
         createCheckRecordFragment.setActivity(this);
         openCheckRecordFragment.setActivity(this);
         homeCheckEntityFragment.setActivity(this);
         doCheckFragment.setActivity(this);
+        singleCheckFragment.setActivity(this);
 
         initMenu("");
         initViewComp();
@@ -268,6 +264,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
      */
     @Override
     public void onClick(View v) {
+        ReadyToCheckTask readyToCheckTask = null;
         switch (v.getId()) {
             case R.id.btnCreateCheckRecord:
                 llCheck.setVisibility(View.VISIBLE);
@@ -287,14 +284,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                         RealTimeView realTimeView = new RealTimeView(getactivity(),real);
                         Globals.CheckItemRealtimeViews.add(realTimeView);
                     }
+                    readyToCheckTask = new ReadyToCheckTask(this,false);
+                    readyToCheckTask.execute();
                 }else {
                     new AlertDialog.Builder(getactivity())
                             .setMessage(R.string.please_selectOne_check_item)
                             .setNeutralButton(R.string.str_ok, null).show();
                     return;
                 }
-                llCheck.setVisibility(View.VISIBLE);
-                showCheckFragment(doCheckFragment, "DoFragment", R.id.ll_check);
                 break;
             case R.id.singleCheckBtn:
                 if (checkItemEntity != null){
@@ -306,8 +303,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                         RealTimeView realTimeView = new RealTimeView(getactivity(),real);
                         Globals.CheckItemRealtimeViews.add(realTimeView);
                     }
-                    SingleReadyToCheckTask singleReadyToCheckTask = new SingleReadyToCheckTask(this);
-                    singleReadyToCheckTask.execute();
+                    readyToCheckTask = new ReadyToCheckTask(this,true);
+                    readyToCheckTask.execute();
                 }else {
                     new AlertDialog.Builder(getactivity())
                             .setMessage(R.string.please_selectOne_check_item)
@@ -315,8 +312,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                     return;
                 }
 
-//                llCheck.setVisibility(View.VISIBLE);
-//                showCheckFragment(doCheckFragment, "SingleFragment", R.id.ll_check);
                 break;
             case R.id.wholeCheckDescTableRow:
                 if (null == checkRecordEntity) {

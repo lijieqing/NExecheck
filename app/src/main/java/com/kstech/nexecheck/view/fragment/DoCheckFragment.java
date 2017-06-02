@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -33,34 +34,33 @@ import java.util.List;
 
 public class DoCheckFragment extends BaseFragment implements View.OnClickListener{
 
-    private TextView deviceNameTV, subdeviceNameTV, excIdTV;
-    public Button singleCheckBeginCheckLeftBtn, singleCheckTimeBtn,
-            singleCheckExitCheckBtn, singleCheckBeginCheckRightBtn;
-
+    protected TextView deviceNameTV, subdeviceNameTV, excIdTV;
+    protected Button singleCheckBeginCheckLeftBtn, singleCheckExitCheckBtn, singleCheckBeginCheckRightBtn;
+    protected Chronometer chronometer;
     // 下一项目按钮，或，退出测量按钮，两者可见其一
-    private Button singleCheckNextItemBtn;
+    protected Button singleCheckNextItemBtn;
 
     /**
      * 主动指令信息提示区
      */
-    private TextView msgTv;
+    protected TextView msgTv;
     /**
      * 被动接收信息提示区
      */
-    private LinearLayout msgLayoutView;
+    protected LinearLayout msgLayoutView;
 
 
-    private CheckItemSingleView checkItemSingleView;
+    protected CheckItemSingleView checkItemSingleView;
 
     // 实时参数表体
-    private RecyclerView recyclerView;
+    protected RecyclerView recyclerView;
     public MyCheckAdapter myAdapter;
 
     // 检查项列表，用于，下一项目，使用
-    private List<CheckItemEntity> checkItemList;
+    protected List<CheckItemEntity> checkItemList;
 
     // 主页面的按钮，单项检测或流程检测
-    private String checkBtnName;
+    protected String checkBtnName;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,7 +108,8 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
 
         singleCheckBeginCheckLeftBtn = (Button) view.findViewById(R.id.singleCheckBeginCheckLeftBtn);
         singleCheckNextItemBtn = (Button) view.findViewById(R.id.singleCheckNextItemBtn);
-        singleCheckTimeBtn = (Button) view.findViewById(R.id.singleCheckTimeBtn);
+        chronometer = (Chronometer) view.findViewById(R.id.singleCheckChronometer);
+
         singleCheckExitCheckBtn = (Button) view.findViewById(R.id.singleCheckExitCheckBtn);
         singleCheckBeginCheckRightBtn = (Button) view.findViewById(R.id.singleCheckBeginCheckRightBtn);
 

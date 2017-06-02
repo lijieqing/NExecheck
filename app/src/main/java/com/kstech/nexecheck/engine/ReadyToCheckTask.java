@@ -23,9 +23,10 @@ import com.kstech.nexecheck.utils.Globals;
  * Created by lijie on 2017/5/24.
  */
 
-public class SingleReadyToCheckTask extends AsyncTask<Void,String,Void> {
+public class ReadyToCheckTask extends AsyncTask<Void,String,Void> {
     private AlertDialog dialog;
     private HomeActivity context;
+    private boolean isSingle = false;
     private int remainSeconds = 0;
     private CheckItemVO checkItemVO;
     private TextView tvMsg;
@@ -33,8 +34,9 @@ public class SingleReadyToCheckTask extends AsyncTask<Void,String,Void> {
     private Button btnIn;
     private Button btnCancel;
 
-    public SingleReadyToCheckTask(HomeActivity context) {
+    public ReadyToCheckTask(HomeActivity context, boolean isSingle) {
         this.context = context;
+        this.isSingle = isSingle;
     }
 
     @Override
@@ -58,7 +60,11 @@ public class SingleReadyToCheckTask extends AsyncTask<Void,String,Void> {
             public void onClick(View v) {
                 dialog.cancel();
                 context.llCheck.setVisibility(View.VISIBLE);
-                context.showCheckFragment(context.doCheckFragment,"SingleFragment",R.id.ll_check);
+                if (isSingle){
+                    context.showCheckFragment(context.singleCheckFragment,"SingleFragment",R.id.ll_check);
+                }else {
+                    context.showCheckFragment(context.doCheckFragment,"DoFragment",R.id.ll_check);
+                }
             }
         });
 
@@ -92,7 +98,7 @@ public class SingleReadyToCheckTask extends AsyncTask<Void,String,Void> {
             } else if ("传感器故障".equals(readyToCheckCommandResp)) {
                 // 有响应，但是不是准备就绪，则通知UI，传感器故障。程序终止
                 String notReadyMsg = checkItemVO.getNotReadyMsg();
-                Log.e("SingleReadyToCheckTask",notReadyMsg);
+                Log.e("ReadyToCheckTask",notReadyMsg);
                 String content = "";
                 if (notReadyMsg != null && !notReadyMsg.equals("")) {
                     content = Globals.getResConfig().getResourceVO().getMsg(notReadyMsg).getContent();
@@ -129,7 +135,8 @@ public class SingleReadyToCheckTask extends AsyncTask<Void,String,Void> {
         if ("error".equals(values[0])){
             tvMsg.setText(values[1]+values[2]);
             chronometer.stop();
-            btnCancel.setVisibility(View.VISIBLE);
+            //btnCancel.setVisibility(View.VISIBLE);
+            btnIn.setVisibility(View.VISIBLE);
         }
         if ("ok".equals(values[0])){
             tvMsg.setText(values[1]+values[2]);
