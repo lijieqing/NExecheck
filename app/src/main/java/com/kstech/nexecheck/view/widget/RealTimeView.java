@@ -37,6 +37,7 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
     private TextView tvUnit ;
     private TextView tvValue ;
     private String formatValue;
+    private MSGListener listener;
 
     public RealTimeView(Activity context,RealTimeParamVO realTimeParamVO) {
         super(context);
@@ -142,6 +143,7 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
         if(dtc != null){
             //说明传感器有故障
             ResourceVO.MsgVO msgVO = Globals.getResConfig().getResourceVO().getMsgVO(dtc.wDescId);
+            if (listener != null) listener.onMsgError(msgVO.getContent());
             return true;
         }
         return false;
@@ -155,5 +157,13 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
                 tvValue.setTextColor(Color.BLACK);
             }
         });
+    }
+
+    public void setMsgListener(MSGListener listener){
+        this.listener = listener;
+    }
+
+    interface MSGListener{
+        void onMsgError(String content);
     }
 }

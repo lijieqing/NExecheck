@@ -71,7 +71,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     // 当前机型检查项目列表
     private ListView currentMachineCheckItemList;
     // 检查项目的 适配器和适配器数据
-    private CheckItemListAdapter checkItemListAdapter;
+    public CheckItemListAdapter checkItemListAdapter;
 
     // 当前检验记录相关
     public String excID;

@@ -96,6 +96,8 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
 
         //实时显示参数初始化
         registRealTimeListener();
+        msgAdapter.notifyDataSetChanged();
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),3);
         myAdapter = new MyCheckAdapter ();
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
@@ -131,7 +133,6 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
         msgTv = (TextView) view.findViewById(R.id.msgTv);
         msgListView = (ListView) view.findViewById(R.id.lv_msg_check);
         msgAdapter = new MsgAdapter();
-
         msgListView.setAdapter(msgAdapter);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.singleRealTimeParamBody);
@@ -163,24 +164,19 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                             // 如果当前项不是最后一项
                             if (i+1 < checkItemList.size()){
                                 ((HomeActivity)activity).checkItemEntity = checkItemList.get(i+1);
+                                Globals.HomeLastPosition = i+1;
                                 // 初始化 项目参数列表
-                                checkItemSingleView.initCheckItemParamList(((HomeActivity)activity).checkItemEntity);
-                                CheckItemVO itemVO = Globals.getModelFile().getCheckItemVO(((HomeActivity) activity).checkItemEntity.getItemId());
                                 // 点击下一项后，重新初始化实时参数配置
                                 unRegistRealTimeListener();
-                                Globals.CheckItemRealtimeViews.clear();
-                                for (RealTimeParamVO realTimeParamVO : itemVO.getRtParamList()) {
-                                    RealTimeView realTimeView = new RealTimeView(activity,realTimeParamVO);
-                                    Globals.CheckItemRealtimeViews.add(realTimeView);
-                                }
-                                registRealTimeListener();
+
+                                CheckItemVO itemVO = Globals.getModelFile().getCheckItemVO(((HomeActivity) activity).checkItemEntity.getItemId());
 
                                 // 自动发送准备检测命令
-                                ReadyToCheckTask readyToCheckTask = new ReadyToCheckTask((HomeActivity) activity,isSingle);
+                                ReadyToCheckInCheckTask readyToCheckTask = new ReadyToCheckInCheckTask((HomeActivity) activity,itemVO);
                                 readyToCheckTask.execute();
 
                                 // 保存最后一次点击的 itemID
-                                ConfigFileManager.getInstance(activity).saveLastItemid(((HomeActivity)activity).checkItemEntity.getItemId());
+                                //ConfigFileManager.getInstance(activity).saveLastItemid(((HomeActivity)activity).checkItemEntity.getItemId());
                                 break;
                             } else {
                                 new AlertDialog.Builder(activity).setMessage(R.string.current_item_is_last_item).setNeutralButton(R.string.str_ok, null).show();
@@ -203,8 +199,6 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
     protected void btnCheck(){
         if (checkTask.isRunning){
             stopConfirm();
-            singleCheckBeginCheckLeftBtn.setText("开始测量");
-            singleCheckBeginCheckRightBtn.setText("开始测量");
         }else {
             checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv);
             checkTask.execute();
@@ -232,6 +226,7 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                                 Globals.CheckItemRealtimeViews.clear();
                                 ((HomeActivity)activity).showChFg = null;
                                 ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
+                                ((HomeActivity)activity).checkItemListAdapter.notifyDataSetChanged();
                                 getFragmentManager().beginTransaction().remove(getFragment()).commit();
                                 // 回传响应码
                                 //CommandSender.sendStopCheckCommand(checkItemEntity.getItemId(),checkItemEntity.getSumTimes());
@@ -251,6 +246,8 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
+                                singleCheckBeginCheckLeftBtn.setText("开始测量");
+                                singleCheckBeginCheckRightBtn.setText("开始测量");
                                 msgTv.setText("人工终止");
                                 chronometer.stop();
                                 checkTask.isRunning = false;
@@ -269,22 +266,22 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
     public class MsgAdapter extends BaseAdapter{
         @Override
         public int getCount() {
-            return 0;
+            return Globals.CheckMsgTextView.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return Globals.CheckMsgTextView.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            return Globals.CheckMsgTextView.get(position);
         }
     }
 }

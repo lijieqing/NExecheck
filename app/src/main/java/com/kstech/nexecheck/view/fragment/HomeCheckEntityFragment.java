@@ -65,6 +65,10 @@ public class HomeCheckEntityFragment extends BaseFragment {
     @Override
     public void updateFragment() {
         if (myAdapter != null)myAdapter.notifyDataSetChanged();
-        if (currentCheckItemView != null)currentCheckItemView.clear();
+        if (currentCheckItemView != null){
+            currentCheckItemView.clear();
+            if (((HomeActivity)activity).checkItemEntity != null)currentCheckItemView.initCheckItemParamList(((HomeActivity)activity).checkItemEntity);
+        }
+
     }
 }

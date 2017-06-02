@@ -11,6 +11,7 @@ import com.kstech.nexecheck.domain.config.vo.CheckLineVO;
 import com.kstech.nexecheck.domain.checkline.CheckLineManager;
 import com.kstech.nexecheck.domain.db.entity.User;
 import com.kstech.nexecheck.exception.ExcException;
+import com.kstech.nexecheck.view.widget.MsgTextView;
 import com.kstech.nexecheck.view.widget.RealTimeView;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public class Globals {
     //实时显示参数集合
     public static ArrayList<RealTimeView> HomeRealtimeViews = new ArrayList<>();
     public static ArrayList<RealTimeView> CheckItemRealtimeViews = new ArrayList<>();
+    public static ArrayList<MsgTextView> CheckMsgTextView = new ArrayList<>();
 
     public static ArrayList<CheckItemVO> HomeItems = new ArrayList<>();
     /**
