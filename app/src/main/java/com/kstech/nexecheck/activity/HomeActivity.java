@@ -526,6 +526,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                 ft.show(f);
             }
         }
+        f.updateFragment();
         showFg = f;
         ft.commit();
         if (!baseFragments.contains(f)) baseFragments.add(f);

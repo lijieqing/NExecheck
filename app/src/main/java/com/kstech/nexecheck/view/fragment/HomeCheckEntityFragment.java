@@ -56,4 +56,15 @@ public class HomeCheckEntityFragment extends BaseFragment {
         super.onDestroyView();
         ((HomeActivity)activity).showFg = null;
     }
+
+    @Override
+    protected BaseFragment getFragment() {
+        return this;
+    }
+
+    @Override
+    public void updateFragment() {
+        if (myAdapter != null)myAdapter.notifyDataSetChanged();
+        if (currentCheckItemView != null)currentCheckItemView.clear();
+    }
 }

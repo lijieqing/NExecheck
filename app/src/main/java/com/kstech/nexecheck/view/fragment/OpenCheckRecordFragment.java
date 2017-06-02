@@ -146,4 +146,9 @@ public class OpenCheckRecordFragment extends BaseFragment {
         super.onDestroyView();
         currentSelectedRecord = null;
     }
+
+    @Override
+    protected BaseFragment getFragment() {
+        return this;
+    }
 }

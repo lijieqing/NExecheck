@@ -1,10 +1,7 @@
 package com.kstech.nexecheck.engine;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
@@ -131,12 +128,12 @@ public class ReadyToCheckTask extends AsyncTask<Void,String,Void> {
         super.onProgressUpdate(values);
         if ("progress".equals(values[0])){
             tvMsg.setText(values[1]+values[2]);
+            btnCancel.setVisibility(View.VISIBLE);
         }
         if ("error".equals(values[0])){
             tvMsg.setText(values[1]+values[2]);
             chronometer.stop();
-            //btnCancel.setVisibility(View.VISIBLE);
-            btnIn.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.VISIBLE);
         }
         if ("ok".equals(values[0])){
             tvMsg.setText(values[1]+values[2]);

@@ -200,6 +200,11 @@ public class CreateCheckRecordFragment extends BaseFragment {
         return true;
     }
 
+    @Override
+    protected BaseFragment getFragment() {
+        return this;
+    }
+
     //gridview 适配器
     private class GVDeviceAdapter extends BaseAdapter{
 

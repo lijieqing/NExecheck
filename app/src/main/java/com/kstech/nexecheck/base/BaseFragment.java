@@ -9,7 +9,7 @@ import com.kstech.nexecheck.utils.Globals;
  * Created by lijie on 2017/5/27.
  */
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
     protected Activity activity;
 
     public void setActivity(Activity activity){
@@ -32,4 +32,9 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    protected abstract BaseFragment getFragment();
+
+    public void updateFragment(){
+        //子类自由实现 而且并不强制实现
+    }
 }

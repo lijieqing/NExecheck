@@ -10,9 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -21,10 +23,16 @@ import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.adapter.MyCheckAdapter;
 import com.kstech.nexecheck.base.BaseFragment;
 import com.kstech.nexecheck.domain.communication.CommandSender;
+import com.kstech.nexecheck.domain.config.ConfigFileManager;
+import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
+import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
+import com.kstech.nexecheck.engine.ItemCheckTask;
+import com.kstech.nexecheck.engine.ReadyToCheckTask;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.widget.CheckItemSingleView;
 import com.kstech.nexecheck.view.widget.DividerItemDecoration;
+import com.kstech.nexecheck.view.widget.RealTimeView;
 
 import java.util.List;
 
@@ -35,7 +43,8 @@ import java.util.List;
 public class DoCheckFragment extends BaseFragment implements View.OnClickListener{
 
     protected TextView deviceNameTV, subdeviceNameTV, excIdTV;
-    protected Button singleCheckBeginCheckLeftBtn, singleCheckExitCheckBtn, singleCheckBeginCheckRightBtn;
+    public Button singleCheckBeginCheckLeftBtn, singleCheckExitCheckBtn, singleCheckBeginCheckRightBtn;
+
     protected Chronometer chronometer;
     // 下一项目按钮，或，退出测量按钮，两者可见其一
     protected Button singleCheckNextItemBtn;
@@ -47,7 +56,7 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
     /**
      * 被动接收信息提示区
      */
-    protected LinearLayout msgLayoutView;
+    protected ListView msgListView;
 
 
     protected CheckItemSingleView checkItemSingleView;
@@ -59,12 +68,16 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
     // 检查项列表，用于，下一项目，使用
     protected List<CheckItemEntity> checkItemList;
 
-    // 主页面的按钮，单项检测或流程检测
-    protected String checkBtnName;
+    protected ItemCheckTask checkTask;
+
+    protected MsgAdapter msgAdapter;
+
+    protected boolean isSingle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isSingle = false;
     }
 
     @Nullable
@@ -95,6 +108,8 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
         checkItemSingleView.initView();
         checkItemSingleView.initCheckItemParamList(((HomeActivity)activity).checkItemEntity);
 
+        //检测线程初始化
+        checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv);
         return view;
     }
 
@@ -114,7 +129,10 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
         singleCheckBeginCheckRightBtn = (Button) view.findViewById(R.id.singleCheckBeginCheckRightBtn);
 
         msgTv = (TextView) view.findViewById(R.id.msgTv);
-        msgLayoutView = (LinearLayout) view.findViewById(R.id.msgLayoutView);
+        msgListView = (ListView) view.findViewById(R.id.lv_msg_check);
+        msgAdapter = new MsgAdapter();
+
+        msgListView.setAdapter(msgAdapter);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.singleRealTimeParamBody);
     }
@@ -132,28 +150,141 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.singleCheckExitCheckBtn:
-                // 提示，确认退出测量吗？
-                new AlertDialog.Builder(activity)
-                        .setTitle(R.string.diaLogWakeup)
-                        .setMessage(R.string.stopCheckConfirm)
-                        .setNegativeButton(R.string.str_close, null)
-                        .setPositiveButton(R.string.str_ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        unRegistRealTimeListener();
-                                        Globals.CheckItemRealtimeViews.clear();
-                                        ((HomeActivity)activity).showChFg = null;
-                                        ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
-                                        getFragmentManager().beginTransaction().remove(DoCheckFragment.this).commit();
-                                        // 回传响应码
-                                        //CommandSender.sendStopCheckCommand(checkItemEntity.getItemId(),checkItemEntity.getSumTimes());
-                                    }
-                                }).show();
-
+            case R.id.singleCheckBeginCheckLeftBtn:
+                btnCheck();
                 break;
+            case R.id.singleCheckNextItemBtn:
+                // 如果计时器是停止状态，则可以点击下一项目按钮，否则不可点击
+                if (!checkTask.isRunning) {
+                    checkItemList = ((HomeActivity)activity).checkRecordEntity.getCheckItemList();
+                    // 求出下一项
+                    for (int i=0;i<checkItemList.size();i++) {
+                        if(checkItemList.get(i).getItemId().equals(((HomeActivity)activity).checkItemEntity.getItemId())) {
+                            // 如果当前项不是最后一项
+                            if (i+1 < checkItemList.size()){
+                                ((HomeActivity)activity).checkItemEntity = checkItemList.get(i+1);
+                                // 初始化 项目参数列表
+                                checkItemSingleView.initCheckItemParamList(((HomeActivity)activity).checkItemEntity);
+                                CheckItemVO itemVO = Globals.getModelFile().getCheckItemVO(((HomeActivity) activity).checkItemEntity.getItemId());
+                                // 点击下一项后，重新初始化实时参数配置
+                                unRegistRealTimeListener();
+                                Globals.CheckItemRealtimeViews.clear();
+                                for (RealTimeParamVO realTimeParamVO : itemVO.getRtParamList()) {
+                                    RealTimeView realTimeView = new RealTimeView(activity,realTimeParamVO);
+                                    Globals.CheckItemRealtimeViews.add(realTimeView);
+                                }
+                                registRealTimeListener();
+
+                                // 自动发送准备检测命令
+                                ReadyToCheckTask readyToCheckTask = new ReadyToCheckTask((HomeActivity) activity,isSingle);
+                                readyToCheckTask.execute();
+
+                                // 保存最后一次点击的 itemID
+                                ConfigFileManager.getInstance(activity).saveLastItemid(((HomeActivity)activity).checkItemEntity.getItemId());
+                                break;
+                            } else {
+                                new AlertDialog.Builder(activity).setMessage(R.string.current_item_is_last_item).setNeutralButton(R.string.str_ok, null).show();
+                            }
+                        }
+                    }
+                } else {
+                    new AlertDialog.Builder(activity).setMessage(R.string.please_wait_currentTask_over).setNeutralButton(R.string.str_ok, null).show();
+                }
+                break;
+            case R.id.singleCheckBeginCheckRightBtn:
+                btnCheck();
+                break;
+            case R.id.singleCheckExitCheckBtn:
+                exitFragment();
+                break;
+        }
+    }
+
+    protected void btnCheck(){
+        if (checkTask.isRunning){
+            stopConfirm();
+            singleCheckBeginCheckLeftBtn.setText("开始测量");
+            singleCheckBeginCheckRightBtn.setText("开始测量");
+        }else {
+            checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv);
+            checkTask.execute();
+            singleCheckBeginCheckLeftBtn.setText("停止测量");
+            singleCheckBeginCheckRightBtn.setText("停止测量");
+        }
+    }
+
+    //退出fragment
+    protected void exitFragment(){
+        // 提示，确认退出测量吗？
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.diaLogWakeup)
+                .setMessage(R.string.stopCheckConfirm)
+                .setNegativeButton(R.string.str_close, null)
+                .setPositiveButton(R.string.str_ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                checkTask.isRunning = false;
+                                checkTask.cancel(true);
+
+                                unRegistRealTimeListener();
+                                Globals.CheckItemRealtimeViews.clear();
+                                ((HomeActivity)activity).showChFg = null;
+                                ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
+                                getFragmentManager().beginTransaction().remove(getFragment()).commit();
+                                // 回传响应码
+                                //CommandSender.sendStopCheckCommand(checkItemEntity.getItemId(),checkItemEntity.getSumTimes());
+                            }
+                        }).show();
+    }
+
+    //退出fragment
+    protected void stopConfirm(){
+        // 提示，确认退出测量吗？
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.diaLogWakeup)
+                .setMessage(R.string.stopCheckingConfirm)
+                .setNegativeButton(R.string.str_close, null)
+                .setPositiveButton(R.string.str_ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                msgTv.setText("人工终止");
+                                chronometer.stop();
+                                checkTask.isRunning = false;
+                                checkTask.cancel(true);
+                                //检测线程初始化
+                                checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv);
+                            }
+                        }).show();
+    }
+
+    @Override
+    protected BaseFragment getFragment() {
+        return this;
+    }
+
+    public class MsgAdapter extends BaseAdapter{
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
         }
     }
 }

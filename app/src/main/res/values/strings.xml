@@ -70,6 +70,7 @@
     <string name="nextItem">下一项目</string>
     <string name="exitCheck">退出测量</string>
     <string name="stopCheckConfirm">您确定要退出测量吗？</string>
+    <string name="stopCheckingConfirm">正在检测，您确定要停止测量吗？</string>
     <string name="please_wait_currentTask_over">请等待当前任务结束</string>
     <string name="current_item_is_last_item">当前项目已经是最后一项</string>
 
