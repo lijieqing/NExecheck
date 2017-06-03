@@ -2,7 +2,6 @@ package com.kstech.nexecheck.view.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,26 +12,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.adapter.MyCheckAdapter;
 import com.kstech.nexecheck.base.BaseFragment;
-import com.kstech.nexecheck.domain.communication.CommandSender;
-import com.kstech.nexecheck.domain.config.ConfigFileManager;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
-import com.kstech.nexecheck.domain.config.vo.RealTimeParamVO;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.engine.ItemCheckTask;
-import com.kstech.nexecheck.engine.ReadyToCheckTask;
+import com.kstech.nexecheck.engine.ReadyToCheckInCheckTask;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.widget.CheckItemSingleView;
 import com.kstech.nexecheck.view.widget.DividerItemDecoration;
-import com.kstech.nexecheck.view.widget.RealTimeView;
 
 import java.util.List;
 
@@ -45,21 +38,21 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
     protected TextView deviceNameTV, subdeviceNameTV, excIdTV;
     public Button singleCheckBeginCheckLeftBtn, singleCheckExitCheckBtn, singleCheckBeginCheckRightBtn;
 
-    protected Chronometer chronometer;
+    public Chronometer chronometer;
     // 下一项目按钮，或，退出测量按钮，两者可见其一
     protected Button singleCheckNextItemBtn;
 
     /**
      * 主动指令信息提示区
      */
-    protected TextView msgTv;
+    public TextView msgTv;
     /**
      * 被动接收信息提示区
      */
-    protected ListView msgListView;
+    public ListView msgListView;
 
 
-    protected CheckItemSingleView checkItemSingleView;
+    public CheckItemSingleView checkItemSingleView;
 
     // 实时参数表体
     protected RecyclerView recyclerView;
@@ -70,9 +63,11 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
 
     protected ItemCheckTask checkTask;
 
-    protected MsgAdapter msgAdapter;
+    public MsgAdapter msgAdapter;
 
     protected boolean isSingle;
+
+    public CheckItemEntity currentCheckItemEntity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -163,6 +158,7 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                         if(checkItemList.get(i).getItemId().equals(((HomeActivity)activity).checkItemEntity.getItemId())) {
                             // 如果当前项不是最后一项
                             if (i+1 < checkItemList.size()){
+                                currentCheckItemEntity = ((HomeActivity)activity).checkItemEntity;
                                 ((HomeActivity)activity).checkItemEntity = checkItemList.get(i+1);
                                 Globals.HomeLastPosition = i+1;
                                 // 初始化 项目参数列表

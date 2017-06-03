@@ -5,19 +5,23 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.kstech.nexecheck.R;
 
 /**
  * Created by lijie on 2017/6/2.
  */
 
-public class MsgTextView extends android.support.v7.widget.AppCompatTextView implements RealTimeView.MSGListener{
+public class MsgTextView extends RelativeLayout implements RealTimeView.MSGListener{
     private Activity context;
+    private TextView textView;
     public MsgTextView(Activity context) {
         super(context);
-        setWillNotDraw(false);
         this.context = context;
-        this.setText("^——^");
-        this.setTextColor(Color.BLACK);
+        initView();
     }
 
     public MsgTextView(Context context, @Nullable AttributeSet attrs) {
@@ -33,11 +37,14 @@ public class MsgTextView extends android.support.v7.widget.AppCompatTextView imp
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getMsg().setText(content);
+                textView.setText(content);
             }
         });
     }
-    public MsgTextView getMsg(){
-        return this;
+    private void initView(){
+        //setWillNotDraw(false);
+        View view = View.inflate(context, R.layout.msg_view,null);
+        textView = (TextView) view.findViewById(R.id.tv_msg_view);
+        this.addView(view);
     }
 }

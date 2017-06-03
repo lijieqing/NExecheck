@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.view.fragment;
+package com.kstech.nexecheck.engine;
 
 import android.app.AlertDialog;
 import android.os.AsyncTask;
@@ -47,26 +47,17 @@ public class ReadyToCheckInCheckTask extends AsyncTask<Void,String,Void> {
         chronometer = (Chronometer) view.findViewById(R.id.chronom);
         btnIn = (Button) view.findViewById(R.id.btn_in);
         btnCancel = (Button) view.findViewById(R.id.btn_cancel);
-        btnCancel.setVisibility(View.INVISIBLE);
-        btnIn.setVisibility(View.INVISIBLE);
+        //btnCancel.setVisibility(View.INVISIBLE);
+        //btnIn.setVisibility(View.INVISIBLE);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                //Globals.HomeLastPosition = Globals.HomeLastPosition-1;
-
-                context.doCheckFragment.checkItemSingleView.initCheckItemParamList(context.checkItemEntity);
-                Globals.CheckItemRealtimeViews.clear();
-                for (RealTimeParamVO realTimeParamVO : checkItemVO.getRtParamList()) {
-                    RealTimeView realTimeView = new RealTimeView(context,realTimeParamVO);
-                    Globals.CheckItemRealtimeViews.add(realTimeView);
-                }
-                context.doCheckFragment.registRealTimeListener();
-                context.doCheckFragment.msgTv.setText("提示信息");
-                context.doCheckFragment.myAdapter.notifyDataSetChanged();
-                context.doCheckFragment.msgAdapter.notifyDataSetChanged();
-                context.doCheckFragment.chronometer.setBase(SystemClock.elapsedRealtime());
+                Globals.HomeLastPosition = Globals.HomeLastPosition-1;
+                context.checkItemEntity = context.doCheckFragment.currentCheckItemEntity;
                 context.homeCheckEntityFragment.updateFragment();
+                context.doCheckFragment.checkItemSingleView.initCheckItemParamList(context.checkItemEntity);
+
             }
         });
         btnIn.setOnClickListener(new View.OnClickListener() {
