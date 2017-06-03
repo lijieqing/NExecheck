@@ -187,7 +187,11 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                 btnCheck();
                 break;
             case R.id.singleCheckExitCheckBtn:
-                exitFragment();
+                if (!checkTask.isRunning) {
+                    exitFragment();
+                }else {
+                    new AlertDialog.Builder(activity).setMessage(R.string.please_wait_currentTask_over).setNeutralButton(R.string.str_ok, null).show();
+                }
                 break;
         }
     }

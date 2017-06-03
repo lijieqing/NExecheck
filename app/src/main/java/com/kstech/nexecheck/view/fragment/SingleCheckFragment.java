@@ -4,6 +4,7 @@ package com.kstech.nexecheck.view.fragment;
  * Created by lijie on 2017/6/1.
  */
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -28,9 +29,28 @@ public class SingleCheckFragment extends DoCheckFragment{
 
     @Override
     public void onClick(View v) {
-        super.onClick(v);
-        if (v.getId() == R.id.singleCheckNextItemBtn){
-            exitFragment();
+
+        switch (v.getId()){
+            case R.id.singleCheckBeginCheckLeftBtn:
+                btnCheck();
+                break;
+            case R.id.singleCheckNextItemBtn:
+                if (!checkTask.isRunning) {
+                    exitFragment();
+                }else {
+                    new AlertDialog.Builder(activity).setMessage(R.string.please_wait_currentTask_over).setNeutralButton(R.string.str_ok, null).show();
+                }
+                break;
+            case R.id.singleCheckBeginCheckRightBtn:
+                btnCheck();
+                break;
+            case R.id.singleCheckExitCheckBtn:
+                if (!checkTask.isRunning) {
+                    exitFragment();
+                }else {
+                    new AlertDialog.Builder(activity).setMessage(R.string.please_wait_currentTask_over).setNeutralButton(R.string.str_ok, null).show();
+                }
+                break;
         }
     }
 }
