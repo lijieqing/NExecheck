@@ -609,6 +609,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     }
 
     private void clear() {
+        Globals.HomeLastPosition = -1;
+        checkRecordEntity = null;
+        checkItemEntity = null;
         deviceNameTV.setText("");
         subdeviceNameTV.setText("");
         excIdTV.setText("");

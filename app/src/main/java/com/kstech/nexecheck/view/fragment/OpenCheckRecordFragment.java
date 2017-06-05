@@ -126,6 +126,7 @@ public class OpenCheckRecordFragment extends BaseFragment {
                 ((HomeActivity)activity).initRecordItem(excId,true);
                 ((HomeActivity)activity).showChFg = null;
                 ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
+                ((HomeActivity)activity).checkItemEntity = null;
                 getFragmentManager().beginTransaction().remove(OpenCheckRecordFragment.this).commit();
             }
         }

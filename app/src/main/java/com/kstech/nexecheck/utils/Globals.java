@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 
+import com.kstech.nexecheck.base.NetWorkStatusListener;
 import com.kstech.nexecheck.domain.config.DeviceModelFile;
 import com.kstech.nexecheck.domain.config.ResConfigFile;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
@@ -16,6 +17,7 @@ import com.kstech.nexecheck.view.widget.RealTimeView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -34,8 +36,7 @@ public class Globals {
     public static String REMOTE_FILE = "";
     public static final String LOCAL_PATH = fs + "storage" + fs + "sdcard1" + fs;
     public static String LOCAL_CURRENT_FILE = LOCAL_PATH;
-
-
+    public static boolean isLoading = false;
 
 
 

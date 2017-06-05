@@ -44,6 +44,7 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
+        Globals.isLoading = true;
         try {
             Globals.loadDeviceModelFile(checkRecordEntity.getDeviceId(), checkRecordEntity.getSubdeviceId(), context);
         } catch (ExcException excException) {
@@ -138,6 +139,7 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
+        Globals.isLoading = false;
         mProgressDialog.cancel();
     }
 

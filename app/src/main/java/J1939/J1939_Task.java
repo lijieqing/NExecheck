@@ -53,8 +53,10 @@ public class J1939_Task extends Thread {
 			}
 			J1939_Context.j1939_API.j1939_CycAction();
 
-			if ( ( ( System.currentTimeMillis() - tmCycleStart) * 100 / J1939_Context.j1939_Cfg.wCycle ) > 20 ) {
-				// J1939任务运行时间与运行周期的比率超过设定值
+			if (J1939_Context.j1939_Cfg.wCycle!=0){
+				if ( ( ( System.currentTimeMillis() - tmCycleStart) * 100 / J1939_Context.j1939_Cfg.wCycle ) > 20 ) {
+					// J1939任务运行时间与运行周期的比率超过设定值
+				}
 			}
 
 			try {

@@ -119,7 +119,7 @@ public class GenericRxDBoxCallback implements IRxDBoxCallback {
 					.getPg(0xFF83).wDBNumber));
 		}
 
-		if (pPGCfg.dwPGN == 0xFF81 ) {
+		if (pPGCfg.dwPGN == 0xFF81 && !Globals.isLoading) {
 			// 发送应答状态接受确认帧（0xFF82）
 			J1939_Context.j1939_API.j1939_sendDatabox((short)(Globals.getModelFile().j1939PgSetVO
 					.getPg(0xFF82).wDBNumber));
