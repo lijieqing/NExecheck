@@ -103,8 +103,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 //获得当前系统已经启动的时间
                 mHints[mHints.length - 1] = SystemClock.uptimeMillis();
                 if (SystemClock.uptimeMillis()-mHints[0]<=1000) {
-                    //startActivity(new Intent(LoginActivity.this, IndexActivity.class));
-                    //finish();
+                    startActivity(new Intent(LoginActivity.this, IndexActivity.class));
+                    finish();
                 }
             }
         });

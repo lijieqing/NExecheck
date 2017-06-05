@@ -3,6 +3,7 @@ package com.kstech.nexecheck.domain.config;
 import android.content.Context;
 import android.util.Log;
 
+import com.kstech.nexecheck.domain.config.vo.APKVO;
 import com.kstech.nexecheck.domain.config.vo.CheckLineVO;
 import com.kstech.nexecheck.domain.config.vo.DeviceVO;
 import com.kstech.nexecheck.domain.config.vo.FtpServerVO;
@@ -38,6 +39,16 @@ public class ResConfigFile {
 	private FtpServerVO ftpServerVO;
 
 	private ResourceVO resourceVO;
+
+	private APKVO apkVO;
+
+	public APKVO getApkVO() {
+		return apkVO;
+	}
+
+	public void setApkVO(APKVO apkVO) {
+		this.apkVO = apkVO;
+	}
 
 	public void addDevice(DeviceVO deviceVO) {
 		deviceList.add(deviceVO);
@@ -120,7 +131,13 @@ public class ResConfigFile {
 
 			result.addCheckLine(checkLine);
 		}
-
+		//获取apk更新信息，对应标签apk
+		Element APKNode = root.element("APK");
+		APKVO apk = null;
+		if (APKNode != null){
+			apk = new APKVO(APKNode.attribute("URL").getText());
+		}
+		result.setApkVO(apk);
 		// 获取Ftp服务器的配置信息
 		Element ftpServerNode = root.element("FtpServer");
 		FtpServerVO ftpServerVO = new FtpServerVO();

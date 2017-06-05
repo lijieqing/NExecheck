@@ -294,6 +294,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                                     boolean suc = SystemUtil.copyDB(name,getactivity());
                                     if(suc){
                                         Toast.makeText(getactivity(),"数据库成功导入",Toast.LENGTH_SHORT).show();
+                                        //// TODO: 2017/6/5 跳转到 打开记录界面
                                         //startActivityForResult(new Intent(getactivity(),OpenCheckRecordActivity.class),1);
                                     }else {
                                         Toast.makeText(getactivity(),"导入失败，请重试",Toast.LENGTH_SHORT).show();
