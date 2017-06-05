@@ -4,12 +4,14 @@
 package com.kstech.nexecheck.view.widget;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.domain.db.dao.CheckItemDetailDao;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.utils.Globals;
 
@@ -72,8 +74,11 @@ public class CheckItemSingleView {
 		if (null != currentItemStatusTV){
 			currentItemStatusTV.setText(checkItem.getCheckStatusName());
 		}
-		currentItemSumTimesTV.setText("检验次数：" + checkItem.getSumTimes() + "次");
-		if(checkItem.getSumTimes()>5){
+		int times = CheckItemDetailDao.getCheckItemDetailList(activity,checkItem.getExcId(),checkItem.getItemId()).size();
+		Log.e("CheckItemSingleView","检验次数：" + times + "次");
+
+		currentItemSumTimesTV.setText("检验次数：" + times + "次");
+		if(times>5){
 			showMoreDataTV.setText("点击加载更多");
 			dataFreshIV.setBackgroundResource(R.drawable.addok);
 		}else {

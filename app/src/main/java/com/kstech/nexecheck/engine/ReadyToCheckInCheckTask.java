@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kstech.nexecheck.R;
@@ -26,13 +27,14 @@ public class ReadyToCheckInCheckTask extends AsyncTask<Void,String,Void> {
 
     private AlertDialog dialog;
     private HomeActivity context;
-    private boolean isSingle = false;
+    private boolean isRunning = false;
     private int remainSeconds = 0;
     private CheckItemVO checkItemVO;
     private TextView tvMsg;
     private Chronometer chronometer;
     private Button btnIn;
     private Button btnCancel;
+    private ImageView imageView;
 
     public ReadyToCheckInCheckTask(HomeActivity context, CheckItemVO checkItemVO) {
         this.context = context;
@@ -47,12 +49,14 @@ public class ReadyToCheckInCheckTask extends AsyncTask<Void,String,Void> {
         chronometer = (Chronometer) view.findViewById(R.id.chronom);
         btnIn = (Button) view.findViewById(R.id.btn_in);
         btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        imageView = (ImageView) view.findViewById(R.id.iv_progress);
         //btnCancel.setVisibility(View.INVISIBLE);
-        //btnIn.setVisibility(View.INVISIBLE);
+        btnIn.setVisibility(View.INVISIBLE);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
+                isRunning = false;
                 Globals.HomeLastPosition = Globals.HomeLastPosition-1;
                 context.checkItemEntity = context.doCheckFragment.currentCheckItemEntity;
                 context.homeCheckEntityFragment.updateFragment();
@@ -92,9 +96,9 @@ public class ReadyToCheckInCheckTask extends AsyncTask<Void,String,Void> {
     protected Void doInBackground(Void... params) {
         // 发送准备检测命令
         CommandSender.sendReadyToCheckCommand(context.checkItemEntity.getItemId(), context.checkItemEntity.getSumTimes() + 1);
-
+        isRunning = true;
         publishProgress("progress","与终端通讯进行准备检测--最大耗时--",""+checkItemVO.getReadyTimeout()*60);
-        while (remainSeconds < checkItemVO.getReadyTimeout()*60){
+        while (remainSeconds < checkItemVO.getReadyTimeout()*60 && isRunning){
             String readyToCheckCommandResp = CommandResp.getReadyToCheckCommandResp(context.checkItemEntity.getItemId(), context.checkItemEntity.getSumTimes() + 1);
             if ("准备就绪".equals(readyToCheckCommandResp)) {
                 String readyMsg = checkItemVO.getReadyMsg();
@@ -115,7 +119,7 @@ public class ReadyToCheckInCheckTask extends AsyncTask<Void,String,Void> {
                 if (notReadyMsg != null && !notReadyMsg.equals("")) {
                     content = Globals.getResConfig().getResourceVO().getMsg(notReadyMsg).getContent();
                 }
-                publishProgress("error","--无法进入检测--",content);
+                publishProgress("error","--存在故障--",content);
                 SystemClock.sleep(1000);
                 return null;
 
@@ -149,17 +153,25 @@ public class ReadyToCheckInCheckTask extends AsyncTask<Void,String,Void> {
             tvMsg.setText(values[1]+values[2]);
             chronometer.stop();
             btnCancel.setVisibility(View.VISIBLE);
+            btnIn.setText("    忽略错误，进入");
+            btnIn.setVisibility(View.VISIBLE);
+            isRunning = false;
+            imageView.setBackgroundResource(R.drawable.progress_error);
         }
         if ("ok".equals(values[0])){
             tvMsg.setText(values[1]+values[2]);
             chronometer.stop();
             btnIn.setVisibility(View.VISIBLE);
             btnCancel.setVisibility(View.VISIBLE);
+            isRunning = false;
+            imageView.setBackgroundResource(R.drawable.progress_ok);
         }
         if ("timeout".equals(values[0])){
             tvMsg.setText(values[1]+values[2]);
             chronometer.stop();
             btnCancel.setVisibility(View.VISIBLE);
+            isRunning = false;
+            imageView.setBackgroundResource(R.drawable.progress_error);
         }
     }
 }

@@ -92,7 +92,7 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 if (progressMsg != null && !progressMsg.equals("")) {
                     content = Globals.getResConfig().getResourceVO().getMsg(progressMsg).getContent();
                 }
-                publishProgress("running","正在检测 - - - ","");
+                publishProgress("running",content,"");
                 // 通知UI线程检测进度，继续循环判断状态，至检测完成
                 SystemClock.sleep(1000);
                 remainSeconds++;
@@ -245,8 +245,6 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
             case "finish":
                 msgTv.setText(values[1]+"，"+values[2]);
                 chronometer.stop();
-                isRunning = false;
-                this.cancel(true);
                 context.doCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
                 context.doCheckFragment.singleCheckBeginCheckRightBtn.setText("开始测量");
                 // 插入详情记录，更新项目记录
@@ -254,12 +252,13 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
                 context.doCheckFragment.checkItemSingleView.initCheckItemParamList(checkItemEntity);
                 context.homeCheckEntityFragment.currentCheckItemView.initCheckItemParamList(checkItemEntity);
+
+                isRunning = false;
+                this.cancel(true);
                 break;
             case "error":
                 msgTv.setText(values[1]+"，"+values[2]);
                 chronometer.stop();
-                isRunning = false;
-                this.cancel(true);
                 context.doCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
                 context.doCheckFragment.singleCheckBeginCheckRightBtn.setText("开始测量");
                 // 保存记录，结论，传感器故障
@@ -267,6 +266,9 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
                 context.doCheckFragment.checkItemSingleView.initCheckItemParamList(checkItemEntity);
                 context.homeCheckEntityFragment.currentCheckItemView.initCheckItemParamList(checkItemEntity);
+
+                isRunning = false;
+                this.cancel(true);
                 break;
             case "running":
                 msgTv.setText(values[1]+values[2]);
@@ -274,8 +276,6 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
             case "timeout":
                 msgTv.setText(values[1]+"，"+values[2]);
                 chronometer.stop();
-                isRunning = false;
-                this.cancel(true);
                 context.doCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
                 context.doCheckFragment.singleCheckBeginCheckRightBtn.setText("开始测量");
                 // 保存记录，结论，超时
@@ -283,6 +283,9 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
                 context.doCheckFragment.checkItemSingleView.initCheckItemParamList(checkItemEntity);
                 context.homeCheckEntityFragment.currentCheckItemView.initCheckItemParamList(checkItemEntity);
+
+                isRunning = false;
+                this.cancel(true);
                 break;
         }
     }
