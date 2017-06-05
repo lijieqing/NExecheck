@@ -16,8 +16,10 @@ import com.kstech.nexecheck.domain.communication.CommandResp;
 import com.kstech.nexecheck.domain.communication.CommandSender;
 import com.kstech.nexecheck.domain.config.vo.CheckItemParamValueVO;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
+import com.kstech.nexecheck.domain.db.dao.CheckItemDao;
 import com.kstech.nexecheck.domain.db.dao.CheckItemDetailDao;
 import com.kstech.nexecheck.domain.db.dbenum.CheckItemDetailStatusEnum;
+import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.view.fragment.DoCheckFragment;
 
@@ -42,6 +44,8 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
     private List<CheckItemParamValueVO> headers;
 
     public boolean isRunning = false;
+
+    private String detailStatus = CheckItemDetailStatusEnum.PASS.getCode();
 
     public ItemCheckTask(HomeActivity context, Chronometer chronometer, DoCheckFragment.MsgAdapter msgAdapter, TextView msgTv) {
         this.context = context;
@@ -95,7 +99,6 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
 
             } else if ("检测完成".equals(startCheckCommandResp)) {
 
-                String detailStatus = CheckItemDetailStatusEnum.PASS.getCode();
                 for (CheckItemParamValueVO h : headers) {
                     // 从数据区中获取 检查参数对应的数据区
                     J1939_DataVar_ts dsItem = Globals.getModelFile().getDataSetVO().getDSItem(h.getParam());
@@ -123,23 +126,19 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                         h.setValue(formatValue);
                         Log.e("MIAO", "收到得知" + formatValue);
                         // 有一个参数不合格，那么当次检测不合格
-                        if (Float.valueOf(h.getValidMin()) > checkvalue
-                                || checkvalue > Float.valueOf(h
-                                .getValidMax())) {
+                        if (Float.valueOf(h.getValidMin()) > checkvalue || checkvalue > Float.valueOf(h.getValidMax())) {
                             detailStatus = CheckItemDetailStatusEnum.UN_PASS.getCode();
                         }
+
                     } else {
                         h.setValue(dsItem.getValue() + "");
                         // 有一个参数不合格，那么当次检测不合格
-                        if (Long.valueOf(h.getValidMin()) > dsItem.getValue()
-                                || dsItem.getValue() > Long
-                                .valueOf(h.getValidMax())) {
+                        if (Long.valueOf(h.getValidMin()) > dsItem.getValue() || dsItem.getValue() > Long.valueOf(h.getValidMax())) {
                             detailStatus = CheckItemDetailStatusEnum.UN_PASS.getCode();
                         }
                     }
                 }
-                // 插入详情记录，更新项目记录
-                //CheckItemDetailDao.insertDetailAndUpdateItem(context, detailStatus, context.checkItemEntity, headers, checkItemVO);
+
                 String okMsg = checkItemVO.getOkMsg();
                 String content = "";
                 if (okMsg != null && !okMsg.equals("")) {
@@ -216,20 +215,14 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 }
 
                 publishProgress("error","检测失败",content);
-                // 判断是否人工终止，进行处理
-
-
-                // 保存记录，结论，传感器故障
-               // CheckItemDetailDao.insertDetailAndUpdateItem(context, CheckItemDetailStatusEnum.OTHER.getCode(), context.checkItemEntity, headers, checkItemVO);
-
-                // 传感器故障,则通知UI。程序终止
 
                 return null;
             }
         }
 
         //// TODO: 2017/6/2 通讯超时处理
-
+        // 保存记录，结论，通讯超时
+        publishProgress("timeout","通讯超时","");
         return null;
     }
 
@@ -242,6 +235,7 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
+        CheckItemEntity checkItemEntity;
         switch (values[0]){
             case "start":
                 msgTv.setText(values[1]+values[2]);
@@ -249,23 +243,46 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 chronometer.start();
                 break;
             case "finish":
-                msgTv.setText(values[1]+values[2]);
+                msgTv.setText(values[1]+"，"+values[2]);
                 chronometer.stop();
                 isRunning = false;
                 this.cancel(true);
                 context.doCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
                 context.doCheckFragment.singleCheckBeginCheckRightBtn.setText("开始测量");
+                // 插入详情记录，更新项目记录
+                CheckItemDetailDao.insertDetailAndUpdateItem(context, detailStatus, context.checkItemEntity, headers, checkItemVO);
+                checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
+                context.doCheckFragment.checkItemSingleView.initCheckItemParamList(checkItemEntity);
+                context.homeCheckEntityFragment.currentCheckItemView.initCheckItemParamList(checkItemEntity);
                 break;
             case "error":
-                msgTv.setText(values[1]+values[2]);
+                msgTv.setText(values[1]+"，"+values[2]);
                 chronometer.stop();
                 isRunning = false;
                 this.cancel(true);
                 context.doCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
                 context.doCheckFragment.singleCheckBeginCheckRightBtn.setText("开始测量");
+                // 保存记录，结论，传感器故障
+                CheckItemDetailDao.insertDetailAndUpdateItem(context, CheckItemDetailStatusEnum.OTHER.getCode(), context.checkItemEntity, headers, checkItemVO);
+                checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
+                context.doCheckFragment.checkItemSingleView.initCheckItemParamList(checkItemEntity);
+                context.homeCheckEntityFragment.currentCheckItemView.initCheckItemParamList(checkItemEntity);
                 break;
             case "running":
                 msgTv.setText(values[1]+values[2]);
+                break;
+            case "timeout":
+                msgTv.setText(values[1]+"，"+values[2]);
+                chronometer.stop();
+                isRunning = false;
+                this.cancel(true);
+                context.doCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
+                context.doCheckFragment.singleCheckBeginCheckRightBtn.setText("开始测量");
+                // 保存记录，结论，超时
+                CheckItemDetailDao.insertDetailAndUpdateItem(context,CheckItemDetailStatusEnum.CONNECT_TIMEOUT.getCode(),context.checkItemEntity,headers,checkItemVO);
+                checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
+                context.doCheckFragment.checkItemSingleView.initCheckItemParamList(checkItemEntity);
+                context.homeCheckEntityFragment.currentCheckItemView.initCheckItemParamList(checkItemEntity);
                 break;
         }
     }
