@@ -106,7 +106,7 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
         checkItemSingleView.initCheckItemParamList(((HomeActivity)activity).checkItemEntity);
 
         //检测线程初始化
-        checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv);
+        checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv,isSingle);
         return view;
     }
 
@@ -200,7 +200,7 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
         if (checkTask.isRunning){
             stopConfirm();
         }else {
-            checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv);
+            checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv, isSingle);
             checkTask.execute();
             singleCheckBeginCheckLeftBtn.setText("停止测量");
             singleCheckBeginCheckRightBtn.setText("停止测量");
@@ -253,7 +253,7 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                                 checkTask.isRunning = false;
                                 checkTask.cancel(true);
                                 //检测线程初始化
-                                checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv);
+                                checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv, isSingle);
                             }
                         }).show();
     }

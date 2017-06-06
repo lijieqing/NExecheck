@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.activity;
+package com.kstech.nexecheck.activity.user;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kstech.nexecheck.activity.HomeActivity;
+import com.kstech.nexecheck.activity.upload.UpgradeActivity;
 import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.adapter.LoginUserListAdapter;

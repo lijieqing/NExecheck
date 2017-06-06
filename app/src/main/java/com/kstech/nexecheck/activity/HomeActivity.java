@@ -7,6 +7,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -275,43 +277,46 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                 showCheckFragment(openCheckRecordFragment, "OpenFragment", R.id.ll_check);
                 break;
             case R.id.liuchengCheckBtn:
-                if (checkItemEntity != null){
-                    //通过 entity id获取到需要初始化的 实施参数
-                    List<RealTimeParamVO> reals = Globals.getModelFile().getCheckItemVO(checkItemEntity.getItemId()).getRtParamList();
-                    Globals.CheckItemRealtimeViews.clear();
-                    for (RealTimeParamVO real : reals) {
-                        //// TODO: 2017/6/1 此时将实时显示参数添加到集合 但是未注册监听 在fragment初始化时注册
-                        RealTimeView realTimeView = new RealTimeView(getactivity(),real);
-                        Globals.CheckItemRealtimeViews.add(realTimeView);
+                if (checkWIFI()){
+                    if (checkItemEntity != null){
+                        //通过 entity id获取到需要初始化的 实施参数
+                        List<RealTimeParamVO> reals = Globals.getModelFile().getCheckItemVO(checkItemEntity.getItemId()).getRtParamList();
+                        Globals.CheckItemRealtimeViews.clear();
+                        for (RealTimeParamVO real : reals) {
+                            //// TODO: 2017/6/1 此时将实时显示参数添加到集合 但是未注册监听 在fragment初始化时注册
+                            RealTimeView realTimeView = new RealTimeView(getactivity(),real);
+                            Globals.CheckItemRealtimeViews.add(realTimeView);
+                        }
+                        readyToCheckTask = new ReadyToCheckTask(this,false);
+                        readyToCheckTask.execute();
+                    }else {
+                        new AlertDialog.Builder(getactivity())
+                                .setMessage(R.string.please_selectOne_check_item)
+                                .setNeutralButton(R.string.str_ok, null).show();
+                        return;
                     }
-                    readyToCheckTask = new ReadyToCheckTask(this,false);
-                    readyToCheckTask.execute();
-                }else {
-                    new AlertDialog.Builder(getactivity())
-                            .setMessage(R.string.please_selectOne_check_item)
-                            .setNeutralButton(R.string.str_ok, null).show();
-                    return;
                 }
                 break;
             case R.id.singleCheckBtn:
-                if (checkItemEntity != null){
-                    //通过 entity id获取到需要初始化的 实施参数
-                    List<RealTimeParamVO> reals = Globals.getModelFile().getCheckItemVO(checkItemEntity.getItemId()).getRtParamList();
-                    Globals.CheckItemRealtimeViews.clear();
-                    for (RealTimeParamVO real : reals) {
-                        //// TODO: 2017/6/1 此时将实时显示参数添加到集合 但是未注册监听 在fragment初始化时注册
-                        RealTimeView realTimeView = new RealTimeView(getactivity(),real);
-                        Globals.CheckItemRealtimeViews.add(realTimeView);
+                if (checkWIFI()){
+                    if (checkItemEntity != null){
+                        //通过 entity id获取到需要初始化的 实施参数
+                        List<RealTimeParamVO> reals = Globals.getModelFile().getCheckItemVO(checkItemEntity.getItemId()).getRtParamList();
+                        Globals.CheckItemRealtimeViews.clear();
+                        for (RealTimeParamVO real : reals) {
+                            //// TODO: 2017/6/1 此时将实时显示参数添加到集合 但是未注册监听 在fragment初始化时注册
+                            RealTimeView realTimeView = new RealTimeView(getactivity(),real);
+                            Globals.CheckItemRealtimeViews.add(realTimeView);
+                        }
+                        readyToCheckTask = new ReadyToCheckTask(this,true);
+                        readyToCheckTask.execute();
+                    }else {
+                        new AlertDialog.Builder(getactivity())
+                                .setMessage(R.string.please_selectOne_check_item)
+                                .setNeutralButton(R.string.str_ok, null).show();
+                        return;
                     }
-                    readyToCheckTask = new ReadyToCheckTask(this,true);
-                    readyToCheckTask.execute();
-                }else {
-                    new AlertDialog.Builder(getactivity())
-                            .setMessage(R.string.please_selectOne_check_item)
-                            .setNeutralButton(R.string.str_ok, null).show();
-                    return;
                 }
-
                 break;
             case R.id.wholeCheckDescTableRow:
                 if (null == checkRecordEntity) {
@@ -629,6 +634,41 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         wholeFinishTimeTV.setText("");
         wholeSumTimesTV.setText("");
         wholeCheckDescTV.setText("");
+    }
+
+    private boolean checkWIFI(){
+        String ssid = "nowifi";
+        WifiManager manager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiinfo = manager.getConnectionInfo();
+        if(wifiinfo!=null){
+            ssid = wifiinfo.getSSID();
+            Log.e("LOGIN","---S S I D---"+ssid);
+        }
+        if(!ssid.equals("\""+ConfigFileManager.getInstance(this).getLastSsid()+"\"")){
+            Log.e("LOGIN","---L O C A L  S S I D---"+ConfigFileManager.getInstance(this).getLastSsid());
+            String bs = getResources().getString(R.string.checkLineError);
+            String s = String.format(bs,ssid,ConfigFileManager.getInstance(this).getLastSsid());
+            new AlertDialog.Builder(this)
+                    .setMessage(s)
+                    .setNeutralButton(R.string.str_ok, null).show();
+            return false;
+        }else {
+            Log.e("LOGIN","---L O C A L  S S I D---"+ConfigFileManager.getInstance(this).getLastSsid());
+        }
+        if("数据上传".equals(Globals.getCurrentCheckLine().getName())){
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.checkByUploadError)
+                    .setNeutralButton(R.string.str_ok, null).show();
+            return false;
+        }
+//        if (!isCheckItemSelected()) {
+//            new AlertDialog.Builder(this)
+//                    .setMessage(R.string.please_selectOne_check_item)
+//                    .setNeutralButton(R.string.str_ok, null).show();
+//            return false;
+//        }
+
+        return true;
     }
 
     /**

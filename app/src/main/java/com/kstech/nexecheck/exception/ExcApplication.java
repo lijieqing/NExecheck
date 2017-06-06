@@ -1,6 +1,7 @@
 package com.kstech.nexecheck.exception;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -33,12 +34,12 @@ public class ExcApplication extends Application {
     /**
      * 自定义Myhandler 异常捕获类 捕获未知异常.
      */
-    class MyHandler implements Thread.UncaughtExceptionHandler {
+    private class MyHandler implements Thread.UncaughtExceptionHandler {
 
         // 一旦有未捕获的异常,就会回调此方法
         @Override
         public void uncaughtException(Thread thread, Throwable ex) {
-            System.out.println("发现一个未处理的异常, 但是被哥捕获了...");
+            Log.e("AndroidRuntime","MyHandler exception");
             ex.printStackTrace();
 
             // 收集崩溃日志, 可以在后台上传给服务器,供开发人员分析

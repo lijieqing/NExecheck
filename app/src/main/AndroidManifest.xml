@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".activity.user.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +31,7 @@
         <activity android:name=".activity.user.ModPwdActivity" />
         <activity android:name=".activity.upload.DataUploadActivity" />
         <activity android:name=".activity.upload.FileManagerActivity" />
-        <activity android:name=".activity.UpgradeActivity" />
+        <activity android:name=".activity.upload.UpgradeActivity" />
 
         <service
             android:name=".engine.J1939TaskService"

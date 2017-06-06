@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.activity;
+package com.kstech.nexecheck.activity.upload;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.activity.user.LoginActivity;
 import com.kstech.nexecheck.utils.Globals;
 import com.kstech.nexecheck.utils.BinaryFile;
 import com.kstech.nexecheck.utils.InStreamUtils;

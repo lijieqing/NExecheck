@@ -12,7 +12,7 @@
     <string name="passwordError">密码错误，请重新输入</string>
     <string name="checkLine">检线名</string>
     <string name="checkLineEmpty">请选择检线名</string>
-    <string name="checkLineError">----------WIFI连接与当前检线不符，无法开始检测----------\n请确认WIFI连接正确，点击\"菜单\">>\"设置检线\">>选择相应检线</string>
+    <string name="checkLineError">----------当前WIFI连接为%1$s与当前检线\"%2$s\"不符---\n----------无法开始检测----------\n请确认WIFI连接正确，点击\"菜单\">>\"设置检线\">>选择相应检线</string>
     <string name="uploadError">并未连接到数据上传网络，若要上传请选择\"数据上传\"检线</string>
     <string name="recordStateError">机型检验状态为\"未完成\"，\s请给定\"合格\"、\"不合格\"、\"强制合格\"后再上传检验记录</string>
     <string name="recordNotFinish">存在检测项目\"未检测\"或\"未完成\"</string>
