@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import J1939.J1939_CANID_ts;
 import J1939.J1939_Context;
@@ -203,13 +204,22 @@ public class CommunicationWorker extends Thread {
         if (canID.PF() == (byte) (J1939.PF_REQPGN)) { //
             J1939_Context.j1939_CommCfg.can_ReqFIFO.add(rxCanMsg); // 将读到的消息放入请求FIFO中
         } //
-        else { //
-            if (J1939_Context.j1939_CommCfg.can_RxFIFO.size() < J1939.CAN_RXFIFO_SIZE) {
-                J1939_Context.j1939_CommCfg.can_RxFIFO.add(rxCanMsg); // 将读到的消息放入接收FIFO中
-            } else {
-//				System.out.println("can_RxFIFO 已满");
+        else {
+            //判断条件为 添加一个元素，若失败进入方法体
+            if (!J1939_Context.j1939_CommCfg.can_RxFIFO.offer(rxCanMsg)){
                 Log.e("FIFO", rxCanMsg + "-------已满--------");
+                //去掉头部元素
+                J1939_Context.j1939_CommCfg.can_RxFIFO.poll();
+                //将最新元素加入 此方法添加 若失败 会报异常
+                J1939_Context.j1939_CommCfg.can_RxFIFO.add(rxCanMsg);
             }
+
+//            if (J1939_Context.j1939_CommCfg.can_RxFIFO.size() < J1939.CAN_RXFIFO_SIZE) {
+//                J1939_Context.j1939_CommCfg.can_RxFIFO.add(rxCanMsg); // 将读到的消息放入接收FIFO中
+//            } else {
+////				System.out.println("can_RxFIFO 已满");
+//                Log.e("FIFO", rxCanMsg + "-------已满--------");
+//            }
         }
 
     }
@@ -272,7 +282,8 @@ public class CommunicationWorker extends Thread {
         isRunning = true;
 
 
-        List<can_Message_ts> msgList = J1939_Context.j1939_CommCfg.can_TxFIFO;
+        ArrayBlockingQueue<can_Message_ts> msgList = J1939_Context.j1939_CommCfg.can_TxFIFO;
+        //List<can_Message_ts> msgList = J1939_Context.j1939_CommCfg.can_TxFIFO;
 
         // 任务循环
         while (true) {
@@ -396,8 +407,11 @@ public class CommunicationWorker extends Thread {
                             isRunning = false;
                             break;
                         }
-                        can_Message_ts canMsg = msgList.get(0); // 链头消息
-                        msgList.remove(0); //
+//                        can_Message_ts canMsg = msgList.get(0); // 链头消息
+//                        msgList.remove(0); //
+                        //poll() 方法 直接移除头元素 并返回
+                        can_Message_ts canMsg = msgList.poll();
+
                         bNop = false; // 标示非空操作周期
                         SendCanMessage(SendBuf, iSendLen, canMsg); // 组装发送帧到发送数据区
                         iSendLen += CAN_PACKET_LEN; //

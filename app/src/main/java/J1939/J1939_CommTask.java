@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class J1939_CommTask extends Thread {
 
@@ -188,7 +189,7 @@ public class J1939_CommTask extends Thread {
 			OutputStream Out = sockTcp.getOutputStream();
 
 			lastRecvTime = System.currentTimeMillis();
-			List<can_Message_ts> msgList = J1939_Context.j1939_CommCfg.can_TxFIFO;
+			ArrayBlockingQueue<can_Message_ts> msgList = J1939_Context.j1939_CommCfg.can_TxFIFO;
 
 			// 任务循环
 			while (true ) {
@@ -259,8 +260,9 @@ public class J1939_CommTask extends Thread {
 				else {
 					// 套接口无可读数据，判断发送缓冲区状态
 					while ( msgList.size() > 0  ) {
-						can_Message_ts canMsg = msgList.get(0); 				// 链头消息
-						msgList.remove(0);										// 	
+						can_Message_ts canMsg = msgList.poll();
+//						can_Message_ts canMsg = msgList.get(0); 				// 链头消息
+//						msgList.remove(0);										//
 						bNop = false;											// 标示非空操作周期
 						SendCanMessage(SendBuf, iSendLen, canMsg);				// 组装发送帧到发送数据区
 						iSendLen += 20;											//

@@ -3,6 +3,7 @@ package J1939;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 //J1939通讯配置类
 public class J1939_CommCfg_ts {
@@ -39,12 +40,14 @@ public class J1939_CommCfg_ts {
 	/**
 	 * CAN帧发送缓冲区,在can_registerTxBuf()中实例化
 	 */
-	public List<can_Message_ts> can_TxFIFO; 	
-	
-	/**
+	public ArrayBlockingQueue<can_Message_ts> can_TxFIFO;
+    //public List<can_Message_ts> can_TxFIFO;
+
+    /**
 	 * CAN帧接收缓冲区 ，can_registerRxBuf()中实例化
 	 */
-	public List<can_Message_ts> can_RxFIFO;
+	public ArrayBlockingQueue<can_Message_ts> can_RxFIFO;
+    //public List<can_Message_ts> can_RxFIFO;
 	
 	/**
 	 *  本节点收到的来自于其它节点的PGN请求帧队列， 

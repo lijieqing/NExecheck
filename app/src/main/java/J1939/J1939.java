@@ -3,6 +3,7 @@ package J1939;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class J1939 implements IJ1939_API {
 
@@ -243,6 +244,14 @@ public class J1939 implements IJ1939_API {
 		for ( int i=0; i<8; i++)
 			System.out.print(" " + Integer.toHexString(( pCanMsg.data_au8[i] & 0xF0 ) >> 4 ) + Integer.toHexString(pCanMsg.data_au8[i] & 0x0F ) ) ;
 		*/
+
+//		if (J1939_Context.j1939_CommCfg.can_TxFIFO.offer(pCanMsg)){
+//			return (1);
+//		}else {
+//			J1939_Context.j1939_CommCfg.can_TxFIFO.poll();
+//			J1939_Context.j1939_CommCfg.can_TxFIFO.add(pCanMsg);
+//			return (0);
+//		}
 
 		if ( J1939_Context.j1939_CommCfg.can_TxFIFO.size() < CAN_TXFIFO_SIZE ) {
 			J1939_Context.j1939_CommCfg.can_TxFIFO.add(pCanMsg);
@@ -1384,12 +1393,13 @@ public class J1939 implements IJ1939_API {
 	 */
 	@Override
 	public int can_registerTxBuf(byte chnl_u8,
-								 List<can_Message_ts> buf_pas, short numMsg_16) {
+								 ArrayBlockingQueue<can_Message_ts> buf_pas, short numMsg_16) {
 
 		// TODO Auto-generated method stub
 
 		if ( buf_pas == null ) {
-			J1939_Context.j1939_CommCfg.can_TxFIFO  = Collections.synchronizedList(new LinkedList<can_Message_ts>());
+			//J1939_Context.j1939_CommCfg.can_TxFIFO  = Collections.synchronizedList(new LinkedList<can_Message_ts>());
+			J1939_Context.j1939_CommCfg.can_TxFIFO  = new ArrayBlockingQueue<>(CAN_TXFIFO_SIZE);
 		}
 		else {
 			J1939_Context.j1939_CommCfg.can_TxFIFO = buf_pas;
@@ -1415,12 +1425,13 @@ public class J1939 implements IJ1939_API {
 	 */
 	@Override
 	public int can_registerRxBuf(byte chnl_u8,
-								 List<can_Message_ts> buf_pas, short numMsg_16) {
+								 ArrayBlockingQueue<can_Message_ts> buf_pas, short numMsg_16) {
 
 		// TODO Auto-generated method stub
 
 		if ( buf_pas == null ) {
-			J1939_Context.j1939_CommCfg.can_RxFIFO  = Collections.synchronizedList(new LinkedList<can_Message_ts>());
+			J1939_Context.j1939_CommCfg.can_RxFIFO  = new ArrayBlockingQueue<>(CAN_RXFIFO_SIZE);
+			//J1939_Context.j1939_CommCfg.can_RxFIFO  = Collections.synchronizedList(new LinkedList<can_Message_ts>());
 		}
 		else {
 			J1939_Context.j1939_CommCfg.can_RxFIFO = buf_pas;
@@ -2454,14 +2465,15 @@ public class J1939 implements IJ1939_API {
 
 		short			boxNumber;
 
-		List<can_Message_ts> pRxFIFO;
+		ArrayBlockingQueue<can_Message_ts> pRxFIFO;
 
 		// 1. 从CAN FIFO接收队列中逐帧读出CAN帧并处理
 		pRxFIFO = J1939_Context.j1939_CommCfg.can_RxFIFO;
 		while ( pRxFIFO.size() > 0 ) {
 
-			pRxCanMsg = pRxFIFO.get(0);
-			pRxFIFO.remove(0);
+			pRxCanMsg = pRxFIFO.poll();
+//			pRxCanMsg = pRxFIFO.get(0);
+//			pRxFIFO.remove(0);
 			//Log.i("pRxFIFO.size()======", pRxFIFO.size()+"");
 
 			canID = new J1939_CANID_ts(pRxCanMsg.id_u32);						// 接收到的CAN帧id

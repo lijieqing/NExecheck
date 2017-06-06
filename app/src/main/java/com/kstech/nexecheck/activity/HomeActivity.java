@@ -330,7 +330,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                 // changeStatusPopUp.setBackgroundDrawable(getDrawable(R.drawable.rect_gray));
                 changeStatusPopUp.setBackgroundDrawable(null);
                 //// TODO: 2017/5/25 弹窗位置需要修改
-                changeStatusPopUp.showAtLocation(layout, Gravity.TOP, 0, 100);
+                changeStatusPopUp.showAtLocation(layout, Gravity.TOP, 0, 80);
 
                 Button saveCheckDescBtn = (Button) layout
                         .findViewById(R.id.saveCheckDescBtn);
@@ -645,5 +645,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
             wholeCheckerNameTV.setText(Globals.getCurrentUser().getName());
             wholeFinishTimeTV.setText(finishTime);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

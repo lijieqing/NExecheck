@@ -6,19 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,20 +28,15 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.channels.FileChannel;
 
 /**
  * 软件更新引导页
  */
-public class IndexActivity extends Activity implements MyHttpUtils.MyHttpCallback{
+public class UpgradeActivity extends Activity implements MyHttpUtils.MyHttpCallback{
     private static final int INFO_UPDATE = 1;
     private static final int INFO_TOMAIN=2;
     private static final int INFO_NETERROR=3;
@@ -70,11 +60,11 @@ public class IndexActivity extends Activity implements MyHttpUtils.MyHttpCallbac
                     toHome();
                     break;
                 case INFO_NETERROR:
-                    Toast.makeText(IndexActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpgradeActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
                     toHome();
                     break;
                 case INFO_DATAERROR:
-                    Toast.makeText(IndexActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpgradeActivity.this,"数据异常",Toast.LENGTH_SHORT).show();
                     toHome();
                     break;
             }

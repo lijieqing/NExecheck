@@ -31,7 +31,7 @@
         <activity android:name=".activity.user.ModPwdActivity" />
         <activity android:name=".activity.upload.DataUploadActivity" />
         <activity android:name=".activity.upload.FileManagerActivity" />
-        <activity android:name=".activity.IndexActivity" />
+        <activity android:name=".activity.UpgradeActivity" />
 
         <service
             android:name=".engine.J1939TaskService"

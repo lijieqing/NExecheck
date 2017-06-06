@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private Button loginBtn;
     private LinearLayout userNameLy, checkLineLy;
 
-    private ImageView ivToEdit;
+    private ImageView ivToUpgrade;
 
     Handler handler = new Handler(){
         @Override
@@ -92,9 +92,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         // 整个用户名的layout框
         userNameLy = (LinearLayout) findViewById(R.id.userNameLy);
         checkLineLy = (LinearLayout) findViewById(R.id.checkLineLy);
-        ivToEdit = (ImageView) findViewById(R.id.iv_to_xml_edit);
+        ivToUpgrade = (ImageView) findViewById(R.id.iv_to_xml_edit);
 
-        ivToEdit.setOnClickListener(new View.OnClickListener() {
+        ivToUpgrade.setOnClickListener(new View.OnClickListener() {
             long[] mHints = new long[4];//初始全部为0
             @Override
             public void onClick(View view) {
@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 //获得当前系统已经启动的时间
                 mHints[mHints.length - 1] = SystemClock.uptimeMillis();
                 if (SystemClock.uptimeMillis()-mHints[0]<=1000) {
-                    startActivity(new Intent(LoginActivity.this, IndexActivity.class));
+                    startActivity(new Intent(LoginActivity.this, UpgradeActivity.class));
                     finish();
                 }
             }

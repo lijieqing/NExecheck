@@ -2,14 +2,15 @@ package J1939;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public interface IJ1939_API {
 
 	static final int DM1_MAXDTCS	 = 20;		//  最大激活故障数
 	static final int DM2_MAXDTCS	 = 20;		//  最大激活故障数
 
-	static final int CAN_RXFIFO_SIZE = 200;		//  CAN帧接收缓冲区大小
-	static final int CAN_TXFIFO_SIZE = 200;		//  CAN帧发送缓冲区大小
+	static final int CAN_RXFIFO_SIZE = 1000;		//  CAN帧接收缓冲区大小
+	static final int CAN_TXFIFO_SIZE = 1000;		//  CAN帧发送缓冲区大小
 
 	static final int PGN_DM1 	=	0xFECA;		//	当前故障表
 	static final int PGN_DM2 	=	0xFECB;		//
@@ -223,14 +224,14 @@ public interface IJ1939_API {
 	// 挂接CAN帧接收缓冲区
 	public int can_registerRxBuf(
 			byte chnl_u8,							//	CAN通道号, 0 -- n;
-			List<can_Message_ts> buf_pas,		//	CAN帧接收缓冲区FIFO队列
+			ArrayBlockingQueue<can_Message_ts> buf_pas,		//	CAN帧接收缓冲区FIFO队列
 			short numMsg_16							//	接收缓冲区大小（FIFO项数）
 	);
 
 	// 挂接CAN发送FIFO缓冲区
 	public int can_registerTxBuf(
 			byte chnl_u8,							//	CAN通道号, 0 -- n;
-			List<can_Message_ts> buf_pas,		//	CAN帧发送缓冲区FIFO队列
+			ArrayBlockingQueue<can_Message_ts> buf_pas,		//	CAN帧发送缓冲区FIFO队列
 			short numMsg_16							//	接收缓冲区大小（FIFO项数）
 	);
 
