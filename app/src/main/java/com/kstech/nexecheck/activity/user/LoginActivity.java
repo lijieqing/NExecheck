@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kstech.nexecheck.activity.HomeActivity;
+import com.kstech.nexecheck.activity.WIFIOFFActivity;
 import com.kstech.nexecheck.activity.upload.UpgradeActivity;
 import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
@@ -30,6 +33,7 @@ import com.kstech.nexecheck.domain.db.dbenum.UserStatusEnum;
 import com.kstech.nexecheck.domain.db.entity.User;
 import com.kstech.nexecheck.utils.DeviceUtil;
 import com.kstech.nexecheck.utils.Globals;
+import com.kstech.nexecheck.utils.MD5Utils;
 
 import java.util.List;
 import java.util.Map;
@@ -65,6 +69,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+        if(checkWIFIisOpen()){
+            //检查平板是否已被授权
+            checkPriority();
+        }else {
+            startActivity(new Intent(this,WIFIOFFActivity.class));
+            finish();
+        }
         new Thread(){
             @Override
             public void run() {
@@ -72,6 +83,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 handler.sendEmptyMessage(1);
             }
         }.start();
+    }
+
+    private boolean checkWIFIisOpen() {
+        WifiManager localWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if(localWifiManager.getWifiState()==1){
+            Log.i("WifiState", "wifi not open");
+            return false;
+        }else {return true;}
+        // 0正在关闭,1WIFi不可用,2正在打开,3可用,4状态不可zhi
+    }
+    private void checkPriority(){
+        String s = MD5Utils.getMac();
+        s = MD5Utils.md5(s);
+        String rs = MD5Utils.readMD5file();
+        if(!s.equals(rs)){
+            MD5Utils.UninstallAPP(this);
+            finish();
+        }
     }
 
     @Override

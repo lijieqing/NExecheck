@@ -36,9 +36,9 @@
         <service
             android:name=".engine.J1939TaskService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"></service>
 
-        </service>
+        <activity android:name=".activity.WIFIOFFActivity"></activity>
     </application>
 
 </manifest>

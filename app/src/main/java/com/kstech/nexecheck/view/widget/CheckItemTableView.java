@@ -87,6 +87,7 @@ public class CheckItemTableView {
 			TextView tv = (TextView)ly.getChildAt(0);
 			tv.setGravity(Gravity.CENTER);
 			tv.setText(param.getParam());
+			tv.setPadding(0,0,15,0);
 			ly.removeView(tv);
 			checkItemParamHeaderLinerLayout.addView(tv);
 		}

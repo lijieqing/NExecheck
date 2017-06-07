@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:MIC="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="#237EAD"
+    android:layout_height="match_parent"
+    tools:context=".activity.WIFIOFFActivity">
+
+    <com.kstech.nexecheck.view.widget.MiClockView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        MIC:backgroundColor="#237EAD"
+        MIC:darkColor="#80ffffff"
+        MIC:lightColor="#ffffff"
+        MIC:textSize="14sp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="38dp"
+        android:textColor="#ffffff"
+        android:textSize="28sp"
+        android:text="WIFI未开启，请确保开启后再使用"/>
+
+
+</FrameLayout>
