@@ -11,9 +11,9 @@ import com.kstech.nexecheck.view.widget.MsgTextView;
  */
 
 public abstract class BaseFragment extends Fragment {
-    protected Activity activity;
+    protected BaseActivity activity;
 
-    public void setActivity(Activity activity){
+    public void setActivity(BaseActivity activity){
         this.activity = activity;
     }
 
@@ -42,5 +42,13 @@ public abstract class BaseFragment extends Fragment {
 
     public void updateFragment(){
         //子类自由实现 而且并不强制实现
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(activity.baseFragments.contains(getFragment())){
+            activity.baseFragments.remove(getFragment());
+        }
     }
 }

@@ -12,6 +12,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kstech.nexecheck.base.BaseActivity;
 import com.kstech.nexecheck.R;
@@ -534,7 +536,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         f.updateFragment();
         showFg = f;
         ft.commit();
-        if (!baseFragments.contains(f)) baseFragments.add(f);
     }
 
     public void updateHome(String excID) {
@@ -687,8 +688,25 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         }
     }
 
+    long[] hints = new long[2];
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (baseFragments.size() == 1){
+            if (baseFragments.get(0) instanceof DoCheckFragment){
+                Toast.makeText(this,"检测界面，请按\"退出测量\"退出",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            fragmentManager.beginTransaction().remove(baseFragments.get(0)).commit();
+            showChFg = null;
+            baseFragments.clear();
+        }else {
+            System.arraycopy(hints,1,hints,0,hints.length-1);
+            hints[hints.length - 1] = SystemClock.uptimeMillis();
+            if (hints[hints.length-1]-hints[0] > 2000){
+                Toast.makeText(this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
+            }else {
+                finish();
+            }
+        }
     }
 }
