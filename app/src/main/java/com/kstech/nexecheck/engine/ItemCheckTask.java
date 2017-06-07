@@ -150,32 +150,6 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
 
                 publishProgress("finish", "检测完成", content);
 
-                for (CheckItemParamValueVO h : headers) {
-                    // 从数据区中获取 检查参数对应的数据区
-                    J1939_DataVar_ts dsItem = Globals.getModelFile().getDataSetVO().getDSItem(h.getParam());
-                    //数值转换
-                    byte bDataDec = dsItem.bDataDec;
-                    StringBuffer sb = new StringBuffer();
-                    if (bDataDec != 0) {
-                        sb.append(".");
-                        for (int i = 0; i < bDataDec; i++) {
-                            sb.append("0");
-                        }
-                    }
-                    DecimalFormat decimalFormat = new DecimalFormat(sb.toString());
-                    if (dsItem.isFloatType()) {
-                        Float value = 0f;
-                        String formatValue = decimalFormat.format(value);
-                        if (".".equals(formatValue.substring(0, 1))) {
-                            formatValue = "0" + formatValue;
-                        }
-                        if ("0".equals(formatValue)) {
-                            formatValue = "0";
-                        }
-                        h.setValue(formatValue);
-                    }
-                }
-
                 return null;
             } else if ("传感器故障".equals(startCheckCommandResp) || "检测失败".equals(startCheckCommandResp)) {
                 for (CheckItemParamValueVO h : headers) {
@@ -249,6 +223,9 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 chronometer.stop();
                 // 插入详情记录，更新项目记录
                 CheckItemDetailDao.insertDetailAndUpdateItem(context, detailStatus, context.checkItemEntity, headers, checkItemVO);
+                //数据清空
+                reset();
+                //重新获取数据
                 checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
                 if (isSingle){
                     context.singleCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
@@ -269,6 +246,9 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 chronometer.stop();
                 // 保存记录，结论，传感器故障
                 CheckItemDetailDao.insertDetailAndUpdateItem(context, CheckItemDetailStatusEnum.OTHER.getCode(), context.checkItemEntity, headers, checkItemVO);
+                //数据清空
+                reset();
+                //重新获取数据
                 checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
                 if (isSingle){
                     context.singleCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
@@ -292,6 +272,9 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 chronometer.stop();
                 // 保存记录，结论，超时
                 CheckItemDetailDao.insertDetailAndUpdateItem(context,CheckItemDetailStatusEnum.CONNECT_TIMEOUT.getCode(),context.checkItemEntity,headers,checkItemVO);
+                //数据清空
+                reset();
+                //重新获取数据
                 checkItemEntity = CheckItemDao.getSingleCheckItemFromDB(context.excID,context.checkItemEntity.getItemId(),context);
                 if (isSingle){
                     context.singleCheckFragment.singleCheckBeginCheckLeftBtn.setText("开始测量");
@@ -307,6 +290,35 @@ public class ItemCheckTask extends AsyncTask<Void, String, Void> {
                 isRunning = false;
                 this.cancel(true);
                 break;
+        }
+    }
+
+    //当入库后再重置数据 否则数据可能会被清空
+    private void reset(){
+        for (CheckItemParamValueVO h : headers) {
+            // 从数据区中获取 检查参数对应的数据区
+            J1939_DataVar_ts dsItem = Globals.getModelFile().getDataSetVO().getDSItem(h.getParam());
+            //数值转换
+            byte bDataDec = dsItem.bDataDec;
+            StringBuffer sb = new StringBuffer();
+            if (bDataDec != 0) {
+                sb.append(".");
+                for (int i = 0; i < bDataDec; i++) {
+                    sb.append("0");
+                }
+            }
+            DecimalFormat decimalFormat = new DecimalFormat(sb.toString());
+            if (dsItem.isFloatType()) {
+                Float value = 0f;
+                String formatValue = decimalFormat.format(value);
+                if (".".equals(formatValue.substring(0, 1))) {
+                    formatValue = "0" + formatValue;
+                }
+                if ("0".equals(formatValue)) {
+                    formatValue = "0";
+                }
+                h.setValue(formatValue);
+            }
         }
     }
 }
