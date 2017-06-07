@@ -30,6 +30,7 @@ public class HomeCheckEntityFragment extends BaseFragment {
     private RecyclerView recyclerView;
     public MyAdapter myAdapter;
     public CheckItemSummaryView currentCheckItemView;
+    GridLayoutManager gridLayoutManager;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,13 @@ public class HomeCheckEntityFragment extends BaseFragment {
         View view = View.inflate(getActivity(), R.layout.fragment_home_check_entity,null);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_home_realtime);
         currentCheckItemView = new CheckItemSummaryView(getActivity(),view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(activity,2, LinearLayoutManager.HORIZONTAL,false);
+
+        if (Globals.HomeRealtimeViews.size()>9){
+            gridLayoutManager = new GridLayoutManager(activity,2, LinearLayoutManager.HORIZONTAL,false);
+        }else {
+            gridLayoutManager = new GridLayoutManager(activity,6, LinearLayoutManager.VERTICAL,false);
+        }
+
         myAdapter = new MyAdapter ();
         currentCheckItemView.initView();
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
@@ -64,6 +71,19 @@ public class HomeCheckEntityFragment extends BaseFragment {
 
     @Override
     public void updateFragment() {
+        if (Globals.HomeRealtimeViews.size()>9){
+            gridLayoutManager = new GridLayoutManager(activity,2, LinearLayoutManager.HORIZONTAL,false);
+        }else {
+            gridLayoutManager = new GridLayoutManager(activity,6, LinearLayoutManager.VERTICAL,false);
+        }
+        if (recyclerView != null) {
+            myAdapter = new MyAdapter ();
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL_LIST));
+            recyclerView.setLayoutManager(gridLayoutManager);
+            recyclerView.setAdapter(myAdapter);
+
+        }
         if (myAdapter != null)myAdapter.notifyDataSetChanged();
         if (currentCheckItemView != null){
             currentCheckItemView.clear();
