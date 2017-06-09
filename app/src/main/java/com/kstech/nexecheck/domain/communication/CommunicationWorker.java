@@ -49,8 +49,6 @@ public class CommunicationWorker extends Thread {
         }
     }
 
-    public static int CAN_PACKET_LEN = 13;
-
     /**
      * Tcp服务器(检测终端）的IP地址
      */
@@ -155,7 +153,7 @@ public class CommunicationWorker extends Thread {
         int dwCanId;
 
 //		byte bFrameMode = RecvBuf[iByteStart + 2];
-        bFrameInfo = RecvBuf[iByteStart /*+ 3*/];
+        bFrameInfo = RecvBuf[iByteStart + 3];
 
         if ((bFrameInfo & 0xC0) != 0x80) {
             // 忽略标准帧或非数据帧
@@ -166,10 +164,10 @@ public class CommunicationWorker extends Thread {
         if (canID == null)
             canID = new J1939_CANID_ts(0);
 
-        dwCanId = ((RecvBuf[iByteStart + 1 /*+3*/] << 24) & 0xFF000000)
-                | ((RecvBuf[iByteStart + 2 /*+3*/] << 16) & 0x00FF0000)
-                | ((RecvBuf[iByteStart + 3 /*+3*/] << 8) & 0x0000FF00)
-                | (RecvBuf[iByteStart +  4 /*+3*/] & 0x000000FF);
+        dwCanId = ((RecvBuf[iByteStart + 4] << 24) & 0xFF000000)
+                | ((RecvBuf[iByteStart + 5] << 16) & 0x00FF0000)
+                | ((RecvBuf[iByteStart + 6] << 8) & 0x0000FF00)
+                | (RecvBuf[iByteStart + 7] & 0x000000FF);
 
         canID.setID(dwCanId);
 
@@ -190,7 +188,7 @@ public class CommunicationWorker extends Thread {
         rxCanMsg.numBytes_u8 = bFrameInfo; // 帧数据长度
         rxCanMsg.format_u8 = J1939.CAN_EXD; // 帧格式
 
-        System.arraycopy(RecvBuf, iByteStart + 5 /*+3*/, // 读帧数据到帧数据接收缓冲区
+        System.arraycopy(RecvBuf, iByteStart + 8, // 读帧数据到帧数据接收缓冲区
                 rxCanMsg.data_au8, 0, 8);
         Log.e("Frame","Frame==start===  rxCanMsg.id_u32="+rxCanMsg.id_u32+"  rxCanMsg.numBytes_u8==="+rxCanMsg.numBytes_u8+"  rxCanMsg.format_u8==="+rxCanMsg.format_u8);
         for (int i = 0; i <rxCanMsg.data_au8.length ; i++) {
@@ -237,27 +235,24 @@ public class CommunicationWorker extends Thread {
                                 can_Message_ts canMsg) {
 
         long tm;
-        /*
+
         SendBuf[iSendLen + 0] = (byte) 0xFE;
         SendBuf[iSendLen + 1] = (byte) 0xFD;
         SendBuf[iSendLen + 2] = (byte) 0x00;
-        */
-        SendBuf[iSendLen /*+ 3*/] = (byte) (0x80 | canMsg.numBytes_u8);
-        SendBuf[iSendLen + 1 /*+ 3*/] = (byte) (canMsg.id_u32 >> 24);
-        SendBuf[iSendLen + 2 /*+ 3*/] = (byte) (canMsg.id_u32 >> 16);
-        SendBuf[iSendLen + 3 /*+ 3*/] = (byte) (canMsg.id_u32 >> 8);
-        SendBuf[iSendLen + 4 /*+ 3*/] = (byte) (canMsg.id_u32);
+        SendBuf[iSendLen + 3] = (byte) (0x80 | canMsg.numBytes_u8);
+        SendBuf[iSendLen + 4] = (byte) (canMsg.id_u32 >> 24);
+        SendBuf[iSendLen + 5] = (byte) (canMsg.id_u32 >> 16);
+        SendBuf[iSendLen + 6] = (byte) (canMsg.id_u32 >> 8);
+        SendBuf[iSendLen + 7] = (byte) (canMsg.id_u32);
 
-        System.arraycopy(canMsg.data_au8, 0, SendBuf, iSendLen + 5 /*+ 3*/, 8);
+        System.arraycopy(canMsg.data_au8, 0, SendBuf, iSendLen + 8, 8);
 
-        /*
         tm = System.currentTimeMillis();
         SendBuf[iSendLen + 16] = (byte) (tm >> 16);
         SendBuf[iSendLen + 17] = (byte) (tm >> 8);
         SendBuf[iSendLen + 18] = (byte) (tm);
 
         SendBuf[iSendLen + 19] = GenVerifyByte(SendBuf, iSendLen, 19);
-        */
 
     }
 
@@ -354,7 +349,6 @@ public class CommunicationWorker extends Thread {
                     // 缓冲区数据处理循环
                     while (true) {
 
-                        /*
                         if (iRecvLen >= 8) {
                             if ((RecvBuf[iByteStart] == (byte) 0xAA)
                                     && (RecvBuf[iByteStart + 1] == 0)
@@ -364,30 +358,27 @@ public class CommunicationWorker extends Thread {
                                 iRecvLen -= 8;
                             }
                         }
-                        */
 
-                        if (iRecvLen >= CAN_PACKET_LEN ) {
-                            /*
+                        if (iRecvLen >= 20) {
                             if ((RecvBuf[iByteStart] == (byte) 0xFE)
                                     && (RecvBuf[iByteStart + 1] == (byte) 0xFD)
                                     && (RecvBuf[iByteStart + 19] == GenVerifyByte(
                                     RecvBuf, iByteStart, 19))) {
-                            */
-                            // 完整的CAN数据帧
-                            RecvCanMessage(RecvBuf, iByteStart);
 
-                            iByteStart += CAN_PACKET_LEN;
-                            iRecvLen -= CAN_PACKET_LEN;
-                            /*
+                                // 完整的CAN数据帧
+                                RecvCanMessage(RecvBuf, iByteStart);
+
+                                iByteStart += 20;
+                                iRecvLen -= 20;
+
                             } else {
                                 // 坏数据帧，丢弃开头字节
                                 iByteStart += 1;
                                 iRecvLen -= 1;
                             }
-                            */
                         }
 
-                        if (iRecvLen < CAN_PACKET_LEN ) {
+                        if (iRecvLen < 20) {
                             // 还未处理的字节数据小于一帧数据字节数，
                             if (iByteStart > 0) {
                                 // 将剩余数据移至缓冲区起始位置
@@ -414,7 +405,7 @@ public class CommunicationWorker extends Thread {
 
                         bNop = false; // 标示非空操作周期
                         SendCanMessage(SendBuf, iSendLen, canMsg); // 组装发送帧到发送数据区
-                        iSendLen += CAN_PACKET_LEN; //
+                        iSendLen += 20; //
                         if (iSendLen >= 100) { // 发送数据区足够长了
                             Out.write(SendBuf, 0, iSendLen); // 送出
                             iSendLen = 0; //

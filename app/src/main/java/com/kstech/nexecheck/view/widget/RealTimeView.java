@@ -66,7 +66,6 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
         if (realTimeParamVO != null){
             tvName.setText(realTimeParamVO.getName());
             tvUnit.setText(realTimeParamVO.getUnit());
-            //// TODO: 2017/5/25 撤销测试代码
             tvValue.setTextColor(Color.BLACK);
             tvValue.setText("----");
         }

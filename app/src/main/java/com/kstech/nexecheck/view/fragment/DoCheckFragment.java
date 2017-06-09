@@ -19,6 +19,7 @@ import com.kstech.nexecheck.R;
 import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.adapter.MyCheckAdapter;
 import com.kstech.nexecheck.base.BaseFragment;
+import com.kstech.nexecheck.domain.communication.CommandSender;
 import com.kstech.nexecheck.domain.config.vo.CheckItemVO;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.engine.ItemCheckTask;
@@ -228,8 +229,8 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
                                 ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
                                 ((HomeActivity)activity).checkItemListAdapter.notifyDataSetChanged();
                                 getFragmentManager().beginTransaction().remove(getFragment()).commit();
-                                // 回传响应码
-                                //CommandSender.sendStopCheckCommand(checkItemEntity.getItemId(),checkItemEntity.getSumTimes());
+                                // // TODO: 2017/6/8  发送停止检测
+                                CommandSender.sendStopCheckCommand(((HomeActivity)activity).checkItemEntity.getItemId(),((HomeActivity)activity).checkItemEntity.getSumTimes());
                             }
                         }).show();
     }
