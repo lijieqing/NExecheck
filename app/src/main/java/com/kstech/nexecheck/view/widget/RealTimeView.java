@@ -144,8 +144,11 @@ public class RealTimeView extends RelativeLayout implements RealtimeChangeListen
             ResourceVO.MsgVO msgVO = Globals.getResConfig().getResourceVO().getMsgVO(dtc.wDescId);
             if (listener != null) listener.onMsgError(msgVO.getContent());
             return true;
+        }else {
+            //无故障时刷新为空串
+            if (listener != null) listener.onMsgError(" ");
+            return false;
         }
-        return false;
     }
 
     public void reset(){
