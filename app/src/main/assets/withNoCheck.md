@@ -335,6 +335,7 @@ public class CommunicationWorker extends Thread {
 					conn.close();
 					conn.setToInterrupted();
 					*/
+					notifyListener(true);
                     if (sockTcp != null) {
                         sockTcp.close();
                         in = null;

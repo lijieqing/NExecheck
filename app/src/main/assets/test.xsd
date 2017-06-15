@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema  xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.kaishang.com"
+            elementFormDefault="qualified">
+    <element name="Device">
+        <complexType>
+            <attribute name="DevBornDate" type="string" use="required"/>
+            <attribute name="DevDieDate" type="string" use="required"/>
+            <attribute name="DevStatus" type="string" use="required"/>
+            <attribute name="Id" type="string" use="required"/>
+            <attribute name="Name" type="string" use="required"/>
+            <attribute name="subDevId" type="string" use="required"/>
+            <attribute name="subDevName" type="string" use="required"/>
+            <sequence>
+                <element maxOccurs="1" minOccurs="1" name="DataSet">
+                    <complexType>
+                        <sequence maxOccurs="unbounded">
+                            <element maxOccurs="unbounded" name="DSItem">
+                                <complexType>
+                                    <attribute name="DataType" type="string" use="required"/>
+                                    <attribute name="Name" type="string" use="required"/>
+                                    <attribute name="Value" type="string" use="required"/>
+                                    <attribute name="Unit" type="string" use="optional"/>
+                                    <attribute name="Rows" type="string" use="optional" />
+                                    <sequence >
+                                        <element minOccurs="0" maxOccurs="unbounded" name="Data">
+                                            <complexType>
+                                                <attribute name="Value" type="float" use="required"/>
+                                            </complexType>
+                                        </element>
+                                    </sequence>
+                                </complexType>
+                            </element>
+                        </sequence>
+                    </complexType>
+
+                </element>
+
+                <element maxOccurs="1" name="J1939">
+                    <complexType>
+                        <attribute name="Cycle" type="int" use="required"/>
+                        <attribute name="NodeAddr" type="string" use="required"/>
+                        <attribute name="TaskPrio" type="int" use="required"/>
+                        <sequence minOccurs="1" maxOccurs="unbounded">
+                            <element name="PG" minOccurs="1" maxOccurs="unbounded">
+                                <complexType>
+                                    <attribute name="Dir" type="string" use="required"/>
+                                    <attribute name="Len" type="string" use="required"/>
+                                    <attribute name="PGN" type="string" use="required"/>
+                                    <attribute name="Prio" type="string" use="required"/>
+                                    <attribute name="Rate" type="string" use="required"/>
+                                    <attribute name="Req" type="string" use="required"/>
+                                    <attribute name="ReqCyc" type="string" use="required"/>
+                                    <attribute name="SA" type="string" use="required"/>
+                                    <attribute name="Type" type="string" use="required"/>
+                                    <sequence>
+                                        <element name="SP" minOccurs="1" maxOccurs="unbounded">
+                                            <complexType>
+                                                <attribute name="Bits" type="int" use="required"/>
+                                                <attribute name="Bytes" type="int" use="required"/>
+                                                <attribute name="Off" type="int" use="required"/>
+                                                <attribute name="Ref" type="string" use="required"/>
+                                                <attribute name="Res" type="int" use="required"/>
+                                                <attribute name="SBit" type="int" use="required"/>
+                                                <attribute name="SByte" type="int" use="required"/>
+                                                <attribute name="SPN" type="int" use="required"/>
+                                                <attribute name="Type" type="int" use="required"/>
+                                                <sequence>
+                                                    <element name="DTC" minOccurs="0">
+                                                        <complexType>
+                                                            <attribute name="FMI" type="int" use="required"/>
+                                                            <attribute name="Icon" type="int" use="required"/>
+                                                            <attribute name="MsgId" type="int" use="required"/>
+                                                        </complexType>
+                                                    </element>
+                                                </sequence>
+                                            </complexType>
+                                        </element>
+                                    </sequence>
+                                </complexType>
+                            </element>
+                        </sequence>
+                    </complexType>
+                </element>
+
+                <element maxOccurs="1" name="QCSet">
+                    <complexType>
+                        <sequence minOccurs="1" maxOccurs="unbounded">
+                            <element name="QCItem">
+                                <complexType>
+                                    <attribute name="Id" type="int" use="required"/>
+                                    <attribute name="Name" type="string" use="required"/>
+                                    <attribute name="QCTimeout" type="int" use="required"/>
+                                    <attribute name="QCTimes" type="int" use="required"/>
+                                    <attribute name="ReadyTimeout" type="int" use="required"/>
+                                    <attribute name="Require" type="string" use="required"/>
+                                    <sequence>
+                                        <element maxOccurs="1" name="Msgs">
+                                            <complexType>
+                                                <attribute name="AbortMsg" type="string" use="required"/>
+                                                <attribute name="NotReadyMsg" type="string" use="required"/>
+                                                <attribute name="OkMsg" type="string" use="required"/>
+                                                <attribute name="ReadyMsg" type="string" use="required"/>
+                                                <all>
+                                                    <element name="QCProgressMsg">
+                                                        <complexType>
+                                                            <sequence>
+                                                                <element name="QCProgress">
+                                                                    <complexType>
+                                                                        <attribute name="Code" type="int" use="required"/>
+                                                                        <attribute name="Msg" type="string" use="required"/>
+                                                                    </complexType>
+                                                                </element>
+                                                            </sequence>
+                                                        </complexType>
+                                                    </element>
+                                                    <element name="QCErrMsg">
+                                                        <complexType>
+                                                            <sequence>
+                                                                <element name="QCErr">
+                                                                    <complexType>
+                                                                        <attribute name="Code" type="int" use="required"/>
+                                                                        <attribute name="Msg" type="string" use="required"/>
+                                                                    </complexType>
+                                                                </element>
+                                                            </sequence>
+                                                        </complexType>
+                                                    </element>
+                                                </all>
+                                            </complexType>
+                                        </element>
+
+                                        <element name="QCParams">
+                                            <complexType>
+                                                <sequence>
+                                                    <element name="QCParam" maxOccurs="unbounded">
+                                                        <complexType>
+                                                            <attribute name="Param" type="string" use="required"/>
+                                                            <attribute name="ValidAvg" type="float" use="required"/>
+                                                            <attribute name="ValidMax" type="float" use="required"/>
+                                                            <attribute name="ValidMin" type="float" use="required"/>
+                                                        </complexType>
+                                                    </element>
+                                                </sequence>
+                                            </complexType>
+                                        </element>
+
+                                        <element name="ENVParams">
+                                            <complexType>
+                                                <sequence>
+                                                    <element name="ENVParam" maxOccurs="unbounded">
+                                                        <complexType>
+                                                            <attribute name="Param" type="string" use="required"/>
+                                                            <attribute name="ValidAvg" type="float" use="required"/>
+                                                            <attribute name="ValidMax" type="float" use="required"/>
+                                                            <attribute name="ValidMin" type="float" use="required"/>
+                                                        </complexType>
+                                                    </element>
+                                                </sequence>
+                                            </complexType>
+                                        </element>
+
+                                        <element name="RealTimeParams">
+                                            <complexType>
+                                                <sequence>
+                                                    <element name="RealTimeParam" maxOccurs="unbounded">
+                                                        <complexType>
+                                                            <attribute name="Name" type="string" use="required"/>
+                                                        </complexType>
+                                                    </element>
+                                                </sequence>
+                                            </complexType>
+                                        </element>
+
+                                    </sequence>
+                                </complexType>
+                            </element>
+                        </sequence>
+                    </complexType>
+                </element>
+
+                <element maxOccurs="1" name="RealTimeSet">
+                    <complexType>
+                        <sequence>
+                            <element name="RealTimeParam" maxOccurs="unbounded">
+                                <complexType>
+                                    <attribute name="Name" type="string" use="required"/>
+                                </complexType>
+                            </element>
+                        </sequence>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+    </element>
+
+</schema>
