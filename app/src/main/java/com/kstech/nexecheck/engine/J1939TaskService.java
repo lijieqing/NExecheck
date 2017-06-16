@@ -74,8 +74,8 @@ public class J1939TaskService extends Service {
 
             // 启动通讯任务
             //// TODO: 2017/6/2 IP 此处写死 正式应用前记得改回
-            j1939CommTask = new CommunicationWorker("192.168.1.178", 4001, getApplicationContext());
-            //j1939CommTask = new CommunicationWorker(Globals.getCurrentCheckLine().getIp(), 4001, getApplicationContext());
+            //j1939CommTask = new CommunicationWorker("192.168.1.178", 4001, getApplicationContext());
+            j1939CommTask = new CommunicationWorker(Globals.getCurrentCheckLine().getIp(), 4001, getApplicationContext());
 
             j1939CommTask.start();
             Log.e("hahah", "j1939CommTask start");

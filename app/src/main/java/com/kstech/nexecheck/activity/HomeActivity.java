@@ -7,12 +7,15 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -579,15 +582,45 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
         }
     }
 
+    int offCount = 0;
+    int onCount = 0;
     @Override
     public void onStatusChanged(final boolean off) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (off){
+                    //将连接通知 清零
+                    onCount = 0;
                     connStatus.setBackgroundResource(R.drawable.link_no);
+                    if (offCount < 1){
+                        Snackbar.make(findViewById(R.id.fl_home),"无法数据通讯，请检查",Snackbar.LENGTH_INDEFINITE)
+                                .setAction("设置", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent =  new Intent(Settings.ACTION_WIFI_SETTINGS);
+                                        startActivity(intent);
+                                        offCount = 0;
+                                    }
+                                }).show();
+                        offCount++;
+                    }
+
                 }else {
+                    //将连接断开通知 清零
+                    offCount = 0;
                     connStatus.setBackgroundResource(R.drawable.link);
+
+                    if (onCount < 1){
+                        Snackbar.make(findViewById(R.id.fl_home),"连接成功",Snackbar.LENGTH_SHORT)
+                                .setAction("关闭", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                    }
+                                }).show();
+
+                        onCount++;
+                    }
                 }
             }
         });
@@ -693,7 +726,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     public void onBackPressed() {
         if (baseFragments.size() == 1){
             if (baseFragments.get(0) instanceof DoCheckFragment){
-                Toast.makeText(this,"检测界面，请按\"退出测量\"退出",Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.fl_home),"检测界面，请按\"退出测量\"退出",Snackbar.LENGTH_SHORT).show();
                 return;
             }
             fragmentManager.beginTransaction().remove(baseFragments.get(0)).commit();
@@ -703,7 +736,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
             System.arraycopy(hints,1,hints,0,hints.length-1);
             hints[hints.length - 1] = SystemClock.uptimeMillis();
             if (hints[hints.length-1]-hints[0] > 2000){
-                Toast.makeText(this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.fl_home),"再按一次退出程序",Snackbar.LENGTH_SHORT).show();
             }else {
                 finish();
             }
