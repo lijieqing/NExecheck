@@ -144,8 +144,8 @@ public class CheckItemDetailDao {
             return;
         }
 
-        // 查询检验次数
-        int times = checkItemEntity.getSumTimes() + 1;
+        // 查询检验次数 从数据库中查找 不能使用之前的
+        int times = CheckItemDao.getSingleCheckItemFromDB(checkItemEntity.getExcId(),checkItemEntity.getItemId(),context).getSumTimes() + 1;
         String checkStatusCode = "";
         // 测量次数没有达到要求的统计次数
         int itemTimeConfig = checkItemVO.getTimes();

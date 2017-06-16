@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -251,36 +252,10 @@ public class DataUploadActivity extends BaseActivity {
                 }else {
                     Log.e("LOGIN","---L O C A L  S S I D---"+ConfigFileManager.getInstance(getactivity()).getLastSsid());
                 }
-                //创建一个要删除内容的集合，不能直接在数据源data集合中直接进行操作，否则会报异常
-                final List<CheckRecordEntity> uploadSelect = new ArrayList<CheckRecordEntity>();
-                //把选中的条目要删除的条目放在deleSelect这个集合中
-                for (int i = 0; i < listData.size(); i++) {
-                    if (listData.get(i).getCheckBoxState()) {
-                        uploadSelect.add(listData.get(i));
-                    }
-                }
-                if (uploadSelect.size() == 0) {
-                    Toast.makeText(DataUploadActivity.this, R.string.pleaseCheckedNeedUploadData, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                // 查询需要上传的数据
-                List<CheckRecordEntity> uploadData = CheckRecordDao.findUploadData(getactivity(),uploadSelect);
 
-                for (CheckRecordEntity record:uploadData) {
-                    if("0".equals(record.getCheckStatus())){
-                        new AlertDialog.Builder(getactivity())
-                                .setMessage(R.string.recordStateError)
-                                .setNeutralButton(R.string.str_ok, null).show();
-                        return;
-                    }
-                }
-
-                // 生成excel文件
-//				Map<String, String> filePathMap = ExcelUtil.writeExcel(DataUploadActivity.this,uploadData);
-                Map<String, String> filePathMap = ExcelUtil.UpdateExcelByTemplate(uploadData);
                 // 异步任务上传文件
-                FtpUploadTask ftpTask = new FtpUploadTask(filePathMap,getactivity());
-                ftpTask.execute(100);
+                FtpUploadTask ftpTask = new FtpUploadTask(listData,getactivity());
+                ftpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("UPLOAD","DataUpload异常"+e.toString());

@@ -522,8 +522,13 @@ public class FtpUtil {
 	 * @throws Exception
 	 */
 	public void closeFTPClient() throws Exception {
-
-		this.closeFTPClient(this.ftp);
+		try {
+			ftp.logout();
+			if (ftp.isConnected())
+				ftp.disconnect();
+		} catch (Exception e) {
+			throw new Exception("关闭FTP服务出错!");
+		}
 	}
 
 	/**

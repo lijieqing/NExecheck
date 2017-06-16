@@ -1,13 +1,22 @@
 package com.kstech.nexecheck.domain.excel;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.widget.Toast;
 
+import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.activity.upload.DataUploadActivity;
 import com.kstech.nexecheck.domain.config.vo.FtpServerVO;
+import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
+import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
 import com.kstech.nexecheck.utils.Globals;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,9 +25,12 @@ import java.util.Map;
 public class FtpUploadTask extends
 		AsyncTask<Integer, Integer, String> {
 
-	private ProgressDialog mProgressDialog = null;
-
+	private final List<CheckRecordEntity> listData;
 	private Map<String, String> filePathMap;
+	private ProgressDialog mProgressDialog = null;
+	private FtpUtil ftpUtil = null;
+
+
 	private Context context;
 
 	/**
@@ -26,8 +38,8 @@ public class FtpUploadTask extends
 	 *
 	 * @param filePathMap the file path map
 	 */
-	public FtpUploadTask(Map<String, String> filePathMap, Context context) {
-		this.filePathMap = filePathMap;
+	public FtpUploadTask(List<CheckRecordEntity> listData, Context context) {
+		this.listData = listData;
 		this.context = context;
 	}
 
@@ -62,15 +74,50 @@ public class FtpUploadTask extends
 	 */
 	@Override
 	protected String doInBackground(Integer... params) {
+		publishProgress(666);
+		SystemClock.sleep(1000);
+
+		//创建一个要删除内容的集合，不能直接在数据源data集合中直接进行操作，否则会报异常
+		final List<CheckRecordEntity> uploadSelect = new ArrayList<CheckRecordEntity>();
+		//把选中的条目要删除的条目放在deleSelect这个集合中
+		for (int i = 0; i < listData.size(); i++) {
+			if (listData.get(i).getCheckBoxState()) {
+				uploadSelect.add(listData.get(i));
+			}
+		}
+		if (uploadSelect.size() == 0) {
+			publishProgress(1);
+			return null;
+		}
+
+		publishProgress(999);
+		SystemClock.sleep(1000);
+
+		// 查询需要上传的数据
+		List<CheckRecordEntity> uploadData = CheckRecordDao.findUploadData(context,uploadSelect);
+		for (CheckRecordEntity record:uploadData) {
+			if("0".equals(record.getCheckStatus())){
+				publishProgress(2);
+				return null;
+			}
+		}
+
+		// 生成excel文件
+//				Map<String, String> filePathMap = ExcelUtil.writeExcel(DataUploadActivity.this,uploadData);
 		try {
+			publishProgress(3);
+			filePathMap = ExcelUtil.UpdateExcelByTemplate(uploadData);
 			FtpServerVO ftpServerVO = Globals.getResConfig().getFtpServerVO();
-			FtpUtil ftpUtil = new FtpUtil(ftpServerVO.getIp(), ftpServerVO.getPort(), ftpServerVO.getUser(), ftpServerVO.getPassword());
+			ftpUtil = new FtpUtil(ftpServerVO.getIp(), ftpServerVO.getPort(), ftpServerVO.getUser(), ftpServerVO.getPassword());
 			for (String excId:filePathMap.keySet()){
 				ftpUtil.uploadFile(filePathMap.get(excId), excId);
 			}
 			ftpUtil.closeFTPClient();
+
+			publishProgress(888);
 		} catch (Exception e) {
 			e.printStackTrace();
+			publishProgress(0);
 		}
 		return null;
 	}
@@ -84,9 +131,56 @@ public class FtpUploadTask extends
 	 */
 	@Override
 	protected void onProgressUpdate(Integer... values) {
-		// mTextView.setText(values[0]+"%");
-		super.onProgressUpdate(values);
+		switch (values[0]){
+			case 0:
+			    mProgressDialog.setMessage("上传失败");
+				Toast.makeText(context,"上传失败",Toast.LENGTH_SHORT).show();
+				break;
+			case 1:
+                mProgressDialog.setMessage("未检测到数据");
+				Toast.makeText(context, R.string.pleaseCheckedNeedUploadData, Toast.LENGTH_SHORT).show();
+				break;
+			case 2:
+				new AlertDialog.Builder(context)
+						.setMessage(R.string.recordStateError)
+						.setNeutralButton(R.string.str_ok, null).show();
+				break;
+			case 3:
+				mProgressDialog.setMessage("正在上传，请稍候---  	总时间：10 s");
+				countDownTimer.start();
+				break;
+			case 666:
+                mProgressDialog.setMessage("正在提取数据，请稍候---");
+				break;
+			case 888:
+				countDownTimer.cancel();
+				Toast.makeText(context,"上传成功",Toast.LENGTH_SHORT).show();
+				break;
+			case 999:
+                mProgressDialog.setMessage("正在检测数据完整性，请稍候---");
+				break;
+
+		}
 	}
+	private CountDownTimer countDownTimer = new CountDownTimer(10000,1000) {
+		@Override
+		public void onTick(long millisUntilFinished) {
+			mProgressDialog.setMessage("正在上传，请稍候---  	剩余时间 "+millisUntilFinished/1000+" s");
+		}
+
+		@Override
+		public void onFinish() {
+			mProgressDialog.cancel();
+			new AlertDialog.Builder(context)
+					.setMessage("上传超时，请确认ftp IP是否一致")
+					.setNeutralButton(R.string.str_ok, null).show();
+			try {
+				ftpUtil.closeFTPClient();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
 
 	/*
 	 * 执行时机：在doInBackground 执行完成后，将被UI 线程调用 作用：后台的计算结果将通过该方法传递到UI 线程，并且在界面上展示给用户
@@ -98,7 +192,6 @@ public class FtpUploadTask extends
 	protected void onPostExecute(final String result) {
 		super.onPostExecute(result);
 		mProgressDialog.cancel();
-		Toast.makeText(context,"上传成功，请到ftp共享目录查看",Toast.LENGTH_SHORT).show();
 	}
 
 }
