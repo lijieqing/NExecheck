@@ -44,28 +44,7 @@ public class J1939TaskService extends Service {
         boolean reload = intent.getBooleanExtra("reload",false);
         context = (HomeActivity) intent.getCharSequenceExtra("home");
         if (reload) {
-            // 配置文件加载后需要重新初始化1939任务，任务中包括实时参数的增量初始化
-            if (j1939ProtTask != null && j1939ProtTask.isRunning) {
-                // 停止通讯任务
-                j1939CommTask.setStop(true);
-                while (TERMINATED != j1939CommTask.getState()) {
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // 停止协议任务
-                j1939ProtTask.setStop(true);
-                while (TERMINATED != j1939ProtTask.getState()) {
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            stopJ1939Service();
 
             j1939ProtTask = new J1939_Task();
             j1939ProtTask.Init();
@@ -90,11 +69,36 @@ public class J1939TaskService extends Service {
         return new MyBinder(this);
     }
 
-    class MyBinder extends Binder {
-        J1939TaskService task;
+    public class MyBinder extends Binder {
+        public J1939TaskService task;
 
         MyBinder(J1939TaskService task) {
             this.task = task;
+        }
+    }
+
+    public void stopJ1939Service(){
+        // 配置文件加载后需要重新初始化1939任务，任务中包括实时参数的增量初始化
+        if (j1939ProtTask != null && j1939ProtTask.isRunning) {
+            // 停止通讯任务
+            j1939CommTask.setStop(true);
+            while (TERMINATED != j1939CommTask.getState()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // 停止协议任务
+            j1939ProtTask.setStop(true);
+            while (TERMINATED != j1939ProtTask.getState()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

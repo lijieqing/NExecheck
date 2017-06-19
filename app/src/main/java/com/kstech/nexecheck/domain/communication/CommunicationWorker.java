@@ -11,6 +11,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.kstech.nexecheck.base.NetWorkStatusListener;
+import com.kstech.nexecheck.utils.Globals;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,22 +33,6 @@ import J1939.J1939;
  */
 public class CommunicationWorker extends Thread {
 
-    private LinkedList<NetWorkStatusListener> netWorkStatusListeners = new LinkedList<>();
-    public void addNetWorkStatusListener(NetWorkStatusListener netWorkStatusListener){
-        if (netWorkStatusListener != null && !netWorkStatusListeners.contains(netWorkStatusListener)){
-            netWorkStatusListeners.add(netWorkStatusListener);
-        }
-    }
-    public void removeNetWorkStatusListener(NetWorkStatusListener netWorkStatusListener){
-        if (netWorkStatusListener != null && netWorkStatusListeners.contains(netWorkStatusListener)){
-            netWorkStatusListeners.remove(netWorkStatusListener);
-        }
-    }
-    private void notifyListener(boolean off){
-        for (NetWorkStatusListener netWorkStatusListener : netWorkStatusListeners) {
-            netWorkStatusListener.onStatusChanged(off);
-        }
-    }
 
     /**
      * Tcp服务器(检测终端）的IP地址
@@ -291,8 +276,8 @@ public class CommunicationWorker extends Thread {
                 bNop = true;
 
                 if (sockTcp == null) {
-                    Log.e("hahah", "sockTcp == null"+ netWorkStatusListeners.size());
-                    notifyListener(true);
+                    Log.e("hahah", "sockTcp == null"+ Globals.netWorkStatusListeners.size());
+                    Globals.notifyListener(true);
                     String ssid = "";
                     WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     WifiInfo wifiinfo = manager.getConnectionInfo();
@@ -312,9 +297,9 @@ public class CommunicationWorker extends Thread {
                     in = sockTcp.getInputStream();
                     Out = sockTcp.getOutputStream();
                     lastRecvTime = System.currentTimeMillis();
-                    notifyListener(false);
+                    Globals.notifyListener(false);
                 } else {
-                    notifyListener(true);
+                    Globals.notifyListener(true);
                     Thread.sleep(1000);
                     continue;
                 }
@@ -326,7 +311,7 @@ public class CommunicationWorker extends Thread {
 					conn.close();
 					conn.setToInterrupted();
 					*/
-					notifyListener(true);
+                    Globals.notifyListener(true);
                     if (sockTcp != null) {
                         sockTcp.close();
                         in = null;
@@ -337,7 +322,7 @@ public class CommunicationWorker extends Thread {
                 }
 
                 if (in != null && in.available() > 0) {
-                    notifyListener(false);
+                    Globals.notifyListener(false);
 
                     iRecvBytes = in.read(RecvBuf, iRecvLen, 1000 - iRecvLen);
                     iRecvLen += iRecvBytes;

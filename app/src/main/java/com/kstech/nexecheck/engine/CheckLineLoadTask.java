@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 import com.kstech.nexecheck.R;
+import com.kstech.nexecheck.activity.HomeActivity;
 import com.kstech.nexecheck.domain.checkline.CheckLineListAdapter;
 import com.kstech.nexecheck.domain.checkline.CheckLineManager;
 import com.kstech.nexecheck.domain.config.ConfigFileManager;
@@ -109,6 +110,12 @@ public class CheckLineLoadTask extends AsyncTask<Integer, Integer, List<CheckLin
                 CheckLineManager.connectCheckLine(result.get(arg2),context);
                 // 显示选择的检线名称
                 checkLineET.setText(result.get(arg2).getName());
+                if (!Globals.getCurrentCheckLine().getIp().equals(result.get(arg2).getIp())){
+                    if (context instanceof HomeActivity){
+                        Globals.setCurrentCheckLine(result.get(arg2));
+                        ((HomeActivity)context).handler.sendEmptyMessage(3);
+                    }
+                }
                 Globals.setCurrentCheckLine(result.get(arg2));
                 ConfigFileManager.getInstance(context).saveCheckLineName(result.get(arg2).getName());
                 ConfigFileManager.getInstance(context).saveCheckLineSsid(result.get(arg2).getSsid());

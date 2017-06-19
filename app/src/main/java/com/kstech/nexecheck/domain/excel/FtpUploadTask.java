@@ -135,6 +135,7 @@ public class FtpUploadTask extends
 			case 0:
 			    mProgressDialog.setMessage("上传失败");
 				Toast.makeText(context,"上传失败",Toast.LENGTH_SHORT).show();
+				countDownTimer.cancel();
 				break;
 			case 1:
                 mProgressDialog.setMessage("未检测到数据");

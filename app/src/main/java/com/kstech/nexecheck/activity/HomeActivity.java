@@ -5,13 +5,18 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -27,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +53,7 @@ import com.kstech.nexecheck.domain.db.dbenum.CheckRecordStatusEnum;
 import com.kstech.nexecheck.domain.db.entity.CheckItemEntity;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
 import com.kstech.nexecheck.engine.DeviceLoadTask;
+import com.kstech.nexecheck.engine.J1939TaskService;
 import com.kstech.nexecheck.engine.ReadyToCheckTask;
 import com.kstech.nexecheck.utils.DateUtil;
 import com.kstech.nexecheck.utils.Globals;
@@ -103,10 +110,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     public CheckItemEntity checkItemEntity;
 
     /**
-     * The constant j1939ProtTask.
+     * The constant j1939TaskService.
      */
+    private J1939TaskService j1939TaskService;
 
-    Handler handler = new Handler(){
+    public Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
@@ -119,9 +127,33 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
                 case 2:
                     initRecordItem(null,false);
                     break;
+                case 3:
+                    //Globals.clearNetWorkStatusListener();
+                    Intent intent = new Intent(HomeActivity.this,J1939TaskService.class);
+                    intent.putExtra("reload",true);
+                    bindService(intent, new ServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName name, IBinder service) {
+                            J1939TaskService.MyBinder myBinder = (J1939TaskService.MyBinder) service;
+                            j1939TaskService = myBinder.task;
+                            myBinder.task.context = HomeActivity.this;
+                            Globals.addNetWorkStatusListener(HomeActivity.this);
+                            deviceLoad.isWaitting = false;
+                            Log.e("HomeActivity","listener size "+Globals.netWorkStatusListeners.size());
+                        }
+
+                        @Override
+                        public void onServiceDisconnected(ComponentName name) {
+
+                        }
+                    },Context.BIND_AUTO_CREATE);
+
+                    startService(intent);
+                    break;
             }
         }
     };
+    private DeviceLoadTask deviceLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -578,7 +610,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
             return;
         }
         if (restart){
-            new DeviceLoadTask(excId,checkRecordEntity,handler,this).execute();
+            deviceLoad = new DeviceLoadTask(excId,checkRecordEntity,handler,this);
+            deviceLoad.execute();
         }
     }
 
@@ -648,6 +681,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,N
     }
 
     private void clear() {
+        if (j1939TaskService != null)
+            j1939TaskService.stopJ1939Service();
         Globals.HomeLastPosition = -1;
         checkRecordEntity = null;
         checkItemEntity = null;

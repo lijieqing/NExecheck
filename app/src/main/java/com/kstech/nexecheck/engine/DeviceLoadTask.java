@@ -26,7 +26,7 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
     private HomeActivity context;
     private Handler handler;
     private String InExc;
-    private boolean isWaitting = true;
+    public boolean isWaitting = true;
 
 
     public DeviceLoadTask(String InExc,CheckRecordEntity checkRecordEntity, Handler handler,HomeActivity context) {
@@ -102,24 +102,8 @@ public class DeviceLoadTask extends AsyncTask<Void, String, Void> {
         super.onProgressUpdate(values);
         if ("msg".equals(values[0])){
             mProgressDialog.setMessage("正在初始化通讯线程，请稍等。。。");
-            Intent intent = new Intent(context,J1939TaskService.class);
-            intent.putExtra("reload",true);
-            context.bindService(intent, new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    J1939TaskService.MyBinder myBinder = (J1939TaskService.MyBinder) service;
-                    myBinder.task.context = context;
-                    myBinder.task.j1939CommTask.addNetWorkStatusListener(context);
-                    isWaitting = false;
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-
-                }
-            },Context.BIND_AUTO_CREATE);
-
-            context.startService(intent);
+            Globals.clearNetWorkStatusListener();
+            handler.sendEmptyMessage(3);
         }
         if("waiting".equals(values[0])){
             mProgressDialog.setMessage("正在启动通讯线程，请稍候。。。。");

@@ -31,15 +31,28 @@ public class Globals {
     public static int HomeLastPosition = -1;
     public static int UploatLastPosition = -1;
 
-    public static ArrayList<String> upload = new ArrayList<String>();
-    public static ArrayList<String> download = new ArrayList<String>();
+    public static ArrayList<String> upload = new ArrayList<>();
+    public static ArrayList<String> download = new ArrayList<>();
     public static String REMOTE_FILE = "";
     public static final String LOCAL_PATH = fs + "storage" + fs + "sdcard1" + fs;
     public static String LOCAL_CURRENT_FILE = LOCAL_PATH;
     public static boolean isLoading = false;
 
-
-
+    //communicate worker 监听队列 相关
+    public static LinkedList<NetWorkStatusListener> netWorkStatusListeners = new LinkedList<>();
+    public static void addNetWorkStatusListener(NetWorkStatusListener netWorkStatusListener){
+        if (netWorkStatusListener != null && !netWorkStatusListeners.contains(netWorkStatusListener)){
+            netWorkStatusListeners.add(netWorkStatusListener);
+        }
+    }
+    public static void clearNetWorkStatusListener(){
+        netWorkStatusListeners.clear();
+    }
+    public static  void notifyListener(boolean off){
+        for (NetWorkStatusListener netWorkStatusListener : netWorkStatusListeners) {
+            netWorkStatusListener.onStatusChanged(off);
+        }
+    }
 
     //实时显示参数集合
     public static ArrayList<RealTimeView> HomeRealtimeViews = new ArrayList<>();
