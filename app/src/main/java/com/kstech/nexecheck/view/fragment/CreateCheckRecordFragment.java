@@ -152,6 +152,7 @@ public class CreateCheckRecordFragment extends BaseFragment {
                     if (((HomeActivity)activity).homeCheckEntityFragment.myAdapter != null)
                         ((HomeActivity)activity).homeCheckEntityFragment.myAdapter.notifyDataSetChanged();
 
+                    ((HomeActivity)activity).excID = excIdET.getText().toString();
                     ((HomeActivity)activity).checkItemEntity = null;
                     ((HomeActivity)activity).showChFg = null;
                     ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);

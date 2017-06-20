@@ -13,6 +13,7 @@ import android.util.Log;
 import com.kstech.nexecheck.base.NetWorkStatusListener;
 import com.kstech.nexecheck.utils.Globals;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -432,7 +433,11 @@ public class CommunicationWorker extends Thread {
         isRunning = false;
         // 线程终止，关闭套接口
         // conn.close();
-
+        try {
+            sockTcp.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

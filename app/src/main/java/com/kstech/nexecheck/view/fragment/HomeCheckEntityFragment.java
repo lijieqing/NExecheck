@@ -51,8 +51,8 @@ public class HomeCheckEntityFragment extends BaseFragment {
 
         myAdapter = new MyAdapter ();
         currentCheckItemView.initView();
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL_LIST));
+        recyclerView.addItemDecoration(new DividerItemDecoration(activity,DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(),DividerItemDecoration.HORIZONTAL_LIST));
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(myAdapter);
         return view;
@@ -78,8 +78,8 @@ public class HomeCheckEntityFragment extends BaseFragment {
         }
         if (recyclerView != null) {
             myAdapter = new MyAdapter ();
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.HORIZONTAL_LIST));
+            recyclerView.addItemDecoration(new DividerItemDecoration(activity,DividerItemDecoration.VERTICAL_LIST));
+            recyclerView.addItemDecoration(new DividerItemDecoration(activity,DividerItemDecoration.HORIZONTAL_LIST));
             recyclerView.setLayoutManager(gridLayoutManager);
             recyclerView.setAdapter(myAdapter);
 

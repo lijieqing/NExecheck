@@ -41,8 +41,11 @@ public class J1939TaskService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        boolean reload = intent.getBooleanExtra("reload",false);
-        context = (HomeActivity) intent.getCharSequenceExtra("home");
+        boolean reload = false;
+        if (intent != null){
+            reload = intent.getBooleanExtra("reload",false);
+            context = (HomeActivity) intent.getCharSequenceExtra("home");
+        }
         if (reload) {
             stopJ1939Service();
 

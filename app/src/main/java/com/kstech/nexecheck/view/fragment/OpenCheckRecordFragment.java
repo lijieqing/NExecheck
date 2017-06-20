@@ -155,6 +155,7 @@ public class OpenCheckRecordFragment extends BaseFragment {
                         .setNeutralButton(R.string.str_ok, null).show();
             } else {
                 String excId = ((TextView)currentSelectedRecord.getChildAt(4)).getText().toString();
+                ((HomeActivity)activity).excID = excId;
                 ((HomeActivity)activity).initRecordItem(excId,true);
                 ((HomeActivity)activity).showChFg = null;
                 ((HomeActivity)activity).llCheck.setVisibility(View.INVISIBLE);
