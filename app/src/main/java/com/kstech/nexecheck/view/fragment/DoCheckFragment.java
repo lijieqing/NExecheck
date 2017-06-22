@@ -2,6 +2,7 @@ package com.kstech.nexecheck.view.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -202,7 +203,8 @@ public class DoCheckFragment extends BaseFragment implements View.OnClickListene
             stopConfirm();
         }else {
             checkTask = new ItemCheckTask((HomeActivity)activity,chronometer,msgAdapter,msgTv, isSingle);
-            checkTask.execute();
+            //checkTask.execute(); 用execute启动默认线程为串行，执行其他异步任务时需等待 exp 打开检线查看
+            checkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             singleCheckBeginCheckLeftBtn.setText("停止测量");
             singleCheckBeginCheckRightBtn.setText("停止测量");
         }

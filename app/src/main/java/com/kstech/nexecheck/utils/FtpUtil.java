@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.domain.excel;
+package com.kstech.nexecheck.utils;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;

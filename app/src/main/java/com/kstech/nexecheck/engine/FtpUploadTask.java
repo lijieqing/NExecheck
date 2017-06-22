@@ -1,4 +1,4 @@
-package com.kstech.nexecheck.domain.excel;
+package com.kstech.nexecheck.engine;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -9,10 +9,11 @@ import android.os.SystemClock;
 import android.widget.Toast;
 
 import com.kstech.nexecheck.R;
-import com.kstech.nexecheck.activity.upload.DataUploadActivity;
 import com.kstech.nexecheck.domain.config.vo.FtpServerVO;
 import com.kstech.nexecheck.domain.db.dao.CheckRecordDao;
 import com.kstech.nexecheck.domain.db.entity.CheckRecordEntity;
+import com.kstech.nexecheck.utils.ExcelUtil;
+import com.kstech.nexecheck.utils.FtpUtil;
 import com.kstech.nexecheck.utils.Globals;
 
 import java.util.ArrayList;
