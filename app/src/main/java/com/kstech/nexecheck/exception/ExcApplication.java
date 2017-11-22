@@ -21,12 +21,15 @@ import java.util.Date;
  */
 public class ExcApplication extends Application {
 
+    private Thread.UncaughtExceptionHandler defalutHandler;
+
     @Override
     public void onCreate() {
         super.onCreate();
         x.Ext.init(this);
         x.Ext.setDebug(false);
-        // 设置未捕获异常的处理器
+        defalutHandler = Thread.getDefaultUncaughtExceptionHandler();
+        //再将当前异常捕获设置为默认
         Thread.setDefaultUncaughtExceptionHandler(new MyHandler());
     }
 
@@ -60,8 +63,10 @@ public class ExcApplication extends Application {
                         "很抱歉，程序出错，即将退出:\r\n" + ex.getLocalizedMessage(),
                         Toast.LENGTH_LONG).show();
             }
+            //调用默认异常捕获方法，也就是退出程序
+            defalutHandler.uncaughtException(thread,ex);
             // 停止当前进程，防止下次进入白屏
-            android.os.Process.killProcess(android.os.Process.myPid());
+            //android.os.Process.killProcess(android.os.Process.myPid());
 //	            System.exit(-1);
         }
 

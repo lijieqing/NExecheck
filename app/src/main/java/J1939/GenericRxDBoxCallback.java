@@ -123,11 +123,11 @@ public class GenericRxDBoxCallback implements IRxDBoxCallback {
 			// 发送应答状态接受确认帧（0xFF82）
 			J1939_Context.j1939_API.j1939_sendDatabox((short)(Globals.getModelFile().j1939PgSetVO
 					.getPg(0xFF82).wDBNumber));
-			Log.e("PGN", "-----PGN--re-81-- s t a r t -----PGN-----");
-			for (int k = 0; k < pPGCfg.pData.length; k++) {
-				Log.e("PGN", "-----PGN-----"+pPGCfg.dwPGN+"-----pPGCfg.pData--"+k+"--"+pPGCfg.pData[k]);
+			Log.e("0xFF82", "-----PGN--re-81-- s t a r t -----PGN-----");
+			for (int k = 0; k < Globals.getModelFile().j1939PgSetVO.getPg(0xFF82).pData.length; k++) {
+				Log.e("0xFF82", "-----PGN-----"+Globals.getModelFile().j1939PgSetVO.getPg(0xFF82).dwPGN+"-----pPGCfg.pData--"+k+"--"+Globals.getModelFile().j1939PgSetVO.getPg(0xFF82).pData[k]);
 			}
-			Log.e("PGN", "-----PGN----- e  n  d -----PGN-----");
+			Log.e("0xFF82", "-----PGN----- e  n  d -----PGN-----");
 		}
 //测试是否丢帧代码
 //		if ( pPGCfg.dwPGN == 0xFF2E ) {

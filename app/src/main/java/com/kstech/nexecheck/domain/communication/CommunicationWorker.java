@@ -287,7 +287,7 @@ public class CommunicationWorker extends Thread {
                         Log.e("LOGIN","---S S I D---"+ssid);
                     }
                     Log.e("hahah", "before create socket");
-                    if("\"Dlink_DWL2000\"".equals(ssid) || "\"DLINK_DWL_2000_01\"".equals(ssid)|| "\"TP-LINK_Outdoor_E85A88\"".equals(ssid)){
+                    if("\"DLINK_DWL2000_01\"".equals(ssid) || "\"DLINK_DWL_2000_01\"".equals(ssid)|| "\"TP-LINK_Outdoor_E85A88\"".equals(ssid)){
                         Log.e("hahah", "serverIPAddress" + serverIPAddress);
                         sockTcp = new Socket(serverIPAddress, serverListenPort);
                         Log.e("hahah", "create socket "+sockTcp);
